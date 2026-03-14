@@ -1423,22 +1423,22 @@ body {
         <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('2 Presas + Ensalada + Papas',5.4)">+</button></div>
       </div>
     </div>
-  </div>
-  <div style="height:14px"></div>
-</div>
 
-
-    <div class="pcard" onclick="openOptions('1 Presa + Salchicha + Papas',0)">
+    <div class="pcard" onclick="openOptions('1 Presa + Salchicha + Papas',3.40)">
       <div class="pcard-img">
-        <img src="img/1_presa_salchicha.jpg" alt="1 Presa Salchicha" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <img src="img/1_presa_salchicha.jpg" alt="1 Presa Salchicha" loading="lazy">
         <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.40</span>
       </div>
       <div class="pcard-body">
         <div class="pcard-name">1 Presa + Salchicha</div>
         <div class="pcard-desc">+ Papas fritas</div>
-        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('1 Presa + Salchicha + Papas',0)">+</button></div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('1 Presa + Salchicha + Papas',3.40)">+</button></div>
       </div>
     </div>
+  </div>
+  <div style="height:14px"></div>
+</div>
 
 
 <!-- ══════════ BEBIDAS PAGE ══════════ -->
@@ -1634,6 +1634,16 @@ body {
             <span class="payment-opt-icon">📲</span>Transferencia
           </div>
         </div>
+        <div id="transferInfo" style="display:none;background:#f0e8ff;border-radius:12px;padding:12px 14px;margin-bottom:12px;border:2px solid #e8d5ff;">
+          <div style="font-weight:900;font-size:0.85rem;color:#6A1FBE;margin-bottom:6px;">📲 Datos para transferencia:</div>
+          <div style="font-size:0.82rem;color:#333;line-height:1.6;">
+            <strong>Lizeth Cisneros</strong><br>
+            Banco Pichincha<br>
+            Cuenta de ahorro<br>
+            Nº <strong>2209253523</strong><br>
+            CI: 0604532168
+          </div>
+        </div>
 
         <label class="form-label">¿Necesitas factura?</label>
         <div class="factura-row">
@@ -1646,6 +1656,8 @@ body {
         <div class="factura-fields" id="facturaFields">
           <input class="form-input" id="facturaRuc" type="text" placeholder="RUC / Cédula">
           <input class="form-input" id="facturaRazon" type="text" placeholder="Razón social o nombre completo">
+          <input class="form-input" id="facturaDireccion" type="text" placeholder="Dirección de factura">
+          <input class="form-input" id="facturaEmail" type="email" placeholder="Correo electrónico">
         </div>
 
         <label class="form-label">Dirección de entrega *</label>
@@ -1758,6 +1770,7 @@ function selectPayment(m) {
   paymentMethod = m;
   document.getElementById('pay-cash').classList.toggle('selected', m==='cash');
   document.getElementById('pay-transfer').classList.toggle('selected', m==='transfer');
+  document.getElementById('transferInfo').style.display = m==='transfer' ? 'block' : 'none';
 }
 function toggleFactura() {
   document.getElementById('facturaFields').classList.toggle('show', document.getElementById('facturaToggle').checked);
@@ -1777,19 +1790,21 @@ function submitOrder() {
   const facturaOn = document.getElementById('facturaToggle').checked;
   const ruc = document.getElementById('facturaRuc').value.trim();
   const razon = document.getElementById('facturaRazon').value.trim();
+  const facturaDireccion = document.getElementById('facturaDireccion').value.trim();
+  const facturaEmail = document.getElementById('facturaEmail').value.trim();
   const address = locTabActive==='text' ? document.getElementById('addressText').value.trim() : document.getElementById('addressMapsLink').value.trim();
 
   if (!name) { alert('Por favor ingresa tu nombre.'); return; }
   if (!phone) { alert('Por favor ingresa tu WhatsApp.'); return; }
   if (!paymentMethod) { alert('Por favor selecciona un método de pago.'); return; }
   if (!address) { alert('Por favor ingresa tu dirección de entrega.'); return; }
-  if (facturaOn && (!ruc || !razon)) { alert('Por favor completa los datos de factura.'); return; }
+  if (facturaOn && (!ruc || !razon || !facturaDireccion || !facturaEmail)) { alert('Por favor completa todos los datos de factura.'); return; }
 
   const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
   const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${(i.price*i.qty).toFixed(2)}`).join('\n');
   const payLabel = paymentMethod==='cash' ? '💵 Efectivo' : '📲 Transferencia';
   const addrLabel = locTabActive==='maps' ? `📍 Maps: ${address}` : `📍 ${address}`;
-  const facturaInfo = facturaOn ? `\n🧾 *FACTURA*: ${ruc} – ${razon}` : '';
+  const facturaInfo = facturaOn ? `\n🧾 *FACTURA*:\n  RUC/CI: ${ruc}\n  Nombre: ${razon}\n  Dir: ${facturaDireccion}\n  Email: ${facturaEmail}` : '';
   const notesInfo = notes ? `\n📝 Nota: ${notes}` : '';
 
   const msg =
@@ -1814,9 +1829,10 @@ ${addrLabel}${facturaInfo}${notesInfo}
 
 function resetOrder() {
   cart = []; paymentMethod = '';
-  ['clientName','clientPhone','orderNotes','facturaRuc','facturaRazon','addressText','addressMapsLink'].forEach(id => { document.getElementById(id).value=''; });
+  ['clientName','clientPhone','orderNotes','facturaRuc','facturaRazon','facturaDireccion','facturaEmail','addressText','addressMapsLink'].forEach(id => { document.getElementById(id).value=''; });
   document.getElementById('facturaToggle').checked = false;
   document.getElementById('facturaFields').classList.remove('show');
+  document.getElementById('transferInfo').style.display = 'none';
   selectLocTab('text');
   updateCartUI();
   closeCart();
