@@ -1913,20 +1913,94 @@ function downloadUpdatedMenu() {
 const PRESA_COMBOS = {'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1, 'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2, 'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8, '1 Presa': 1, '2 Presas': 2, '3 Presas': 3, '4 Presas': 4, '5 Presas': 5, '6 Presas': 6, '7 Presas': 7, '8 Presas': 8, '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas con Ensalada': 2, '1 Presa + Salchicha + Papas': 1};
 const DRINK_COMBOS = ['Combo Happy', 'Combo Super Happy', 'Combo Twins', 'Combo Festín', 'Combo Ideal', 'Combo Star', 'Happy Lunch', 'Combo Irresistible', 'Happy Burger', 'Super Burger', 'Combo Especial', 'Super Lunch', 'Mega Familiar', 'Super Star', '1 Presa', '2 Presas', '3 Presas', '4 Presas', '5 Presas', '6 Presas', '7 Presas', '8 Presas'];
 
-const PRESAS = ['Pechuga', 'Ala', 'Pierna', 'Pospierna', 'Rabo'];
-const DRINKS = ['Coca Cola','Fanta','Inka Cola','Sprite','Fiora','Fresno','Fuze Tea','Agua'];
-const SIZES = [
-  { label: '300ml', extra: 0, note: 'incluido' },
-  { label: '500ml', extra: 0.50, note: '+$0.50' },
-  { label: '1.35lt', extra: 1.00, note: '+$1.00' },
-  { label: '1.5lt', extra: 1.25, note: '+$1.25' },
-  { label: '3lt', extra: 2.50, note: '+$2.50' },
+// ─── COMBINACIONES VÁLIDAS DE PRESAS ───
+const PRESA_COMBINATIONS = {
+  1: [
+    ['Pechuga'], ['Ala'], ['Pierna'], ['Pospierna'], ['Rabo']
+  ],
+  2: [
+    ['Pechuga','Pierna'], ['Pechuga','Pospierna'], ['Pechuga','Rabo'],
+    ['Ala','Pierna'], ['Ala','Pospierna'], ['Ala','Rabo'],
+    ['Pierna','Pospierna'], ['Pierna','Rabo'], ['Pospierna','Rabo'],
+    ['2 Piernas'], ['2 Pospiernas']
+  ],
+  3: [
+    ['Pechuga','Pierna','Pospierna'], ['Pechuga','2 Piernas'], ['Pechuga','2 Pospiernas'],
+    ['Ala','Pierna','Pospierna'], ['Ala','2 Piernas'], ['Ala','2 Pospiernas'],
+    ['Pierna','2 Pospiernas'], ['Pospierna','2 Piernas'],
+    ['3 Piernas'], ['3 Pospiernas']
+  ],
+  4: [
+    ['Pechuga','Ala','Pierna','Pospierna'],
+    ['Pechuga','Ala','2 Piernas'], ['Pechuga','Ala','2 Pospiernas'],
+    ['2 Piernas','2 Pospiernas'],
+    ['Pechuga','Pierna','2 Pospiernas'], ['Pechuga','Pospierna','2 Piernas'],
+    ['Ala','Pierna','2 Pospiernas'], ['Ala','Pospierna','2 Piernas'],
+    ['4 Piernas'], ['4 Pospiernas']
+  ],
+  5: [
+    ['Pechuga','Ala','Pierna','2 Pospiernas'], ['Pechuga','Ala','Pospierna','2 Piernas'],
+    ['Pechuga','Ala','3 Piernas'], ['Pechuga','Ala','3 Pospiernas'],
+    ['Pechuga','2 Piernas','2 Pospiernas'], ['Ala','2 Piernas','2 Pospiernas'],
+    ['2 Piernas','3 Pospiernas'], ['3 Piernas','2 Pospiernas'],
+    ['5 Piernas'], ['5 Pospiernas']
+  ],
+  6: [
+    ['2 Pechuga','2 Ala','Pierna','Pospierna'],
+    ['Pechuga','Ala','2 Piernas','2 Pospiernas'],
+    ['Pechuga','Ala','4 Piernas'], ['Pechuga','Ala','4 Pospiernas'],
+    ['2 Pechuga','2 Ala','2 Piernas'], ['2 Pechuga','2 Ala','2 Pospiernas'],
+    ['3 Piernas','3 Pospiernas'],
+    ['6 Piernas'], ['6 Pospiernas']
+  ],
+  7: [
+    ['2 Ala','2 Pechuga','2 Pierna','1 Pospierna'],
+    ['2 Ala','2 Pechuga','1 Pierna','2 Pospierna'],
+    ['2 Ala','2 Pechuga','3 Pierna'],
+    ['2 Ala','2 Pechuga','3 Pospierna'],
+    ['1 Ala','1 Pechuga','3 Pospierna','2 Pierna'],
+    ['1 Ala','1 Pechuga','2 Pospierna','3 Pierna'],
+    ['7 Piernas'], ['7 Pospiernas']
+  ],
+  8: [
+    ['2 Ala','2 Pechuga','2 Pierna','2 Pospierna'],
+    ['3 Ala','1 Pechuga','2 Pierna','2 Pospierna'],
+    ['1 Ala','3 Pechuga','2 Pierna','2 Pospierna'],
+    ['2 Ala','2 Pechuga','4 Pierna'],
+    ['2 Ala','2 Pechuga','4 Pospierna'],
+    ['4 Pospierna','4 Pierna'],
+    ['8 Pospiernas'], ['8 Piernas']
+  ]
+};
+
+// ─── BEBIDAS POR TAMAÑO ───
+const DRINK_SIZES = [
+  {
+    label: '300ml', extra: 0, note: 'incluido',
+    drinks: ['Coca Cola','Fiora','Fanta','Inka Cola','Sprite','Agua','Fuze Tea','Jugo del Valle']
+  },
+  {
+    label: '500ml', extra: 0.50, note: '+$0.50',
+    drinks: ['Coca Cola','Fiora','Fanta','Inka Cola','Sprite','Sunny Mora','Sunny Durazno','Frezno','Fuze Tea','Agua Splendor']
+  },
+  {
+    label: '1.35lt', extra: 1.00, note: '+$1.00',
+    drinks: ['Coca Cola','Fiora','Fanta','Inka Cola','Sprite','Fuze Tea']
+  },
+  {
+    label: '1.5lt', extra: 1.25, note: '+$1.25',
+    drinks: ['Frezno','Fuze Tea']
+  },
+  {
+    label: '3lt', extra: 2.50, note: '+$2.50',
+    drinks: ['Coca Cola','Sprite']
+  }
 ];
 
 let optCurrent = { name: '', price: 0, presasNeeded: 0, hasDrink: false };
-let selectedPresas = [];
+let selectedCombo = null; // index of selected presa combination
 let selectedDrink = '';
-let selectedSize = 0;
+let selectedSizeIdx = 0;
 
 function openOptions(name, price) {
   const presasNeeded = PRESA_COMBOS[name] || 0;
@@ -1938,56 +2012,41 @@ function openOptions(name, price) {
   }
 
   optCurrent = { name, price, presasNeeded, hasDrink };
-  selectedPresas = [];
+  selectedCombo = null;
   selectedDrink = '';
-  selectedSize = 0;
+  selectedSizeIdx = 0;
 
   document.getElementById('optTitle').textContent = name;
   document.getElementById('optSubtitle').textContent = '$' + price.toFixed(2);
   document.getElementById('optError').style.display = 'none';
 
-  // Build presa section
+  // Build presa section — show predefined combinations
   const presaSection = document.getElementById('optPresaSection');
-  if (presasNeeded > 0) {
+  if (presasNeeded > 0 && PRESA_COMBINATIONS[presasNeeded]) {
     presaSection.style.display = 'block';
-    document.getElementById('presaCounter').textContent = 'Seleccionadas: 0 / ' + presasNeeded;
+    const combos = PRESA_COMBINATIONS[presasNeeded];
+    document.getElementById('presaCounter').textContent = 'Elige tu combinación de ' + presasNeeded + ' presa(s):';
     const grid = document.getElementById('presaGrid');
     grid.innerHTML = '';
-    PRESAS.forEach(p => {
+    grid.style.gridTemplateColumns = '1fr'; // full width for combos
+    combos.forEach((combo, idx) => {
       const btn = document.createElement('button');
       btn.className = 'opt-btn';
-      btn.textContent = p;
-      btn.dataset.presa = p;
-      btn.onclick = () => togglePresa(p, presasNeeded);
+      btn.textContent = combo.join(' + ');
+      btn.style.textAlign = 'left';
+      btn.style.padding = '12px 14px';
+      btn.onclick = () => selectPresaCombo(idx);
       grid.appendChild(btn);
     });
   } else {
     presaSection.style.display = 'none';
   }
 
-  // Build drink section
+  // Build drink section — size tabs + drinks per size
   const drinkSection = document.getElementById('optDrinkSection');
   if (hasDrink) {
     drinkSection.style.display = 'block';
-    const dg = document.getElementById('drinkGrid');
-    dg.innerHTML = '';
-    DRINKS.forEach(d => {
-      const btn = document.createElement('button');
-      btn.className = 'opt-btn';
-      btn.textContent = d;
-      btn.dataset.drink = d;
-      btn.onclick = () => selectDrink(d);
-      dg.appendChild(btn);
-    });
-    const sg = document.getElementById('sizeGrid');
-    sg.innerHTML = '';
-    SIZES.forEach((s, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'opt-size-btn' + (i === 0 ? ' selected' : '');
-      btn.innerHTML = '<div>' + s.label + '</div><div class="opt-size-extra">' + s.note + '</div>';
-      btn.onclick = () => selectSize(i);
-      sg.appendChild(btn);
-    });
+    buildDrinkUI();
   } else {
     drinkSection.style.display = 'none';
   }
@@ -1996,44 +2055,41 @@ function openOptions(name, price) {
   document.body.style.overflow = 'hidden';
 }
 
-function togglePresa(presa, max) {
-  const idx = selectedPresas.indexOf(presa);
-  const restricted = ['Pechuga', 'Ala'];
+function selectPresaCombo(idx) {
+  selectedCombo = idx;
+  const btns = document.querySelectorAll('#presaGrid .opt-btn');
+  btns.forEach((btn, i) => btn.classList.toggle('selected', i === idx));
+  document.getElementById('optError').style.display = 'none';
+}
 
-  if (idx !== -1) {
-    selectedPresas.splice(idx, 1);
-  } else {
-    if (selectedPresas.length >= max) return;
-
-    // Rules: no 2 pechugas, no pechuga+ala together
-    if (max >= 2) {
-      if (presa === 'Pechuga' && selectedPresas.includes('Pechuga')) {
-        showOptError('No puedes elegir 2 pechugas en el mismo combo.');
-        return;
-      }
-      if (presa === 'Ala' && selectedPresas.includes('Ala')) {
-        showOptError('No puedes elegir 2 alas en el mismo combo.');
-        return;
-      }
-      if (presa === 'Pechuga' && selectedPresas.includes('Ala')) {
-        showOptError('No puedes combinar Pechuga y Ala en el mismo pedido.');
-        return;
-      }
-      if (presa === 'Ala' && selectedPresas.includes('Pechuga')) {
-        showOptError('No puedes combinar Pechuga y Ala en el mismo pedido.');
-        return;
-      }
-    }
-    document.getElementById('optError').style.display = 'none';
-    selectedPresas.push(presa);
-  }
-
-  // Update UI
-  document.querySelectorAll('#presaGrid .opt-btn').forEach(btn => {
-    btn.classList.toggle('selected', selectedPresas.includes(btn.dataset.presa));
+function buildDrinkUI() {
+  // Size tabs
+  const sg = document.getElementById('sizeGrid');
+  sg.innerHTML = '';
+  DRINK_SIZES.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-size-btn' + (i === selectedSizeIdx ? ' selected' : '');
+    btn.innerHTML = '<div>' + s.label + '</div><div class="opt-size-extra">' + s.note + '</div>';
+    btn.onclick = () => {
+      selectedSizeIdx = i;
+      selectedDrink = ''; // reset drink when changing size
+      buildDrinkUI();
+    };
+    sg.appendChild(btn);
   });
-  document.getElementById('presaCounter').textContent =
-    'Seleccionadas: ' + selectedPresas.length + ' / ' + max;
+
+  // Drinks for selected size
+  const dg = document.getElementById('drinkGrid');
+  dg.innerHTML = '';
+  const availableDrinks = DRINK_SIZES[selectedSizeIdx].drinks;
+  availableDrinks.forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn' + (selectedDrink === d ? ' selected' : '');
+    btn.textContent = d;
+    btn.dataset.drink = d;
+    btn.onclick = () => selectDrink(d);
+    dg.appendChild(btn);
+  });
 }
 
 function selectDrink(drink) {
@@ -2042,13 +2098,6 @@ function selectDrink(drink) {
     btn.classList.toggle('selected', btn.dataset.drink === drink);
   });
   document.getElementById('optError').style.display = 'none';
-}
-
-function selectSize(idx) {
-  selectedSize = idx;
-  document.querySelectorAll('#sizeGrid .opt-size-btn').forEach((btn, i) => {
-    btn.classList.toggle('selected', i === idx);
-  });
 }
 
 function showOptError(msg) {
@@ -2068,8 +2117,8 @@ function closeOpt() {
 function confirmOptions() {
   const { name, price, presasNeeded, hasDrink } = optCurrent;
 
-  if (presasNeeded > 0 && selectedPresas.length < presasNeeded) {
-    showOptError('Elige ' + presasNeeded + ' presa(s) para continuar.');
+  if (presasNeeded > 0 && selectedCombo === null) {
+    showOptError('Elige una combinación de presas para continuar.');
     return;
   }
   if (hasDrink && !selectedDrink) {
@@ -2079,12 +2128,15 @@ function confirmOptions() {
 
   // Build item name with selections
   let fullName = name;
-  if (presasNeeded > 0) fullName += ' [' + selectedPresas.join(', ') + ']';
+  if (presasNeeded > 0) {
+    const combos = PRESA_COMBINATIONS[presasNeeded];
+    fullName += ' [' + combos[selectedCombo].join(' + ') + ']';
+  }
   if (hasDrink) {
-    fullName += ' + ' + selectedDrink + ' ' + SIZES[selectedSize].label;
+    fullName += ' + ' + selectedDrink + ' ' + DRINK_SIZES[selectedSizeIdx].label;
   }
 
-  const finalPrice = price + (hasDrink ? SIZES[selectedSize].extra : 0);
+  const finalPrice = price + (hasDrink ? DRINK_SIZES[selectedSizeIdx].extra : 0);
   addToCart(fullName, finalPrice);
   closeOpt();
 }
@@ -2127,10 +2179,10 @@ function confirmOptions() {
       <div class="opt-grid" id="presaGrid"></div>
     </div>
     <div id="optDrinkSection" class="opt-section" style="display:none">
-      <div class="opt-section-title">🥤 Elige tu bebida (300ml incluido)</div>
-      <div class="opt-drink-grid" id="drinkGrid"></div>
-      <div class="opt-section-title" style="margin-top:12px;">📦 Tamaño</div>
+      <div class="opt-section-title">📦 Tamaño (300ml incluido)</div>
       <div class="opt-size-grid" id="sizeGrid"></div>
+      <div class="opt-section-title" style="margin-top:12px;">🥤 Elige tu bebida</div>
+      <div class="opt-drink-grid" id="drinkGrid"></div>
     </div>
     <button class="opt-confirm" id="optConfirm" onclick="confirmOptions()">Agregar al pedido</button>
   </div>
