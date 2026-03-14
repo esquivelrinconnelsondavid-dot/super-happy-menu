@@ -858,6 +858,7 @@ body {
   <button class="tab-btn active" onclick="showPage('presas',this)">🍗 Presas</button>
   <button class="tab-btn" onclick="showPage('combos',this)">🔥 Combos</button>
   <button class="tab-btn" onclick="showPage('adicionales',this)">➕ Adicionales</button>
+  <button class="tab-btn" onclick="showPage('bebidas',this)">🥤 Bebidas</button>
   <button class="tab-btn" onclick="showPage('especiales',this)">⭐ Especiales</button>
   <button class="tab-btn" onclick="showPage('sucursales',this)">📍 Sucursales</button>
 </div>
@@ -1443,6 +1444,67 @@ body {
       </div>
     </div>
 
+
+<!-- ══════════ BEBIDAS PAGE ══════════ -->
+<div class="page" id="page-bebidas">
+  <div class="section-title">🥤 Bebidas</div>
+
+  <!-- 300ml -->
+  <div style="margin:10px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 300 ml</div>
+  <div class="products-grid">
+    <div class="pcard" onclick="addToCart('Coca Cola 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#c0392b,#e74c3c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Fiora 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f39c12);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Fiora</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Fanta 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f1c40f);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Fanta</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Inka Cola 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f1c40f,#2ecc71);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Inka Cola</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Sprite 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#2ecc71,#1abc9c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Sprite</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Agua 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#3498db,#2980b9);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">💧</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Agua</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Fuze Tea 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f39c12,#e67e22);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🍵</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Fuze Tea</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Jugo del Valle 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e74c3c,#f39c12);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🧃</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Jugo del Valle</div><div class="pcard-desc">300ml</div></div></div>
+  </div>
+
+  <!-- 500ml -->
+  <div style="margin:14px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 500 ml</div>
+  <div class="products-grid">
+    <div class="pcard" onclick="addToCart('Coca Cola 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#c0392b,#e74c3c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Fiora 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f39c12);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Fiora</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Fanta 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f1c40f);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Fanta</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Inka Cola 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f1c40f,#2ecc71);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Inka Cola</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Sprite 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#2ecc71,#1abc9c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Sprite</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Sunny Mora 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#8e44ad,#9b59b6);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🫐</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Sunny Mora</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Sunny Durazno 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f39c12,#e67e22);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🍑</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Sunny Durazno</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Frezno 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e74c3c,#c0392b);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🍓</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Frezno</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Fuze Tea 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f39c12,#e67e22);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🍵</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Fuze Tea</div><div class="pcard-desc">500ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Agua Splendor 500ml',1.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#3498db,#2980b9);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">💧</span></div><span class="pcard-price-tag">$1.00</span></div><div class="pcard-body"><div class="pcard-name">Agua Splendor</div><div class="pcard-desc">500ml</div></div></div>
+  </div>
+
+  <!-- 1.35lt -->
+  <div style="margin:14px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 1.35 Litro</div>
+  <div class="products-grid">
+    <div class="pcard" onclick="addToCart('Coca Cola 1.35lt',1.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#c0392b,#e74c3c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.50</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">1.35 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Fiora 1.35lt',1.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f39c12);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.50</span></div><div class="pcard-body"><div class="pcard-name">Fiora</div><div class="pcard-desc">1.35 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Fanta 1.35lt',1.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f1c40f);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.50</span></div><div class="pcard-body"><div class="pcard-name">Fanta</div><div class="pcard-desc">1.35 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Inka Cola 1.35lt',1.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f1c40f,#2ecc71);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.50</span></div><div class="pcard-body"><div class="pcard-name">Inka Cola</div><div class="pcard-desc">1.35 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Sprite 1.35lt',1.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#2ecc71,#1abc9c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.50</span></div><div class="pcard-body"><div class="pcard-name">Sprite</div><div class="pcard-desc">1.35 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Fuze Tea 1.35lt',1.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f39c12,#e67e22);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.50</span></div><div class="pcard-body"><div class="pcard-name">Fuze Tea</div><div class="pcard-desc">1.35 lt</div></div></div>
+  </div>
+
+  <!-- 1.5lt -->
+  <div style="margin:14px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 1.5 Litro</div>
+  <div class="products-grid">
+    <div class="pcard" onclick="addToCart('Frezno 1.5lt',1.75)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e74c3c,#c0392b);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.75</span></div><div class="pcard-body"><div class="pcard-name">Frezno</div><div class="pcard-desc">1.5 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Fuze Tea 1.5lt',1.75)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f39c12,#e67e22);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2.5rem;">🍾</span></div><span class="pcard-price-tag">$1.75</span></div><div class="pcard-body"><div class="pcard-name">Fuze Tea</div><div class="pcard-desc">1.5 lt</div></div></div>
+  </div>
+
+  <!-- 3lt -->
+  <div style="margin:14px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 3 Litros</div>
+  <div class="products-grid">
+    <div class="pcard" onclick="addToCart('Coca Cola 3lt',3.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#c0392b,#e74c3c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:3rem;">🍾</span></div><span class="pcard-price-tag">$3.00</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">3 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Sprite 3lt',3.00)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#2ecc71,#1abc9c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:3rem;">🍾</span></div><span class="pcard-price-tag">$3.00</span></div><div class="pcard-body"><div class="pcard-name">Sprite</div><div class="pcard-desc">3 lt</div></div></div>
+  </div>
+
+  <div style="height:14px"></div>
+</div>
+
 <!-- ══════════ ESPECIALES PAGE ══════════ -->
 <div class="page" id="page-especiales">
   <div class="section-title">⭐ Especiales</div>
@@ -1634,9 +1696,14 @@ function showPage(page, btn) {
 }
 
 function addToCart(name, price) {
-  const existing = cart.find(i => i.name === name);
-  if (existing) { existing.qty++; }
-  else { cart.push({ name, price, qty: 1 }); }
+  // Presas con selección [xxx] son únicas, no se acumulan
+  if (name.includes('[')) {
+    cart.push({ name, price, qty: 1, unique: true });
+  } else {
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.qty++; }
+    else { cart.push({ name, price, qty: 1 }); }
+  }
   updateCartUI();
   animateFab();
 }
@@ -1659,9 +1726,10 @@ function updateCartUI() {
           <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
         </div>
         <div class="qty-controls">
-          <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+          ${item.unique ?
+            '<button class="qty-btn" style="border-color:#c0392b;color:#c0392b;" onclick="changeQty(' + idx + ',-1)">✕</button>' :
+            '<button class="qty-btn" onclick="changeQty(' + idx + ',-1)">−</button><span class="qty-num">' + item.qty + '</span><button class="qty-btn" onclick="changeQty(' + idx + ',1)">+</button>'
+          }
         </div>
       </div>`).join('');
   }
