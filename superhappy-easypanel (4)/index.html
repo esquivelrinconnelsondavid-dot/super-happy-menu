@@ -1,0 +1,2477 @@
+
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Super Happy – Menú</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;0,800;0,900;1,800&amp;family=Righteous&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #F5A623;
+  --orange-dark: #E08800;
+  --pink: #E91E8C;
+  --pink-dark: #C0157A;
+  --purple: #6A1FBE;
+  --yellow: #FFD600;
+  --white: #FFFFFF;
+  --black: #1A1A1A;
+  --bg: #FFF8F0;
+  --gray: #F3F3F3;
+  --gray2: #E5E5E5;
+  --text: #222;
+  --shadow-card: 0 4px 20px rgba(0,0,0,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #888;
+  color: var(--text);
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+.app-wrapper {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg);
+  min-height: 100vh;
+  padding-bottom: 110px;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0,0,0,0.3);
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(120deg, var(--orange) 0%, #FFC145 100%);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 3px 20px rgba(245,166,35,0.45);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px 8px;
+  gap: 10px;
+}
+.logo-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.logo-super {
+  font-family: 'Righteous', cursive;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.logo-happy {
+  font-family: 'Righteous', cursive;
+  font-size: 1.85rem;
+  color: var(--white);
+  letter-spacing: -1px;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+  line-height: 0.9;
+}
+.logo-star {
+  font-size: 1.6rem;
+  filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.15));
+}
+.header-right {
+  margin-left: auto;
+  text-align: right;
+}
+.header-phone {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--purple);
+  background: white;
+  border-radius: 20px;
+  padding: 3px 9px;
+  display: inline-block;
+}
+.header-slogan {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.85);
+  margin-top: 3px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  background: linear-gradient(135deg, #3d0070 0%, #6A1FBE 50%, #E91E8C 100%);
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '🍗';
+  position: absolute;
+  right: -10px; top: -10px;
+  font-size: 5rem;
+  opacity: 0.12;
+  transform: rotate(20deg);
+}
+.hero-text { position: relative; z-index: 1; }
+.hero-title {
+  font-family: 'Righteous', cursive;
+  font-size: 1.15rem;
+  color: var(--yellow);
+  line-height: 1.1;
+}
+.hero-sub {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.8);
+  margin-top: 3px;
+  font-weight: 600;
+}
+.hero-pill {
+  margin-left: auto;
+  background: var(--pink);
+  color: white;
+  font-weight: 900;
+  font-size: 0.72rem;
+  padding: 7px 12px;
+  border-radius: 30px;
+  text-align: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(233,30,140,0.5);
+  line-height: 1.4;
+  position: relative; z-index: 1;
+}
+
+/* ─── TABS ─── */
+.tabs {
+  display: flex;
+  background: var(--white);
+  border-bottom: 2px solid var(--gray2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 6px;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  padding: 11px 14px;
+  background: none;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #aaa;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all .18s;
+  white-space: nowrap;
+}
+.tab-btn.active { color: var(--pink); border-bottom-color: var(--pink); }
+
+/* ─── SECTION TITLE ─── */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 12px 10px;
+  font-family: 'Righteous', cursive;
+  font-size: 1rem;
+  color: white;
+  background: linear-gradient(90deg, var(--pink) 0%, var(--pink-dark) 100%);
+  padding: 7px 14px;
+  border-radius: 30px;
+  box-shadow: 0 3px 12px rgba(233,30,140,0.3);
+  width: fit-content;
+}
+
+/* ─── PRODUCT GRID ─── */
+.products-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 10px;
+  margin-bottom: 4px;
+}
+.products-grid.wide { grid-template-columns: 1fr; }
+
+.pcard {
+  background: var(--white);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform .13s;
+  position: relative;
+  border: 1.5px solid #f0e8ff;
+}
+.pcard:active { transform: scale(0.96); }
+
+/* Photo area */
+.pcard-img {
+  position: relative;
+  width: 100%;
+  padding-top: 80%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #3d0070, #E91E8C);
+  flex-shrink: 0;
+}
+.pcard-img img {
+  position: absolute;
+  inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .35s;
+}
+.pcard:hover .pcard-img img { transform: scale(1.07); }
+.pcard-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(30,0,60,0.65) 0%, transparent 55%);
+}
+/* price tag on image */
+.pcard-price-tag {
+  position: absolute;
+  bottom: 7px; left: 8px;
+  background: var(--yellow);
+  color: var(--black);
+  font-family: 'Righteous', cursive;
+  font-size: 1.05rem;
+  padding: 2px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  z-index: 2;
+}
+/* qty badge */
+.pcard-qty {
+  position: absolute;
+  top: 7px; right: 7px;
+  background: var(--pink);
+  color: white;
+  font-weight: 900;
+  font-size: 0.72rem;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  z-index: 2;
+}
+.pcard-qty.show { display: flex; }
+/* badge label */
+.pcard-badge {
+  position: absolute;
+  top: 7px; left: 7px;
+  background: var(--purple);
+  color: white;
+  font-weight: 900;
+  font-size: 0.6rem;
+  padding: 2px 7px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+
+/* Card body */
+.pcard-body {
+  padding: 9px 10px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pcard-name {
+  font-weight: 900;
+  font-size: 0.88rem;
+  color: var(--black);
+  line-height: 1.2;
+}
+.pcard-desc {
+  font-size: 0.72rem;
+  color: #999;
+  line-height: 1.35;
+  flex: 1;
+}
+.pcard-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+.add-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  border: none;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 10px rgba(233,30,140,0.4);
+  transition: transform .1s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.add-btn:active { transform: scale(0.85); }
+
+/* WIDE card (combo full width) */
+.pcard.wide {
+  flex-direction: row;
+  align-items: stretch;
+}
+.pcard.wide .pcard-img {
+  width: 130px;
+  padding-top: 0;
+  flex-shrink: 0;
+  min-height: 120px;
+}
+.pcard.wide .pcard-body { padding: 12px 14px; }
+
+/* ─── FAB CART ─── */
+.cart-fab {
+  position: fixed;
+  bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 26px;
+  font-family: 'Righteous', cursive;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 6px 28px rgba(233,30,140,0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 200;
+  transition: transform .15s;
+  white-space: nowrap;
+  min-width: 210px;
+  justify-content: center;
+}
+.cart-fab:active { transform: translateX(-50%) scale(0.96); }
+.cart-fab.hidden { display: none; }
+.cart-badge {
+  background: var(--yellow);
+  color: var(--black);
+  border-radius: 50%;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 900;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ─── OVERLAY / MODAL ─── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(30,0,60,0.6);
+  z-index: 300;
+}
+.overlay.show { display: flex; align-items: flex-end; }
+
+.modal {
+  background: var(--white);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding-bottom: 28px;
+  animation: slideUp .22s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideUp { from { transform: translateY(70px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+.modal-handle {
+  width: 40px; height: 4px;
+  background: var(--gray2);
+  border-radius: 3px;
+  margin: 10px auto 0;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1.5px solid var(--gray2);
+}
+.modal-title {
+  font-family: 'Righteous', cursive;
+  font-size: 1.1rem;
+  color: var(--pink);
+}
+.close-btn {
+  background: var(--gray2);
+  border: none;
+  border-radius: 50%;
+  width: 30px; height: 30px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #555;
+  flex-shrink: 0;
+}
+
+/* ─── CART ITEMS ─── */
+.cart-list { padding: 0 14px; }
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray2);
+}
+.cart-item-info { flex: 1; }
+.cart-item-name { font-weight: 800; font-size: 0.88rem; line-height: 1.2; }
+.cart-item-price { font-size: 0.8rem; color: var(--pink); font-weight: 800; margin-top: 1px; }
+.qty-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.qty-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--pink);
+  background: none;
+  color: var(--pink);
+  font-size: 1rem; font-weight: 900;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.qty-num { font-weight: 900; font-size: 1rem; min-width: 20px; text-align: center; }
+.cart-total {
+  padding: 12px 16px 4px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cart-total-label { font-weight: 800; font-size: 1rem; }
+.cart-total-value {
+  font-family: 'Righteous', cursive;
+  font-size: 1.4rem;
+  color: var(--black);
+  background: var(--yellow);
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+/* ─── FORM ─── */
+.form-section { padding: 8px 14px 0; }
+.form-label {
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #555;
+  margin-bottom: 5px;
+  display: block;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border: 2px solid var(--gray2);
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  background: var(--gray);
+  color: var(--text);
+  margin-bottom: 12px;
+  transition: border-color .15s;
+  outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--pink);
+  background: white;
+}
+.form-textarea { resize: vertical; min-height: 56px; }
+
+.payment-opts { display: flex; gap: 10px; margin-bottom: 12px; }
+.payment-opt {
+  flex: 1;
+  border: 2.5px solid var(--gray2);
+  border-radius: 14px;
+  padding: 10px 6px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.83rem;
+  color: #999;
+  background: var(--gray);
+  transition: all .15s;
+  user-select: none;
+}
+.payment-opt.selected { border-color: var(--pink); background: #fff0f8; color: var(--pink); }
+.payment-opt-icon { font-size: 1.4rem; display: block; margin-bottom: 3px; }
+
+.factura-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0;
+  background: var(--gray2);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.toggle-slider:before {
+  content: '';
+  position: absolute;
+  left: 3px; top: 3px;
+  width: 18px; height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform .2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--pink); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
+.toggle-label { font-weight: 800; font-size: 0.85rem; }
+.factura-fields { display: none; }
+.factura-fields.show { display: block; }
+
+.location-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+.loc-tab {
+  flex: 1;
+  padding: 9px;
+  border: 2px solid var(--gray2);
+  border-radius: 10px;
+  background: var(--gray);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  color: #999;
+  transition: all .15s;
+}
+.loc-tab.active { border-color: var(--pink); background: #fff0f8; color: var(--pink); }
+
+.submit-btn {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 14px 14px 0;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Righteous', cursive;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(233,30,140,0.4);
+  transition: transform .12s;
+  letter-spacing: 0.3px;
+}
+.submit-btn:active { transform: scale(0.98); }
+
+/* ─── SUCCESS ─── */
+.success-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 20px 24px;
+  text-align: center;
+}
+.success-screen.show { display: flex; }
+.success-icon { font-size: 4rem; margin-bottom: 14px; animation: pop .4s cubic-bezier(.4,0,.2,1); }
+@keyframes pop { 0%{transform:scale(0.3);} 80%{transform:scale(1.15);} 100%{transform:scale(1);} }
+.success-title { font-family: 'Righteous', cursive; font-size: 1.55rem; color: var(--pink); margin-bottom: 8px; }
+.success-msg { color: #666; font-size: 0.9rem; line-height: 1.55; }
+
+/* ─── EMPTY CART ─── */
+.empty-cart { text-align: center; padding: 28px 20px; color: #bbb; font-size: 0.92rem; }
+
+/* ─── BRANCHES ─── */
+.branch-section { padding: 12px 12px; }
+.branch-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+  border-left: 5px solid var(--orange);
+  position: relative;
+  overflow: hidden;
+}
+.branch-card::before {
+  content: '📍';
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.8rem;
+  opacity: 0.08;
+}
+.branch-name { font-family: 'Righteous', cursive; font-size: 1.05rem; color: var(--purple); margin-bottom: 3px; }
+.branch-address { font-size: 0.85rem; color: #666; font-weight: 700; }
+.branch-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 9px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+  color: white;
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(245,166,35,0.4);
+}
+
+/* ─── PAGE ─── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ─── ADMIN PANEL ─── */
+.admin-fab {
+  position: fixed;
+  bottom: 22px; right: 18px;
+  background: linear-gradient(135deg, #6A1FBE, #3d0070);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 52px; height: 52px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(106,31,190,0.5);
+  z-index: 250;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .15s;
+}
+.admin-fab:active { transform: scale(0.92); }
+.admin-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(30,0,60,0.75);
+  z-index: 400;
+  overflow-y: auto;
+}
+.admin-overlay.show { display: block; }
+.admin-modal {
+  background: white;
+  border-radius: 20px 20px 0 0;
+  margin-top: 40px;
+  padding: 0 0 120px;
+  min-height: calc(100vh - 40px);
+}
+.admin-header {
+  background: linear-gradient(135deg, #6A1FBE, #3d0070);
+  border-radius: 20px 20px 0 0;
+  padding: 16px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 10;
+}
+.admin-title { font-family: 'Righteous', cursive; font-size: 1.1rem; color: white; }
+.admin-close {
+  background: rgba(255,255,255,0.2);
+  border: none; border-radius: 50%;
+  width: 32px; height: 32px;
+  color: white; font-size: 1rem; cursor: pointer;
+}
+.admin-section-title {
+  font-family: 'Righteous', cursive;
+  font-size: 0.9rem; color: white;
+  background: linear-gradient(90deg, #E91E8C, #C0157A);
+  padding: 6px 16px;
+  margin: 14px 12px 8px;
+  border-radius: 20px;
+  width: fit-content;
+}
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 12px;
+}
+.admin-item {
+  background: #f8f0ff;
+  border-radius: 14px;
+  padding: 10px;
+  border: 2px solid #e8d5ff;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+}
+.admin-item-thumb {
+  width: 100%; height: 90px;
+  object-fit: cover; border-radius: 10px;
+  background: #ddd;
+}
+.admin-item-name {
+  font-weight: 900; font-size: 0.78rem;
+  color: #3d0070; text-align: center; line-height: 1.2;
+}
+.admin-upload-btn {
+  width: 100%; padding: 7px;
+  background: linear-gradient(135deg, #E91E8C, #C0157A);
+  color: white; border: none; border-radius: 10px;
+  font-size: 0.75rem; font-weight: 800;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+}
+.admin-upload-btn.changed { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+.admin-file-input { display: none; }
+.admin-save-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; padding: 14px 12px;
+  border-top: 2px solid #f0e8ff;
+  z-index: 401; display: none;
+}
+.admin-overlay.show ~ .admin-save-bar,
+.admin-save-bar.show { display: block; }
+.admin-save-btn {
+  width: 100%; padding: 15px;
+  background: linear-gradient(135deg, #6A1FBE, #3d0070);
+  color: white; border: none; border-radius: 14px;
+  font-family: 'Righteous', cursive; font-size: 1.05rem;
+  cursor: pointer; box-shadow: 0 4px 16px rgba(106,31,190,0.4);
+}
+.admin-info {
+  font-size: 0.75rem; color: #888;
+  text-align: center; padding: 10px 16px 4px; line-height: 1.5;
+}
+.admin-badge {
+  display: inline-block; background: #4CAF50; color: white;
+  font-size: 0.6rem; font-weight: 900;
+  padding: 2px 6px; border-radius: 10px; margin-left: 4px;
+}
+
+
+/* ─── DESKTOP WRAPPER FIX ─── */
+@media (min-width: 481px) {
+  .cart-fab {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 460px;
+  }
+  .admin-save-bar {
+    max-width: 480px;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  .admin-fab {
+    right: calc(50% - 240px) !important;
+  }
+  .quick-order-btn {
+    right: calc(50% - 240px) !important;
+  }
+}
+
+
+/* ─── OPTIONS MODAL ─── */
+.opt-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(30,0,60,0.7); z-index: 500;
+  align-items: flex-end; justify-content: center;
+}
+.opt-overlay.show { display: flex; }
+.opt-modal {
+  background: white; border-radius: 24px 24px 0 0;
+  padding: 20px 16px 32px; width: 100%; max-width: 480px;
+  max-height: 85vh; overflow-y: auto;
+}
+.opt-title {
+  font-family: 'Righteous', cursive; font-size: 1.1rem;
+  color: #3d0070; margin-bottom: 4px;
+}
+.opt-subtitle {
+  font-size: 0.78rem; color: #999; margin-bottom: 16px;
+}
+.opt-section { margin-bottom: 18px; }
+.opt-section-title {
+  font-weight: 900; font-size: 0.85rem; color: #E91E8C;
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opt-btn {
+  padding: 10px 6px; border-radius: 12px;
+  border: 2px solid #e8d5ff; background: #f8f0ff;
+  font-family: 'Nunito', sans-serif; font-size: 0.82rem;
+  font-weight: 800; color: #3d0070; cursor: pointer;
+  transition: all .15s; text-align: center;
+}
+.opt-btn.selected { background: #6A1FBE; color: white; border-color: #6A1FBE; }
+.opt-btn.disabled { opacity: 0.35; cursor: not-allowed; background: #f0f0f0; border-color: #ddd; color: #999; }
+.opt-btn:not(.disabled):not(.selected):active { background: #e8d5ff; }
+.opt-drink-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.opt-size-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+.opt-size-btn {
+  padding: 8px 4px; border-radius: 10px;
+  border: 2px solid #e8d5ff; background: #f8f0ff;
+  font-family: 'Nunito', sans-serif; font-size: 0.72rem;
+  font-weight: 800; color: #3d0070; cursor: pointer;
+  text-align: center; transition: all .15s;
+}
+.opt-size-btn.selected { background: #E91E8C; color: white; border-color: #E91E8C; }
+.opt-size-extra { font-size: 0.62rem; color: #E91E8C; margin-top: 2px; }
+.opt-confirm {
+  width: 100%; padding: 15px; margin-top: 10px;
+  background: linear-gradient(135deg, #E91E8C, #C0157A);
+  color: white; border: none; border-radius: 14px;
+  font-family: 'Righteous', cursive; font-size: 1rem;
+  cursor: pointer; box-shadow: 0 4px 16px rgba(233,30,140,0.4);
+}
+.opt-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
+.opt-error {
+  background: #fff0f0; color: #c0392b; border-radius: 10px;
+  padding: 8px 12px; font-size: 0.78rem; font-weight: 800;
+  margin-bottom: 10px; display: none;
+}
+.presa-counter {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #f0e8ff; border-radius: 10px; padding: 8px 12px;
+  margin-bottom: 10px; font-size: 0.82rem; font-weight: 800; color: #3d0070;
+}
+
+
+.drink-row {
+  padding: 10px 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.drink-row::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E91E8C, #6A1FBE);
+  flex-shrink: 0;
+}
+.drink-row.last { border-bottom: none; }
+
+</style>
+</head>
+<body style="">
+<div class="app-wrapper">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <span class="logo-star">⭐</span>
+    <div class="logo-wrap">
+      <span class="logo-super">Super</span>
+      <span class="logo-happy">happy!</span>
+    </div>
+    <div class="header-right">
+      <div class="header-phone">📞 0985723122</div>
+      <div class="header-slogan">· IRRESISTIBLE ·</div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-title">¡Hola! ¿Qué se te antoja hoy? 🍗</div>
+    <div class="hero-sub">Arma tu pedido y lo recibimos en segundos</div>
+  </div>
+  <div class="hero-pill">🚀 Pedido<br>rápido</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showPage('presas',this)">🍗 Presas</button>
+  <button class="tab-btn" onclick="showPage('combos',this)">🔥 Combos</button>
+  <button class="tab-btn" onclick="showPage('adicionales',this)">➕ Adicionales</button>
+  <button class="tab-btn" onclick="showPage('especiales',this)">⭐ Especiales</button>
+  <button class="tab-btn" onclick="showPage('bebidas',this)">🥤 Bebidas</button>
+  <button class="tab-btn" onclick="showPage('sucursales',this)">📍 Sucursales</button>
+</div>
+
+<!-- ══════════ PRESAS PAGE ══════════ -->
+<div class="page active" id="page-presas">
+  <div class="section-title">🍗 Presas + Papas Fritas</div>
+  <div class="products-grid">
+
+    <div class="pcard" onclick="openOptions('1 Presa + Papas Fritas',2.80)">
+      <div class="pcard-img">
+        <img src="img/1_presa.jpg" alt="1 presa" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$2.80</span>
+        <span class="pcard-qty" id="qb-p0"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">1 Presa</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('1 Presa + Papas Fritas',2.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('2 Presas + Papas Fritas',5.00)">
+      <div class="pcard-img">
+        <img src="img/2_presas.jpg" alt="2 presas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.00</span>
+        <span class="pcard-qty" id="qb-p1"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">2 Presas</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('2 Presas + Papas Fritas',5.00)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('3 Presas + Papas Fritas',7.50)">
+      <div class="pcard-img">
+        <img src="img/3_presas.jpg" alt="3 presas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$7.50</span>
+        <span class="pcard-qty" id="qb-p2"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">3 Presas</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('3 Presas + Papas Fritas',7.50)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('4 Presas + Papas Fritas',9.30)">
+      <div class="pcard-img">
+        <img src="img/4_presas.jpg" alt="4 presas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$9.30</span>
+        <span class="pcard-qty" id="qb-p3"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">4 Presas</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('4 Presas + Papas Fritas',9.30)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('5 Presas + Papas Fritas',11.30)">
+      <div class="pcard-img">
+        <img src="img/5_presas.jpg" alt="5 presas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$11.30</span>
+        <span class="pcard-qty" id="qb-p4"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">5 Presas</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('5 Presas + Papas Fritas',11.30)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('6 Presas + Papas Fritas',12.80)">
+      <div class="pcard-img">
+        <img src="img/6_presas.jpg" alt="6 presas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$12.80</span>
+        <span class="pcard-qty" id="qb-p5"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">6 Presas</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('6 Presas + Papas Fritas',12.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('7 Presas + Papas Fritas',14.50)">
+      <div class="pcard-img">
+        <img src="img/7_presas.jpg" alt="7 presas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$14.50</span>
+        <span class="pcard-qty" id="qb-p6"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">7 Presas</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('7 Presas + Papas Fritas',14.50)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('8 Presas + Papas Fritas',16.00)">
+      <div class="pcard-img">
+        <img src="img/8_presas.jpg" alt="8 presas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$16.00</span>
+        <span class="pcard-qty" id="qb-p7"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">8 Presas</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('8 Presas + Papas Fritas',16.00)">+</button></div>
+      </div>
+    </div>
+
+  </div>
+  <div style="height:14px"></div>
+</div>
+
+<!-- ══════════ COMBOS PAGE ══════════ -->
+<div class="page" id="page-combos">
+  <div class="section-title">🔥 Combos</div>
+  <div class="products-grid">
+
+    <div class="pcard" onclick="openOptions('Combo Happy',3.50)">
+      <div class="pcard-img">
+        <img src="img/combo_happy.jpg" alt="Combo Happy" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.50</span>
+        <span class="pcard-qty" id="qb-c0"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo HAPPY</div>
+        <div class="pcard-desc">1 Presa + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Happy',3.50)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Super Happy',4.10)">
+      <div class="pcard-img">
+        <img src="img/super_happy.jpg" alt="Super Happy" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c1"></span>
+        <span class="pcard-badge">⭐ FAVORITO</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo SUPER HAPPY</div>
+        <div class="pcard-desc">1 Presa + Salchicha + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Super Happy',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Twins',3.50)">
+      <div class="pcard-img">
+        <img src="img/twins.jpg" alt="Twins" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.50</span>
+        <span class="pcard-qty" id="qb-c2"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo TWINS</div>
+        <div class="pcard-desc">Salchidoble + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Twins',3.50)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Festín',4.10)">
+      <div class="pcard-img">
+        <img src="img/festin.jpg" alt="Festin" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c3"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo FESTÍN</div>
+        <div class="pcard-desc">Salchicha + Carne + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Festín',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Ideal',4.10)">
+      <div class="pcard-img">
+        <img src="img/ideal.jpg" alt="Ideal" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c4"></span>
+        <span class="pcard-badge">🔝 MÁS PEDIDO</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo IDEAL</div>
+        <div class="pcard-desc">1 Presa + Arroz + Menestra + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Ideal',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Star',4.10)">
+      <div class="pcard-img">
+        <img src="img/star.jpg" alt="Star" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c5"></span>
+        <span class="pcard-badge">⭐ RECOMENDADO</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo STAR</div>
+        <div class="pcard-desc">1 Presa + Arroz + Ensalada + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Star',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Happy Lunch',5.30)">
+      <div class="pcard-img">
+        <img src="img/happy_lunch.jpg" alt="Happy Lunch" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.30</span>
+        <span class="pcard-qty" id="qb-c6"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">HAPPY LUNCH</div>
+        <div class="pcard-desc">1 Presa + Papas fritas + Consomé + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Happy Lunch',5.30)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Irresistible',6.00)">
+      <div class="pcard-img">
+        <img src="img/irresistible.jpg" alt="Irresistible" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$6.00</span>
+        <span class="pcard-qty" id="qb-c7"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo IRRESISTIBLE</div>
+        <div class="pcard-desc">2 Presas + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Irresistible',6.00)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Happy Burger',4.10)">
+      <div class="pcard-img">
+        <img src="img/happy_burger.jpg" alt="Happy Burger" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c8"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">HAPPY BURGER</div>
+        <div class="pcard-desc">Carne + Queso + Papas fritas + Salsa especial + Tomate + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Happy Burger',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Super Burger',5.80)">
+      <div class="pcard-img">
+        <img src="img/super_burger.jpg" alt="Super Burger" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.80</span>
+        <span class="pcard-qty" id="qb-c9"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">SUPER BURGER</div>
+        <div class="pcard-desc">Doble Carne + Queso + Papas fritas + Tomate + Lechuga + Salsa + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Super Burger',5.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Especial',11.10)">
+      <div class="pcard-img">
+        <img src="img/especial.jpg" alt="Especial" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$11.10</span>
+        <span class="pcard-qty" id="qb-c10"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo ESPECIAL</div>
+        <div class="pcard-desc">4 Presas + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Especial',11.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Super Lunch',14.70)">
+      <div class="pcard-img">
+        <img src="img/super_lunch.jpg" alt="Super Lunch" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$14.70</span>
+        <span class="pcard-qty" id="qb-c11"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">SUPER LUNCH</div>
+        <div class="pcard-desc">4 Presas + 2 Consomé + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Super Lunch',14.70)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Mega Familiar',19.60)">
+      <div class="pcard-img">
+        <img src="img/mega_familiar.jpg" alt="Mega Familiar" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$19.60</span>
+        <span class="pcard-qty" id="qb-c12"></span>
+        <span class="pcard-badge">🔥 FAMILIAR</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">MEGA FAMILIAR</div>
+        <div class="pcard-desc">8 Presas + 2 Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Mega Familiar',19.60)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Super Star',26.80)">
+      <div class="pcard-img">
+        <img src="img/super_star.jpg" alt="Super Star" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$26.80</span>
+        <span class="pcard-qty" id="qb-c13"></span>
+        <span class="pcard-badge">👑 PREMIUM</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">SUPER STAR</div>
+        <div class="pcard-desc">8 Presas + 2 Papas fritas + 2 Consomé + 2 Ensaladas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Super Star',26.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Happy Box',5.80)">
+      <div class="pcard-img">
+        <img src="img/happy_box.jpg" alt="Happy Box" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.80</span>
+        <span class="pcard-qty" id="qb-c14"></span>
+        <span class="pcard-badge">🎁 NIÑOS</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">HAPPY BOX</div>
+        <div class="pcard-desc">1 Presa + Papas fritas + Salchicha + Jugo + Kinder</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Happy Box',5.80)">+</button></div>
+      </div>
+    </div>
+
+
+    >
+  <div class="section-title">🔥 Combos</div>
+  <div class="products-grid">
+
+    <div class="pcard" onclick="openOptions('Combo Happy',3.50)">
+      <div class="pcard-img">
+        <img src="img/combo_happy.jpg" alt="Combo Happy" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.50</span>
+        <span class="pcard-qty" id="qb-c0"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo HAPPY</div>
+        <div class="pcard-desc">1 Presa + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Happy',3.50)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Super Happy',4.10)">
+      <div class="pcard-img">
+        <img src="img/super_happy.jpg" alt="Super Happy" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c1"></span>
+        <span class="pcard-badge">⭐ FAVORITO</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo SUPER HAPPY</div>
+        <div class="pcard-desc">1 Presa + Salchicha + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Super Happy',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Twins',3.50)">
+      <div class="pcard-img">
+        <img src="img/twins.jpg" alt="Twins" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.50</span>
+        <span class="pcard-qty" id="qb-c2"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo TWINS</div>
+        <div class="pcard-desc">Salchidoble + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Twins',3.50)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Festín',4.10)">
+      <div class="pcard-img">
+        <img src="img/festin.jpg" alt="Festin" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c3"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo FESTÍN</div>
+        <div class="pcard-desc">Salchicha + Carne + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Festín',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Ideal',4.10)">
+      <div class="pcard-img">
+        <img src="img/ideal.jpg" alt="Ideal" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c4"></span>
+        <span class="pcard-badge">🔝 MÁS PEDIDO</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo IDEAL</div>
+        <div class="pcard-desc">1 Presa + Arroz + Menestra + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Ideal',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Star',4.10)">
+      <div class="pcard-img">
+        <img src="img/star.jpg" alt="Star" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c5"></span>
+        <span class="pcard-badge">⭐ RECOMENDADO</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo STAR</div>
+        <div class="pcard-desc">1 Presa + Arroz + Ensalada + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Star',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Happy Lunch',5.30)">
+      <div class="pcard-img">
+        <img src="img/happy_lunch.jpg" alt="Happy Lunch" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.30</span>
+        <span class="pcard-qty" id="qb-c6"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">HAPPY LUNCH</div>
+        <div class="pcard-desc">1 Presa + Papas fritas + Consomé + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Happy Lunch',5.30)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Irresistible',6.00)">
+      <div class="pcard-img">
+        <img src="img/irresistible.jpg" alt="Irresistible" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$6.00</span>
+        <span class="pcard-qty" id="qb-c7"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo IRRESISTIBLE</div>
+        <div class="pcard-desc">2 Presas + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Irresistible',6.00)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Happy Burger',4.10)">
+      <div class="pcard-img">
+        <img src="img/happy_burger.jpg" alt="Happy Burger" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$4.10</span>
+        <span class="pcard-qty" id="qb-c8"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">HAPPY BURGER</div>
+        <div class="pcard-desc">Carne + Queso + Papas fritas + Salsa especial + Tomate + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Happy Burger',4.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Super Burger',5.80)">
+      <div class="pcard-img">
+        <img src="img/super_burger.jpg" alt="Super Burger" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.80</span>
+        <span class="pcard-qty" id="qb-c9"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">SUPER BURGER</div>
+        <div class="pcard-desc">Doble Carne + Queso + Papas fritas + Tomate + Lechuga + Salsa + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Super Burger',5.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Combo Especial',11.10)">
+      <div class="pcard-img">
+        <img src="img/especial.jpg" alt="Especial" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$11.10</span>
+        <span class="pcard-qty" id="qb-c10"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Combo ESPECIAL</div>
+        <div class="pcard-desc">4 Presas + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Combo Especial',11.10)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Super Lunch',14.70)">
+      <div class="pcard-img">
+        <img src="img/super_lunch.jpg" alt="Super Lunch" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$14.70</span>
+        <span class="pcard-qty" id="qb-c11"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">SUPER LUNCH</div>
+        <div class="pcard-desc">4 Presas + 2 Consomé + Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Super Lunch',14.70)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Mega Familiar',19.60)">
+      <div class="pcard-img">
+        <img src="img/mega_familiar.jpg" alt="Mega Familiar" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$19.60</span>
+        <span class="pcard-qty" id="qb-c12"></span>
+        <span class="pcard-badge">🔥 FAMILIAR</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">MEGA FAMILIAR</div>
+        <div class="pcard-desc">8 Presas + 2 Papas fritas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Mega Familiar',19.60)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Super Star',26.80)">
+      <div class="pcard-img">
+        <img src="img/super_star.jpg" alt="Super Star" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$26.80</span>
+        <span class="pcard-qty" id="qb-c13"></span>
+        <span class="pcard-badge">👑 PREMIUM</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">SUPER STAR</div>
+        <div class="pcard-desc">8 Presas + 2 Papas fritas + 2 Consomé + 2 Ensaladas + Gaseosa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Super Star',26.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="openOptions('Happy Box',5.80)">
+      <div class="pcard-img">
+        <img src="img/happy_box.jpg" alt="Happy Box" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.80</span>
+        <span class="pcard-qty" id="qb-c14"></span>
+        <span class="pcard-badge">🎁 NIÑOS</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">HAPPY BOX</div>
+        <div class="pcard-desc">1 Presa + Papas fritas + Salchicha + Jugo + Kinder</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Happy Box',5.80)">+</button></div>
+      </div>
+    </div>
+
+
+    <div class="pcard" onclick="openOptions('Ideal Doble',6.2)">
+      <div class="pcard-img">
+        <img src="img/ideal_doble.jpg" alt="Ideal Doble" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$6.20</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">IDEAL DOBLE</div>
+        <div class="pcard-desc">2 Presas + Menestra + Arroz + Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Ideal Doble',6.2)">+</button></div>
+      </div>
+    </div>
+  </div>
+  <div style="height:14px"></div>
+</div>
+
+<!-- ══════════ ADICIONALES PAGE ══════════ -->
+<div class="page" id="page-adicionales">
+  <div class="section-title">➕ Adicionales</div>
+  <div class="products-grid">
+
+    <div class="pcard" onclick="addToCart('Papas Fritas',1.80)">
+      <div class="pcard-img">
+        <img src="img/papas.jpg" alt="Papas" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.80</span>
+        <span class="pcard-qty" id="qb-a0"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Papas Fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Papas Fritas',1.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Salchipapa',2.30)">
+      <div class="pcard-img">
+        <img src="img/salchipapa.jpg" alt="Salchipapa" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$2.30</span>
+        <span class="pcard-qty" id="qb-a1"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Salchipapa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Salchipapa',2.30)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Salchidoble',2.80)">
+      <div class="pcard-img">
+        <img src="img/salchidoble.jpg" alt="Salchidoble" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$2.80</span>
+        <span class="pcard-qty" id="qb-a2"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Salchidoble</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Salchidoble',2.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Papicarne',2.30)">
+      <div class="pcard-img">
+        <img src="img/papicarne.jpg" alt="Papicarne" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$2.30</span>
+        <span class="pcard-qty" id="qb-a3"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Papicarne</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Papicarne',2.30)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Arroz',1.80)">
+      <div class="pcard-img">
+        <img src="img/arroz.jpg" alt="Arroz" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.80</span>
+        <span class="pcard-qty" id="qb-a4"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Arroz</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Arroz',1.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Menestra',1.80)">
+      <div class="pcard-img">
+        <img src="img/menestra.jpg" alt="Menestra" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.80</span>
+        <span class="pcard-qty" id="qb-a5"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Menestra</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Menestra',1.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Consomé',1.80)">
+      <div class="pcard-img">
+        <img src="img/consom.jpg" alt="Consomé" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.80</span>
+        <span class="pcard-qty" id="qb-a6"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Consomé</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Consomé',1.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Ensalada de Col',1.80)">
+      <div class="pcard-img">
+        <img src="img/ensalada.jpg" alt="Ensalada" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.80</span>
+        <span class="pcard-qty" id="qb-a7"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Ensalada de Col</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Ensalada de Col',1.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Ensalada Mixta',1.80)">
+      <div class="pcard-img">
+        <img src="img/ensalada_mixta.jpg" alt="Ensalada Mixta" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.80</span>
+        <span class="pcard-qty" id="qb-a8"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Ensalada Mixta</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Ensalada Mixta',1.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Salchicarne',2.80)">
+      <div class="pcard-img">
+        <img src="img/salchicarne.jpg" alt="Salchicarne" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$2.80</span>
+        <span class="pcard-qty" id="qb-a9"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Salchicarne</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Salchicarne',2.80)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Hamburguesa Simple + Papas',3.40)">
+      <div class="pcard-img">
+        <img src="img/hamburguesa.jpg" alt="Hamburguesa" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.40</span>
+        <span class="pcard-qty" id="qb-a10"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Hamburguesa Simple</div>
+        <div class="pcard-desc">+ Papas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Hamburguesa Simple + Papas',3.40)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Hamburguesa Doble + Papas',5.10)">
+      <div class="pcard-img">
+        <img src="img/hamburguesa_doble.jpg" alt="Hamburguesa Doble" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.10</span>
+        <span class="pcard-qty" id="qb-a11"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Hamburguesa Doble</div>
+        <div class="pcard-desc">+ Papas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Hamburguesa Doble + Papas',5.10)">+</button></div>
+      </div>
+    </div>
+
+
+    <div class="pcard" onclick="addToCart('1 Presa + Menestra + Arroz + Papas',3.4)">
+      <div class="pcard-img">
+        <img src="img/1_presa_completa.jpg" alt="1 Presa Completa" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.40</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">1 Presa Completa</div>
+        <div class="pcard-desc">+ Menestra + Arroz + Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('1 Presa + Menestra + Arroz + Papas',3.4)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('1 Presa + Ensalada + Arroz + Papas',3.4)">
+      <div class="pcard-img">
+        <img src="img/1_presa_con_ensalada.jpg" alt="1 Presa con Ensalada" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$3.40</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">1 Presa con Ensalada</div>
+        <div class="pcard-desc">+ Ensalada + Arroz + Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('1 Presa + Ensalada + Arroz + Papas',3.4)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('2 Presas + Ensalada + Papas',5.4)">
+      <div class="pcard-img">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:10px;text-align:center;">
+          <span style="font-size:2.2rem;">🍗</span>
+          <span style="font-family:'Righteous',cursive;font-size:0.75rem;color:white;line-height:1.2;">2 Presas con Ensalada</span>
+        </div>
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$5.40</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">2 Presas con Ensalada</div>
+        <div class="pcard-desc">+ Ensalada + Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('2 Presas + Ensalada + Papas',5.4)">+</button></div>
+      </div>
+    </div>
+  </div>
+  <div style="height:14px"></div>
+</div>
+
+
+    
+
+
+    <div class="pcard" onclick="openOptions('1 Presa + Salchicha + Papas',0)">
+      <div class="pcard-img">
+        <img src="img/1_presa_salchicha.jpg" alt="1 Presa Salchicha" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <div class="pcard-img-overlay"></div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">1 Presa + Salchicha</div>
+        <div class="pcard-desc">+ Papas fritas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('1 Presa + Salchicha + Papas',0)">+</button></div>
+      </div>
+    </div>
+
+  </div>
+  <div style="height:14px"></div>
+</div>
+
+<!-- ══════════ ESPECIALES PAGE ══════════ -->
+<div class="page" id="page-especiales">
+  <div class="section-title">⭐ Especiales</div>
+  <div class="products-grid">
+
+    <div class="pcard" onclick="addToCart('Bomba de Chocolate',1.50)">
+      <div class="pcard-img">
+        <img src="img/bomba_chocolate.jpg" alt="Bomba Chocolate" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.50</span>
+        <span class="pcard-qty" id="qb-e0"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Bomba de Chocolate</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Bomba de Chocolate',1.50)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Kinder Sorpresa',1.75)">
+      <div class="pcard-img">
+        <img src="img/kinder.jpg" alt="Kinder" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.75</span>
+        <span class="pcard-qty" id="qb-e1"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Kinder Sorpresa</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Kinder Sorpresa',1.75)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Tic Tac',1.00)">
+      <div class="pcard-img">
+        <img src="img/tic_tac.jpg" alt="Tic Tac" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$1.00</span>
+        <span class="pcard-qty" id="qb-e2"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Tic Tac</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Tic Tac',1.00)">+</button></div>
+      </div>
+    </div>
+
+    <div class="pcard" onclick="addToCart('Fresno Tea',2.30)">
+      <div class="pcard-img">
+        <img src="img/fresno_tea.jpg" alt="Fresno Tea" loading="lazy">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$2.30</span>
+        <span class="pcard-qty" id="qb-e3"></span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Fresno Tea</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('Fresno Tea',2.30)">+</button></div>
+      </div>
+    </div>
+
+  </div>
+  <div style="height:14px"></div>
+</div>
+
+
+<!-- ══════════ BEBIDAS PAGE ══════════ -->
+<div class="page" id="page-bebidas">
+  <div class="section-title">🥤 Bebidas</div>
+
+  <div style="padding: 0 10px;">
+
+    <div style="background:white;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:14px;">
+      <div style="background:linear-gradient(90deg,#E91E8C,#C0157A);padding:10px 16px;">
+        <span style="font-family:'Righteous',cursive;color:white;font-size:0.95rem;">Personales — 300ml</span>
+      </div>
+      <div style="padding:10px 16px;">
+        <div class="drink-row">Coca Cola</div>
+        <div class="drink-row">Fiora</div>
+        <div class="drink-row">Fanta</div>
+        <div class="drink-row">Inka Cola</div>
+        <div class="drink-row">Sprite</div>
+        <div class="drink-row">Agua</div>
+        <div class="drink-row">Fuze Tea</div>
+        <div class="drink-row last">Jugo del Valle</div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:14px;">
+      <div style="background:linear-gradient(90deg,#6A1FBE,#3d0070);padding:10px 16px;">
+        <span style="font-family:'Righteous',cursive;color:white;font-size:0.95rem;">Medianas — 500ml</span>
+      </div>
+      <div style="padding:10px 16px;">
+        <div class="drink-row">Coca Cola</div>
+        <div class="drink-row">Fiora</div>
+        <div class="drink-row">Fanta</div>
+        <div class="drink-row">Inka Cola</div>
+        <div class="drink-row">Sprite</div>
+        <div class="drink-row">Sunny Mora</div>
+        <div class="drink-row">Sunny Durazno</div>
+        <div class="drink-row">Fresno</div>
+        <div class="drink-row">Fuze Tea</div>
+        <div class="drink-row last">Agua Splendor</div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:14px;">
+      <div style="background:linear-gradient(90deg,#F5A623,#E08800);padding:10px 16px;">
+        <span style="font-family:'Righteous',cursive;color:white;font-size:0.95rem;">1.35 Litros</span>
+      </div>
+      <div style="padding:10px 16px;">
+        <div class="drink-row">Coca Cola</div>
+        <div class="drink-row">Fiora</div>
+        <div class="drink-row">Fanta</div>
+        <div class="drink-row">Inka Cola</div>
+        <div class="drink-row">Sprite</div>
+        <div class="drink-row last">Fuze Tea</div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:14px;">
+      <div style="background:linear-gradient(90deg,#E91E8C,#6A1FBE);padding:10px 16px;">
+        <span style="font-family:'Righteous',cursive;color:white;font-size:0.95rem;">1.5 Litros</span>
+      </div>
+      <div style="padding:10px 16px;">
+        <div class="drink-row">Fresno</div>
+        <div class="drink-row last">Fuze Tea</div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:14px;">
+      <div style="background:linear-gradient(90deg,#1a1a1a,#444);padding:10px 16px;">
+        <span style="font-family:'Righteous',cursive;color:white;font-size:0.95rem;">3 Litros</span>
+      </div>
+      <div style="padding:10px 16px;">
+        <div class="drink-row">Coca Cola</div>
+        <div class="drink-row last">Sprite</div>
+      </div>
+    </div>
+
+  </div>
+  <div style="height:14px"></div>
+</div>
+
+<!-- ══════════ SUCURSALES PAGE ══════════ -->
+<div class="page" id="page-sucursales">
+  <div class="section-title">📍 Nuestras Sucursales</div>
+  <div class="branch-section">
+    <div class="branch-card">
+      <div class="branch-name">Sucursal Principal</div>
+      <div class="branch-address">Av. Daniel León Borja y Miguel Ángel León</div>
+      <a class="branch-link" href="https://www.google.com/maps/search/Av.+Daniel+León+Borja+y+Miguel+Angel+León+Riobamba" target="_blank">📍 Ver en Maps</a>
+    </div>
+    <div class="branch-card">
+      <div class="branch-name">Sucursal Norte</div>
+      <div class="branch-address">Av. Lizarzaburu y 11 de Noviembre</div>
+      <a class="branch-link" href="https://www.google.com/maps/search/Av.+Lizarzaburu+y+11+de+Noviembre+Riobamba" target="_blank">📍 Ver en Maps</a>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--orange),#FFC145);border-radius:16px;padding:16px;text-align:center;margin-top:6px;">
+      <div style="font-family:'Righteous',cursive;font-size:1.1rem;color:white;margin-bottom:4px;">📞 Llámanos</div>
+      <div style="font-size:1.4rem;font-weight:900;color:var(--purple);">0985723122</div>
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.85);margin-top:3px;">@superhappy.ec</div>
+    </div>
+  </div>
+</div>
+
+<!-- CART FAB -->
+<button class="cart-fab hidden" id="cartFab" onclick="openCart()">
+  🛒 Ver pedido
+  <span class="cart-badge" id="cartBadge">0</span>
+</button>
+
+<!-- MODAL -->
+<div class="overlay" id="cartOverlay" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+
+    <!-- Cart view -->
+    <div id="cartView">
+      <div class="modal-header">
+        <span class="modal-title">🛒 Tu Pedido</span>
+        <button class="close-btn" onclick="closeCart()">✕</button>
+      </div>
+      <div class="cart-list" id="cartList"><div class="empty-cart">Tu carrito está vacío 🍽️</div></div>
+      <div class="cart-total">
+        <span class="cart-total-label">Total:</span>
+        <span class="cart-total-value" id="cartTotal">$0.00</span>
+      </div>
+      <div style="padding:0 14px;">
+        <button class="submit-btn" onclick="showForm()">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- Form view -->
+    <div id="formView" style="display:none">
+      <div class="modal-header">
+        <button class="close-btn" onclick="backToCart()" style="background:none;font-size:0.95rem;color:#555;width:auto;height:auto;border-radius:0;">← Atrás</button>
+        <span class="modal-title">Datos del pedido</span>
+        <button class="close-btn" onclick="closeCart()">✕</button>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Tu nombre *</label>
+        <input class="form-input" id="clientName" type="text" placeholder="Ej: María García">
+
+        <label class="form-label">Tu WhatsApp *</label>
+        <input class="form-input" id="clientPhone" type="tel" placeholder="Ej: 0991234567">
+
+        <label class="form-label">Método de pago *</label>
+        <div class="payment-opts">
+          <div class="payment-opt" id="pay-cash" onclick="selectPayment('cash')">
+            <span class="payment-opt-icon">💵</span>Efectivo
+          </div>
+          <div class="payment-opt" id="pay-transfer" onclick="selectPayment('transfer')">
+            <span class="payment-opt-icon">📲</span>Transferencia
+          </div>
+        </div>
+
+        <label class="form-label">¿Necesitas factura?</label>
+        <div class="factura-row">
+          <label class="toggle-switch">
+            <input type="checkbox" id="facturaToggle" onchange="toggleFactura()">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Sí, necesito factura</span>
+        </div>
+        <div class="factura-fields" id="facturaFields">
+          <input class="form-input" id="facturaRuc" type="text" placeholder="RUC / Cédula">
+          <input class="form-input" id="facturaRazon" type="text" placeholder="Razón social o nombre completo">
+        </div>
+
+        <label class="form-label">Dirección de entrega *</label>
+        <div class="location-tabs">
+          <button class="loc-tab active" id="locTabText" onclick="selectLocTab('text')">✍️ Escribir dirección</button>
+          <button class="loc-tab" id="locTabMaps" onclick="selectLocTab('maps')">📍 Google Maps</button>
+        </div>
+        <div id="locTextArea">
+          <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba">
+        </div>
+        <div id="locMapsArea" style="display:none">
+          <input class="form-input" id="addressMapsLink" type="url" placeholder="Pega aquí el link de Google Maps">
+          <div style="font-size:0.75rem;color:#aaa;margin-top:-8px;margin-bottom:10px;">Abre Maps → mantén presionado tu punto → copia el link</div>
+        </div>
+
+        <label class="form-label">Nota adicional (opcional)</label>
+        <textarea class="form-textarea" id="orderNotes" placeholder="Ej: Sin picante, extra salsa, timbre color azul..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitOrder()">🍗 Enviar Pedido por WhatsApp</button>
+    </div>
+
+    <!-- Success -->
+    <div class="success-screen" id="successView">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">¡Pedido enviado!</div>
+      <div class="success-msg">Tu pedido llegó al restaurante por WhatsApp.<br>Te confirman en breve. ¡Gracias!</div>
+      <button class="submit-btn" style="margin-top:20px;width:calc(100% - 28px);" onclick="resetOrder()">Hacer otro pedido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let cart = [];
+let paymentMethod = '';
+let locTabActive = 'text';
+
+const WA_NUMBER = '593985723122'; // ← número real del restaurante
+
+function showPage(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  btn.classList.add('active');
+}
+
+function addToCart(name, price) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) { existing.qty++; }
+  else { cart.push({ name, price, qty: 1 }); }
+  updateCartUI();
+  animateFab();
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cartBadge').textContent = count;
+  document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
+  document.getElementById('cartFab').classList.toggle('hidden', cart.length === 0);
+
+  const list = document.getElementById('cartList');
+  if (!cart.length) {
+    list.innerHTML = '<div class="empty-cart">Tu carrito está vacío 🍽️</div>';
+  } else {
+    list.innerHTML = cart.map((item, idx) => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+        </div>
+      </div>`).join('');
+  }
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  updateCartUI();
+}
+
+function animateFab() {
+  const fab = document.getElementById('cartFab');
+  fab.style.transform = 'translateX(-50%) scale(1.13)';
+  setTimeout(() => fab.style.transform = 'translateX(-50%) scale(1)', 200);
+}
+
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('show');
+  document.getElementById('cartView').style.display = '';
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('successView').classList.remove('show');
+  updateCartUI();
+}
+function closeCart() { document.getElementById('cartOverlay').classList.remove('show'); }
+function closeOnOverlay(e) { if (e.target === document.getElementById('cartOverlay')) closeCart(); }
+function showForm() { if (!cart.length) return; document.getElementById('cartView').style.display='none'; document.getElementById('formView').style.display=''; }
+function backToCart() { document.getElementById('cartView').style.display=''; document.getElementById('formView').style.display='none'; }
+function selectPayment(m) {
+  paymentMethod = m;
+  document.getElementById('pay-cash').classList.toggle('selected', m==='cash');
+  document.getElementById('pay-transfer').classList.toggle('selected', m==='transfer');
+}
+function toggleFactura() {
+  document.getElementById('facturaFields').classList.toggle('show', document.getElementById('facturaToggle').checked);
+}
+function selectLocTab(tab) {
+  locTabActive = tab;
+  document.getElementById('locTabText').classList.toggle('active', tab==='text');
+  document.getElementById('locTabMaps').classList.toggle('active', tab==='maps');
+  document.getElementById('locTextArea').style.display = tab==='text' ? '' : 'none';
+  document.getElementById('locMapsArea').style.display = tab==='maps' ? '' : 'none';
+}
+
+function submitOrder() {
+  const name = document.getElementById('clientName').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  const notes = document.getElementById('orderNotes').value.trim();
+  const facturaOn = document.getElementById('facturaToggle').checked;
+  const ruc = document.getElementById('facturaRuc').value.trim();
+  const razon = document.getElementById('facturaRazon').value.trim();
+  const address = locTabActive==='text' ? document.getElementById('addressText').value.trim() : document.getElementById('addressMapsLink').value.trim();
+
+  if (!name) { alert('Por favor ingresa tu nombre.'); return; }
+  if (!phone) { alert('Por favor ingresa tu WhatsApp.'); return; }
+  if (!paymentMethod) { alert('Por favor selecciona un método de pago.'); return; }
+  if (!address) { alert('Por favor ingresa tu dirección de entrega.'); return; }
+  if (facturaOn && (!ruc || !razon)) { alert('Por favor completa los datos de factura.'); return; }
+
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${(i.price*i.qty).toFixed(2)}`).join('\n');
+  const payLabel = paymentMethod==='cash' ? '💵 Efectivo' : '📲 Transferencia';
+  const addrLabel = locTabActive==='maps' ? `📍 Maps: ${address}` : `📍 ${address}`;
+  const facturaInfo = facturaOn ? `\n🧾 *FACTURA*: ${ruc} – ${razon}` : '';
+  const notesInfo = notes ? `\n📝 Nota: ${notes}` : '';
+
+  const msg =
+`⭐ *NUEVO PEDIDO - Super Happy!* ⭐
+━━━━━━━━━━━━━━━━━━
+👤 Cliente: ${name}
+📞 WhatsApp: ${phone}
+━━━━━━━━━━━━━━━━━━
+🛒 *Pedido:*
+${items}
+━━━━━━━━━━━━━━━━━━
+💰 *TOTAL: $${total.toFixed(2)}*
+💳 Pago: ${payLabel}
+${addrLabel}${facturaInfo}${notesInfo}
+━━━━━━━━━━━━━━━━━━
+✅ Pedido desde la app`;
+
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('successView').classList.add('show');
+}
+
+function resetOrder() {
+  cart = []; paymentMethod = '';
+  ['clientName','clientPhone','orderNotes','facturaRuc','facturaRazon','addressText','addressMapsLink'].forEach(id => { document.getElementById(id).value=''; });
+  document.getElementById('facturaToggle').checked = false;
+  document.getElementById('facturaFields').classList.remove('show');
+  selectLocTab('text');
+  updateCartUI();
+  closeCart();
+}
+
+updateCartUI();
+
+
+// ─── ADMIN PANEL ───
+const ADMIN_PRODUCTS = [
+  { section: "🍗 Presas + Papas", items: [
+    { alt: "1 presa",  name: "1 Presa + Papas" },
+    { alt: "2 presas", name: "2 Presas + Papas" },
+    { alt: "3 presas", name: "3 Presas + Papas" },
+    { alt: "4 presas", name: "4 Presas + Papas" },
+    { alt: "5 presas", name: "5 Presas + Papas" },
+    { alt: "6 presas", name: "6 Presas + Papas" },
+    { alt: "7 presas", name: "7 Presas + Papas" },
+    { alt: "8 presas", name: "8 Presas + Papas" },
+  ]},
+  { section: "🔥 Combos", items: [
+    { alt: "Combo Happy",   name: "Combo HAPPY" },
+    { alt: "Super Happy",   name: "Combo SUPER HAPPY" },
+    { alt: "Twins",         name: "Combo TWINS" },
+    { alt: "Festin",        name: "Combo FESTÍN" },
+    { alt: "Ideal",         name: "Combo IDEAL" },
+    { alt: "Star",          name: "Combo STAR" },
+    { alt: "Happy Lunch",   name: "HAPPY LUNCH" },
+    { alt: "Irresistible",  name: "Combo IRRESISTIBLE" },
+    { alt: "Happy Burger",  name: "HAPPY BURGER" },
+    { alt: "Super Burger",  name: "SUPER BURGER" },
+    { alt: "Especial",      name: "Combo ESPECIAL" },
+    { alt: "Super Lunch",   name: "SUPER LUNCH" },
+    { alt: "Mega Familiar", name: "MEGA FAMILIAR" },
+    { alt: "Super Star",    name: "SUPER STAR" },
+    { alt: "Happy Box",     name: "HAPPY BOX" },
+    { alt: "Ideal Doble",   name: "IDEAL DOBLE" },
+  ]},
+  { section: "➕ Adicionales", items: [
+    { alt: "Papas",             name: "Papas Fritas" },
+    { alt: "Salchipapa",        name: "Salchipapa" },
+    { alt: "Salchidoble",       name: "Salchidoble" },
+    { alt: "Papicarne",         name: "Papicarne" },
+    { alt: "Arroz",             name: "Arroz" },
+    { alt: "Menestra",          name: "Menestra" },
+    { alt: "Consomé",           name: "Consomé" },
+    { alt: "Ensalada",          name: "Ensalada de Col" },
+    { alt: "Ensalada Mixta",    name: "Ensalada Mixta" },
+    { alt: "Salchicarne",       name: "Salchicarne" },
+    { alt: "Hamburguesa",       name: "Hamburguesa Simple" },
+    { alt: "Hamburguesa Doble", name: "Hamburguesa Doble" },
+    { alt: "1 Presa Completa",     name: "1 Presa + Menestra + Arroz + Papas" },
+    { alt: "1 Presa con Ensalada", name: "1 Presa + Ensalada + Arroz + Papas" },
+    { alt: "2 Presas con Ensalada",name: "2 Presas + Ensalada + Papas" },
+  ]},
+  { section: "⭐ Especiales", items: [
+    { alt: "Bomba Chocolate", name: "Bomba de Chocolate" },
+    { alt: "Kinder",          name: "Kinder Sorpresa" },
+    { alt: "Tic Tac",         name: "Tic Tac" },
+    { alt: "Fresno Tea",      name: "Fresno Tea" },
+  ]},
+];
+
+const pendingChanges = {};
+
+function openAdmin() {
+  buildAdminList();
+  document.getElementById('adminOverlay').classList.add('show');
+  document.getElementById('adminSaveBar').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('show');
+  document.getElementById('adminSaveBar').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function buildAdminList() {
+  const container = document.getElementById('adminProductList');
+  container.innerHTML = '';
+  ADMIN_PRODUCTS.forEach(section => {
+    const secTitle = document.createElement('div');
+    secTitle.className = 'admin-section-title';
+    secTitle.textContent = section.section;
+    container.appendChild(secTitle);
+    const grid = document.createElement('div');
+    grid.className = 'admin-grid';
+    section.items.forEach(product => {
+      const imgEl = document.querySelector('img[alt="' + product.alt + '"]');
+      const currentSrc = pendingChanges[product.alt] || (imgEl ? imgEl.src : '');
+      const changed = !!pendingChanges[product.alt];
+      const safeId = 'file_' + product.alt.replace(/[^a-z0-9]/gi, '_');
+      const item = document.createElement('div');
+      item.className = 'admin-item';
+      item.innerHTML =
+        '<img class="admin-item-thumb" src="' + currentSrc + '" alt="' + product.alt + '">' +
+        '<div class="admin-item-name">' + product.name + (changed ? ' <span class="admin-badge">✓ NUEVA</span>' : '') + '</div>' +
+        '<input type="file" accept="image/*" class="admin-file-input" id="' + safeId + '" data-alt="' + product.alt + '">' +
+        '<button class="admin-upload-btn ' + (changed ? 'changed' : '') + '" onclick="document.getElementById(\'' + safeId + '\').click()">' +
+        (changed ? '✅ Cambiar foto' : '📷 Subir foto') + '</button>';
+      grid.appendChild(item);
+    });
+    container.appendChild(grid);
+  });
+
+  // Attach change listeners
+  container.querySelectorAll('.admin-file-input').forEach(input => {
+    input.addEventListener('change', function() {
+      const altKey = this.dataset.alt;
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        pendingChanges[altKey] = e.target.result;
+        // Update menu preview immediately
+        document.querySelectorAll('img[alt="' + altKey + '"]').forEach(img => {
+          img.src = e.target.result;
+        });
+        buildAdminList();
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+}
+
+function downloadUpdatedMenu() {
+  if (Object.keys(pendingChanges).length === 0) {
+    alert('⚠️ Sube al menos una foto antes de descargar.');
+    return;
+  }
+  const btn = document.querySelector('.admin-save-btn');
+  btn.textContent = '⏳ Generando archivo...';
+  btn.disabled = true;
+
+  setTimeout(function() {
+    // Serialize the current document with updated images
+    var updatedHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    var blob = new Blob([updatedHTML], { type: 'text/html;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'superhappy-menu-actualizado.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    btn.textContent = '✅ Descargado correctamente';
+    setTimeout(function() {
+      btn.textContent = '⬇️ Descargar menú actualizado';
+      btn.disabled = false;
+    }, 3000);
+  }, 100);
+}
+
+
+
+// ─── OPTIONS / MODIFIERS ───
+const PRESA_COMBOS = {
+  'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1,
+  'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2,
+  'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8,
+  '1 Presa': 1, '2 Presas': 2, '3 Presas': 3, '4 Presas': 4,
+  '5 Presas': 5, '6 Presas': 6, '7 Presas': 7, '8 Presas': 8,
+  '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas con Ensalada': 2,
+  '1 Presa + Salchicha + Papas': 1,
+  '1 Presa + Papas Fritas': 1, '2 Presas + Papas Fritas': 2,
+  '3 Presas + Papas Fritas': 3, '4 Presas + Papas Fritas': 4,
+  '5 Presas + Papas Fritas': 5, '6 Presas + Papas Fritas': 6,
+  '7 Presas + Papas Fritas': 7, '8 Presas + Papas Fritas': 8,
+};
+const DRINK_COMBOS = [
+  'Combo Happy', 'Combo Super Happy', 'Combo Twins', 'Combo Festín', 'Combo Ideal',
+  'Combo Star', 'Happy Lunch', 'Combo Irresistible', 'Happy Burger', 'Super Burger',
+  'Combo Especial', 'Super Lunch', 'Mega Familiar', 'Super Star',
+  '1 Presa + Papas Fritas', '2 Presas + Papas Fritas', '3 Presas + Papas Fritas',
+  '4 Presas + Papas Fritas', '5 Presas + Papas Fritas', '6 Presas + Papas Fritas',
+  '7 Presas + Papas Fritas', '8 Presas + Papas Fritas',
+];
+
+const PRESAS = ['Pechuga', 'Ala', 'Pierna', 'Pospierna', 'Rabo'];
+const DRINKS = ['Coca Cola','Fanta','Inka Cola','Sprite','Fiora','Fresno','Fuze Tea','Agua'];
+const SIZES = [
+  { label: '300ml', extra: 0, note: 'incluido' },
+  { label: '500ml', extra: 0.50, note: '+$0.50' },
+  { label: '1.35lt', extra: 1.00, note: '+$1.00' },
+  { label: '1.5lt', extra: 1.25, note: '+$1.25' },
+  { label: '3lt', extra: 2.50, note: '+$2.50' },
+];
+
+let optCurrent = { name: '', price: 0, presasNeeded: 0, hasDrink: false };
+let selectedPresas = [];
+let selectedDrink = '';
+let selectedSize = 0;
+
+function openOptions(name, price) {
+  const presasNeeded = PRESA_COMBOS[name] || 0;
+  const hasDrink = DRINK_COMBOS.includes(name);
+
+  if (!presasNeeded && !hasDrink) {
+    addToCart(name, price);
+    return;
+  }
+
+  optCurrent = { name, price, presasNeeded, hasDrink };
+  selectedPresas = [];
+  selectedDrink = '';
+  selectedSize = 0;
+
+  document.getElementById('optTitle').textContent = name;
+  document.getElementById('optSubtitle').textContent = '$' + price.toFixed(2);
+  document.getElementById('optError').style.display = 'none';
+
+  // Build presa section
+  const presaSection = document.getElementById('optPresaSection');
+  if (presasNeeded > 0) {
+    presaSection.style.display = 'block';
+    document.getElementById('presaCounter').textContent = 'Seleccionadas: 0 / ' + presasNeeded;
+    const grid = document.getElementById('presaGrid');
+    grid.innerHTML = '';
+    PRESAS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = p;
+      btn.dataset.presa = p;
+      btn.onclick = () => togglePresa(p, presasNeeded);
+      grid.appendChild(btn);
+    });
+  } else {
+    presaSection.style.display = 'none';
+  }
+
+  // Build drink section
+  const drinkSection = document.getElementById('optDrinkSection');
+  if (hasDrink) {
+    drinkSection.style.display = 'block';
+    const dg = document.getElementById('drinkGrid');
+    dg.innerHTML = '';
+    DRINKS.forEach(d => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = d;
+      btn.dataset.drink = d;
+      btn.onclick = () => selectDrink(d);
+      dg.appendChild(btn);
+    });
+
+  } else {
+    drinkSection.style.display = 'none';
+  }
+
+  document.getElementById('optOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function togglePresa(presa, max) {
+  const idx = selectedPresas.indexOf(presa);
+  const restricted = ['Pechuga', 'Ala'];
+
+  if (idx !== -1) {
+    selectedPresas.splice(idx, 1);
+  } else {
+    if (selectedPresas.length >= max) return;
+
+    // Rules only apply for combos of 2-4 presas
+    if (max >= 2 && max <= 4) {
+      if (presa === 'Pechuga' && selectedPresas.includes('Pechuga')) {
+        showOptError('No puedes elegir 2 pechugas en combos de hasta 4 presas.');
+        return;
+      }
+      if (presa === 'Ala' && selectedPresas.includes('Ala')) {
+        showOptError('No puedes elegir 2 alas en combos de hasta 4 presas.');
+        return;
+      }
+      if (presa === 'Pechuga' && selectedPresas.includes('Ala')) {
+        showOptError('No puedes combinar Pechuga y Ala en el mismo pedido.');
+        return;
+      }
+      if (presa === 'Ala' && selectedPresas.includes('Pechuga')) {
+        showOptError('No puedes combinar Pechuga y Ala en el mismo pedido.');
+        return;
+      }
+    }
+    document.getElementById('optError').style.display = 'none';
+    selectedPresas.push(presa);
+  }
+
+  // Update UI
+  document.querySelectorAll('#presaGrid .opt-btn').forEach(btn => {
+    btn.classList.toggle('selected', selectedPresas.includes(btn.dataset.presa));
+  });
+  document.getElementById('presaCounter').textContent =
+    'Seleccionadas: ' + selectedPresas.length + ' / ' + max;
+}
+
+function selectDrink(drink) {
+  selectedDrink = drink;
+  document.querySelectorAll('#drinkGrid .opt-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.drink === drink);
+  });
+  document.getElementById('optError').style.display = 'none';
+}
+
+function selectSize(idx) {
+  selectedSize = idx;
+  document.querySelectorAll('#sizeGrid .opt-size-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === idx);
+  });
+}
+
+function showOptError(msg) {
+  const el = document.getElementById('optError');
+  el.textContent = '⚠️ ' + msg;
+  el.style.display = 'block';
+}
+
+function closeOptOnBg(e) {
+  if (e.target === document.getElementById('optOverlay')) closeOpt();
+}
+function closeOpt() {
+  document.getElementById('optOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function confirmOptions() {
+  const { name, price, presasNeeded, hasDrink } = optCurrent;
+
+  if (presasNeeded > 0 && selectedPresas.length < presasNeeded) {
+    showOptError('Elige ' + presasNeeded + ' presa(s) para continuar.');
+    return;
+  }
+  if (hasDrink && !selectedDrink) {
+    showOptError('Elige el sabor de tu bebida.');
+    return;
+  }
+
+  // Build item name with selections
+  let fullName = name;
+  if (presasNeeded > 0) fullName += ' [' + selectedPresas.join(', ') + ']';
+  if (hasDrink) {
+    fullName += ' + ' + selectedDrink + ' 300ml';
+  }
+
+  const finalPrice = price;
+  addToCart(fullName, finalPrice);
+  closeOpt();
+}
+
+</script>
+
+<!-- ADMIN FAB -->
+<button class="admin-fab" onclick="openAdmin()" title="Panel Admin">⚙️</button>
+<!-- ADMIN SAVE BAR -->
+<div class="admin-save-bar" id="adminSaveBar">
+  <button class="admin-save-btn" onclick="downloadUpdatedMenu()" disabled="">⏳ Generando archivo...</button>
+</div>
+<!-- ADMIN PANEL -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-modal">
+    <div class="admin-header">
+      <span class="admin-title">⚙️ Panel de Imágenes</span>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="admin-info">
+      Sube la foto de cada producto.<br>Cuando termines pulsa <strong>"Descargar menú actualizado"</strong> y reemplaza el archivo anterior.
+    </div>
+    <div id="adminProductList"><div class="admin-section-title">🍗 Presas + Papas</div><div class="admin-grid"><div class="admin-item"><img class="admin-item-thumb" src="img/1_presa.jpg" alt="1 presa"><div class="admin-item-name">1 Presa + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_1_presa" data-alt="1 presa"><button class="admin-upload-btn changed" onclick="document.getElementById('file_1_presa').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/2_presas.jpg" alt="2 presas"><div class="admin-item-name">2 Presas + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_2_presas" data-alt="2 presas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_2_presas').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/3_presas.jpg" alt="3 presas"><div class="admin-item-name">3 Presas + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_3_presas" data-alt="3 presas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_3_presas').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/4_presas.jpg" alt="4 presas"><div class="admin-item-name">4 Presas + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_4_presas" data-alt="4 presas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_4_presas').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/5_presas.jpg" alt="5 presas"><div class="admin-item-name">5 Presas + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_5_presas" data-alt="5 presas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_5_presas').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/6_presas.jpg" alt="6 presas"><div class="admin-item-name">6 Presas + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_6_presas" data-alt="6 presas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_6_presas').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/7_presas.jpg" alt="7 presas"><div class="admin-item-name">7 Presas + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_7_presas" data-alt="7 presas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_7_presas').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/8_presas.jpg" alt="8 presas"><div class="admin-item-name">8 Presas + Papas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_8_presas" data-alt="8 presas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_8_presas').click()">✅ Cambiar foto</button></div></div><div class="admin-section-title">🔥 Combos</div><div class="admin-grid"><div class="admin-item"><img class="admin-item-thumb" src="img/combo_happy.jpg" alt="Combo Happy"><div class="admin-item-name">Combo HAPPY <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Combo_Happy" data-alt="Combo Happy"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Combo_Happy').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/super_happy.jpg" alt="Super Happy"><div class="admin-item-name">Combo SUPER HAPPY <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Super_Happy" data-alt="Super Happy"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Super_Happy').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/twins.jpg" alt="Twins"><div class="admin-item-name">Combo TWINS <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Twins" data-alt="Twins"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Twins').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/festin.jpg" alt="Festin"><div class="admin-item-name">Combo FESTÍN <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Festin" data-alt="Festin"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Festin').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/ideal.jpg" alt="Ideal"><div class="admin-item-name">Combo IDEAL <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Ideal" data-alt="Ideal"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Ideal').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/star.jpg" alt="Star"><div class="admin-item-name">Combo STAR <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Star" data-alt="Star"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Star').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/happy_lunch.jpg" alt="Happy Lunch"><div class="admin-item-name">HAPPY LUNCH <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Happy_Lunch" data-alt="Happy Lunch"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Happy_Lunch').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/irresistible.jpg" alt="Irresistible"><div class="admin-item-name">Combo IRRESISTIBLE <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Irresistible" data-alt="Irresistible"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Irresistible').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/happy_burger.jpg" alt="Happy Burger"><div class="admin-item-name">HAPPY BURGER <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Happy_Burger" data-alt="Happy Burger"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Happy_Burger').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/super_burger.jpg" alt="Super Burger"><div class="admin-item-name">SUPER BURGER <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Super_Burger" data-alt="Super Burger"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Super_Burger').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/especial.jpg" alt="Especial"><div class="admin-item-name">Combo ESPECIAL <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Especial" data-alt="Especial"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Especial').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/super_lunch.jpg" alt="Super Lunch"><div class="admin-item-name">SUPER LUNCH <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Super_Lunch" data-alt="Super Lunch"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Super_Lunch').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/mega_familiar.jpg" alt="Mega Familiar"><div class="admin-item-name">MEGA FAMILIAR <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Mega_Familiar" data-alt="Mega Familiar"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Mega_Familiar').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/super_star.jpg" alt="Super Star"><div class="admin-item-name">SUPER STAR <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Super_Star" data-alt="Super Star"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Super_Star').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/happy_box.jpg" alt="Happy Box"><div class="admin-item-name">HAPPY BOX <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Happy_Box" data-alt="Happy Box"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Happy_Box').click()">✅ Cambiar foto</button></div></div><div class="admin-section-title">➕ Adicionales</div><div class="admin-grid"><div class="admin-item"><img class="admin-item-thumb" src="img/papas.jpg" alt="Papas"><div class="admin-item-name">Papas Fritas <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Papas" data-alt="Papas"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Papas').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/salchipapa.jpg" alt="Salchipapa"><div class="admin-item-name">Salchipapa <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Salchipapa" data-alt="Salchipapa"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Salchipapa').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/salchidoble.jpg" alt="Salchidoble"><div class="admin-item-name">Salchidoble <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Salchidoble" data-alt="Salchidoble"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Salchidoble').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/papicarne.jpg" alt="Papicarne"><div class="admin-item-name">Papicarne <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Papicarne" data-alt="Papicarne"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Papicarne').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/arroz.jpg" alt="Arroz"><div class="admin-item-name">Arroz <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Arroz" data-alt="Arroz"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Arroz').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/menestra.jpg" alt="Menestra"><div class="admin-item-name">Menestra <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Menestra" data-alt="Menestra"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Menestra').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/consom.jpg" alt="Consomé"><div class="admin-item-name">Consomé <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Consom_" data-alt="Consomé"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Consom_').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/ensalada.jpg" alt="Ensalada"><div class="admin-item-name">Ensalada de Col <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Ensalada" data-alt="Ensalada"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Ensalada').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/ensalada_mixta.jpg" alt="Ensalada Mixta"><div class="admin-item-name">Ensalada Mixta <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Ensalada_Mixta" data-alt="Ensalada Mixta"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Ensalada_Mixta').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/salchicarne.jpg" alt="Salchicarne"><div class="admin-item-name">Salchicarne <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Salchicarne" data-alt="Salchicarne"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Salchicarne').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/hamburguesa.jpg" alt="Hamburguesa"><div class="admin-item-name">Hamburguesa Simple <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Hamburguesa" data-alt="Hamburguesa"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Hamburguesa').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/hamburguesa_doble.jpg" alt="Hamburguesa Doble"><div class="admin-item-name">Hamburguesa Doble <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Hamburguesa_Doble" data-alt="Hamburguesa Doble"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Hamburguesa_Doble').click()">✅ Cambiar foto</button></div></div><div class="admin-section-title">⭐ Especiales</div><div class="admin-grid"><div class="admin-item"><img class="admin-item-thumb" src="img/bomba_chocolate.jpg" alt="Bomba Chocolate"><div class="admin-item-name">Bomba de Chocolate <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Bomba_Chocolate" data-alt="Bomba Chocolate"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Bomba_Chocolate').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/kinder.jpg" alt="Kinder"><div class="admin-item-name">Kinder Sorpresa <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Kinder" data-alt="Kinder"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Kinder').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/tic_tac.jpg" alt="Tic Tac"><div class="admin-item-name">Tic Tac <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Tic_Tac" data-alt="Tic Tac"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Tic_Tac').click()">✅ Cambiar foto</button></div><div class="admin-item"><img class="admin-item-thumb" src="img/fresno_tea.jpg" alt="Fresno Tea"><div class="admin-item-name">Fresno Tea <span class="admin-badge">✓ NUEVA</span></div><input type="file" accept="image/*" class="admin-file-input" id="file_Fresno_Tea" data-alt="Fresno Tea"><button class="admin-upload-btn changed" onclick="document.getElementById('file_Fresno_Tea').click()">✅ Cambiar foto</button></div></div></div>
+  </div>
+</div>
+
+
+
+</div>
+
+<!-- OPTIONS MODAL -->
+<div class="opt-overlay" id="optOverlay" onclick="closeOptOnBg(event)">
+  <div class="opt-modal" id="optModal">
+    <div class="opt-title" id="optTitle">Personaliza tu pedido</div>
+    <div class="opt-subtitle" id="optSubtitle"></div>
+    <div class="opt-error" id="optError"></div>
+    <div id="optPresaSection" class="opt-section" style="display:none">
+      <div class="opt-section-title">🍗 Elige tus presas</div>
+      <div class="presa-counter" id="presaCounter">Seleccionadas: 0 / 0</div>
+      <div class="opt-grid" id="presaGrid"></div>
+    </div>
+    <div id="optDrinkSection" class="opt-section" style="display:none">
+      <div class="opt-section-title">🥤 Elige el sabor de tu bebida</div>
+      <div class="opt-drink-grid" id="drinkGrid"></div>
+
+    </div>
+    <button class="opt-confirm" id="optConfirm" onclick="confirmOptions()">Agregar al pedido</button>
+  </div>
+</div>
+
+</body>
