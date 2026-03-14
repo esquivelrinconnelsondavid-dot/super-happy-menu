@@ -832,11 +832,7 @@ body {
 <!-- HEADER -->
 <div class="header">
   <div class="header-inner">
-    <span class="logo-star">⭐</span>
-    <div class="logo-wrap">
-      <span class="logo-super">Super</span>
-      <span class="logo-happy">happy!</span>
-    </div>
+    <img src="img/logo-superhappy.png" alt="Super Happy" style="height:44px;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.15));">
     <div class="header-right">
       <div class="header-phone">📞 0985723122</div>
       <div class="header-slogan">· IRRESISTIBLE ·</div>
@@ -2099,16 +2095,13 @@ function openOptions(name, price) {
         const match = i.name.match(/\[(.+)\]/);
         return match ? match[1] : '';
       });
-      // Contar pechugas y alas en carrito
       const pechugas = presasEnCarrito.filter(p => p === 'Pechuga').length;
       const alas = presasEnCarrito.filter(p => p === 'Ala').length;
-      // Si ya hay 1 pechuga, no más pechugas
-      if (pechugas >= 1) disabledPresas.push('Pechuga');
-      // Si ya hay 1 ala, no más alas
-      if (alas >= 1) disabledPresas.push('Ala');
-      // Si hay pechuga, no ala y viceversa
-      if (pechugas > 0 && alas === 0) disabledPresas.push('Ala');
-      if (alas > 0 && pechugas === 0) disabledPresas.push('Pechuga');
+      // No repetir pechuga ni ala, y no combinar pechuga+ala
+      if (pechugas >= 1 || alas >= 1) {
+        if (!disabledPresas.includes('Pechuga')) disabledPresas.push('Pechuga');
+        if (!disabledPresas.includes('Ala')) disabledPresas.push('Ala');
+      }
 
       document.getElementById('presaCounter').textContent = 'Elige tu presa:' +
         (disabledPresas.length > 0 ? ' (' + disabledPresas.join(' y ') + ' no disponible)' : '');
