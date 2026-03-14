@@ -2087,9 +2087,10 @@ function openOptions(name, price) {
     presaSection.style.display = 'block';
     const combos = PRESA_COMBINATIONS[presasNeeded];
 
-    // Para individuales (1 presa), verificar qué hay en el carrito
+    // Restricción SOLO para individuales (1 Presa + Papas Fritas), NO para combos
     let disabledPresas = [];
-    if (presasNeeded === 1) {
+    const isIndividual = presasNeeded === 1 && optCurrent.name === '1 Presa + Papas Fritas';
+    if (isIndividual) {
       const indivInCart = cart.filter(i => i.name.startsWith('1 Presa + Papas Fritas ['));
       const presasEnCarrito = indivInCart.map(i => {
         const match = i.name.match(/\[(.+)\]/);
@@ -2097,7 +2098,6 @@ function openOptions(name, price) {
       });
       const pechugas = presasEnCarrito.filter(p => p === 'Pechuga').length;
       const alas = presasEnCarrito.filter(p => p === 'Ala').length;
-      // No repetir pechuga ni ala, y no combinar pechuga+ala
       if (pechugas >= 1 || alas >= 1) {
         if (!disabledPresas.includes('Pechuga')) disabledPresas.push('Pechuga');
         if (!disabledPresas.includes('Ala')) disabledPresas.push('Ala');
@@ -2105,6 +2105,8 @@ function openOptions(name, price) {
 
       document.getElementById('presaCounter').textContent = 'Elige tu presa:' +
         (disabledPresas.length > 0 ? ' (' + disabledPresas.join(' y ') + ' no disponible)' : '');
+    } else if (presasNeeded === 1) {
+      document.getElementById('presaCounter').textContent = 'Elige tu presa:';
     } else {
       document.getElementById('presaCounter').textContent = 'Elige tu combinación de ' + presasNeeded + ' presa(s):';
     }
@@ -2119,8 +2121,8 @@ function openOptions(name, price) {
       btn.textContent = label;
       btn.style.textAlign = 'left';
       btn.style.padding = '12px 14px';
-      // Deshabilitar opciones no válidas para individuales
-      if (presasNeeded === 1 && disabledPresas.includes(label)) {
+      // Deshabilitar opciones no válidas solo para individuales
+      if (isIndividual && disabledPresas.includes(label)) {
         btn.classList.add('disabled');
         btn.onclick = () => showOptError(label + ' no disponible. Ya tienes ' + label + ' o Pechuga/Ala en tu pedido.');
       } else {
