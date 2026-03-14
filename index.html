@@ -1452,7 +1452,7 @@ body {
   <!-- 300ml -->
   <div style="margin:10px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 300 ml</div>
   <div class="products-grid">
-    <div class="pcard" onclick="addToCart('Coca Cola 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#c0392b,#e74c3c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Coca Cola 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#c0392b,#e74c3c);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥫</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Fiora 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f39c12);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Fiora</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Fanta 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#e67e22,#f1c40f);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Fanta</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Inka Cola 300ml',0.50)"><div class="pcard-img" style="padding-top:60%;background:linear-gradient(135deg,#f1c40f,#2ecc71);"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:2rem;">🥤</span></div><span class="pcard-price-tag">$0.50</span></div><div class="pcard-body"><div class="pcard-name">Inka Cola</div><div class="pcard-desc">300ml</div></div></div>
@@ -2090,17 +2090,49 @@ function openOptions(name, price) {
   if (presasNeeded > 0 && PRESA_COMBINATIONS[presasNeeded]) {
     presaSection.style.display = 'block';
     const combos = PRESA_COMBINATIONS[presasNeeded];
-    document.getElementById('presaCounter').textContent = 'Elige tu combinación de ' + presasNeeded + ' presa(s):';
+
+    // Para individuales (1 presa), verificar qué hay en el carrito
+    let disabledPresas = [];
+    if (presasNeeded === 1) {
+      const indivInCart = cart.filter(i => i.name.startsWith('1 Presa + Papas Fritas ['));
+      const presasEnCarrito = indivInCart.map(i => {
+        const match = i.name.match(/\[(.+)\]/);
+        return match ? match[1] : '';
+      });
+      // Contar pechugas y alas en carrito
+      const pechugas = presasEnCarrito.filter(p => p === 'Pechuga').length;
+      const alas = presasEnCarrito.filter(p => p === 'Ala').length;
+      // Si ya hay 1 pechuga, no más pechugas
+      if (pechugas >= 1) disabledPresas.push('Pechuga');
+      // Si ya hay 1 ala, no más alas
+      if (alas >= 1) disabledPresas.push('Ala');
+      // Si hay pechuga, no ala y viceversa
+      if (pechugas > 0 && alas === 0) disabledPresas.push('Ala');
+      if (alas > 0 && pechugas === 0) disabledPresas.push('Pechuga');
+
+      document.getElementById('presaCounter').textContent = 'Elige tu presa:' +
+        (disabledPresas.length > 0 ? ' (' + disabledPresas.join(' y ') + ' no disponible)' : '');
+    } else {
+      document.getElementById('presaCounter').textContent = 'Elige tu combinación de ' + presasNeeded + ' presa(s):';
+    }
+
     const grid = document.getElementById('presaGrid');
     grid.innerHTML = '';
     grid.style.gridTemplateColumns = '1fr';
     combos.forEach((combo, idx) => {
       const btn = document.createElement('button');
       btn.className = 'opt-btn';
-      btn.textContent = Array.isArray(combo) ? combo[0] : combo;
+      const label = Array.isArray(combo) ? combo[0] : combo;
+      btn.textContent = label;
       btn.style.textAlign = 'left';
       btn.style.padding = '12px 14px';
-      btn.onclick = () => selectPresaCombo(idx);
+      // Deshabilitar opciones no válidas para individuales
+      if (presasNeeded === 1 && disabledPresas.includes(label)) {
+        btn.classList.add('disabled');
+        btn.onclick = () => showOptError(label + ' no disponible. Ya tienes ' + label + ' o Pechuga/Ala en tu pedido.');
+      } else {
+        btn.onclick = () => selectPresaCombo(idx);
+      }
       grid.appendChild(btn);
     });
   } else {
