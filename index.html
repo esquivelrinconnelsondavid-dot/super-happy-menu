@@ -832,8 +832,8 @@ body {
 <!-- HEADER -->
 <div class="header">
   <div class="header-inner">
-    <img src="img/logo-superhappy-new.jpg" alt="Super Happy" style="height:48px;border-radius:8px;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.15));">
-    <div class="header-right">
+    <img src="img/logo-superhappy-new.jpg" alt="Super Happy" style="flex:1;max-height:54px;object-fit:contain;border-radius:8px;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.15));">
+    <div class="header-right" style="flex-shrink:0;">
       <div class="header-phone">📞 0985723122</div>
       <div class="header-slogan">· IRRESISTIBLE ·</div>
     </div>
@@ -1662,11 +1662,18 @@ body {
 
         <label class="form-label">Dirección de entrega *</label>
         <div class="location-tabs">
-          <button class="loc-tab active" id="locTabText" onclick="selectLocTab('text')">✍️ Escribir dirección</button>
-          <button class="loc-tab" id="locTabMaps" onclick="selectLocTab('maps')">📍 Google Maps</button>
+          <button class="loc-tab active" id="locTabText" onclick="selectLocTab('text')">✍️ Escribir</button>
+          <button class="loc-tab" id="locTabGPS" onclick="selectLocTab('gps')">📍 Mi ubicación</button>
+          <button class="loc-tab" id="locTabMaps" onclick="selectLocTab('maps')">🔗 Link Maps</button>
         </div>
         <div id="locTextArea">
           <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba">
+        </div>
+        <div id="locGPSArea" style="display:none">
+          <button type="button" onclick="obtenerUbicacionGPS()" style="width:100%;padding:12px;background:linear-gradient(135deg,#4285f4,#34a853);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:0.95rem;cursor:pointer;margin-bottom:8px;">📍 Enviar mi ubicación actual</button>
+          <div id="gpsStatus" style="font-size:0.8rem;color:#666;margin-bottom:10px;text-align:center;"></div>
+          <input class="form-input" id="addressGPS" type="text" placeholder="Tu ubicación aparecerá aquí..." readonly style="background:#f0f0f0;">
+          <input type="hidden" id="addressGPSLink">
         </div>
         <div id="locMapsArea" style="display:none">
           <input class="form-input" id="addressMapsLink" type="url" placeholder="Pega aquí el link de Google Maps">
@@ -1778,9 +1785,49 @@ function toggleFactura() {
 function selectLocTab(tab) {
   locTabActive = tab;
   document.getElementById('locTabText').classList.toggle('active', tab==='text');
+  document.getElementById('locTabGPS').classList.toggle('active', tab==='gps');
   document.getElementById('locTabMaps').classList.toggle('active', tab==='maps');
   document.getElementById('locTextArea').style.display = tab==='text' ? '' : 'none';
+  document.getElementById('locGPSArea').style.display = tab==='gps' ? '' : 'none';
   document.getElementById('locMapsArea').style.display = tab==='maps' ? '' : 'none';
+}
+
+function obtenerUbicacionGPS() {
+  const statusEl = document.getElementById('gpsStatus');
+  const addrEl = document.getElementById('addressGPS');
+  const linkEl = document.getElementById('addressGPSLink');
+
+  if (!navigator.geolocation) {
+    statusEl.textContent = '❌ Tu navegador no soporta geolocalización';
+    statusEl.style.color = '#e74c3c';
+    return;
+  }
+
+  statusEl.textContent = '⏳ Obteniendo ubicación...';
+  statusEl.style.color = '#666';
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      const mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+      addrEl.value = `📍 ${lat}, ${lng}`;
+      linkEl.value = mapsLink;
+      statusEl.innerHTML = `✅ Ubicación obtenida — <a href="${mapsLink}" target="_blank" style="color:#4285f4;text-decoration:underline;">Ver en Maps</a>`;
+      statusEl.style.color = '#27ae60';
+    },
+    function(err) {
+      if (err.code === 1) {
+        statusEl.textContent = '❌ Permiso denegado. Activa la ubicación en tu navegador.';
+      } else if (err.code === 2) {
+        statusEl.textContent = '❌ No se pudo obtener la ubicación. Intenta de nuevo.';
+      } else {
+        statusEl.textContent = '❌ Tiempo agotado. Intenta de nuevo.';
+      }
+      statusEl.style.color = '#e74c3c';
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
 }
 
 function submitOrder() {
@@ -1792,7 +1839,10 @@ function submitOrder() {
   const razon = document.getElementById('facturaRazon').value.trim();
   const facturaDireccion = document.getElementById('facturaDireccion').value.trim();
   const facturaEmail = document.getElementById('facturaEmail').value.trim();
-  const address = locTabActive==='text' ? document.getElementById('addressText').value.trim() : document.getElementById('addressMapsLink').value.trim();
+  let address = '';
+  if (locTabActive==='text') address = document.getElementById('addressText').value.trim();
+  else if (locTabActive==='gps') address = document.getElementById('addressGPSLink').value.trim() || document.getElementById('addressGPS').value.trim();
+  else address = document.getElementById('addressMapsLink').value.trim();
 
   if (!name) { alert('Por favor ingresa tu nombre.'); return; }
   if (!phone) { alert('Por favor ingresa tu WhatsApp.'); return; }
@@ -1803,7 +1853,7 @@ function submitOrder() {
   const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
   const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${(i.price*i.qty).toFixed(2)}`).join('\n');
   const payLabel = paymentMethod==='cash' ? '💵 Efectivo' : '📲 Transferencia';
-  const addrLabel = locTabActive==='maps' ? `📍 Maps: ${address}` : `📍 ${address}`;
+  const addrLabel = (locTabActive==='maps' || locTabActive==='gps') ? `📍 Maps: ${address}` : `📍 ${address}`;
   const facturaInfo = facturaOn ? `\n🧾 *FACTURA*:\n  RUC/CI: ${ruc}\n  Nombre: ${razon}\n  Dir: ${facturaDireccion}\n  Email: ${facturaEmail}` : '';
   const notesInfo = notes ? `\n📝 Nota: ${notes}` : '';
 
@@ -1829,7 +1879,8 @@ ${addrLabel}${facturaInfo}${notesInfo}
 
 function resetOrder() {
   cart = []; paymentMethod = '';
-  ['clientName','clientPhone','orderNotes','facturaRuc','facturaRazon','facturaDireccion','facturaEmail','addressText','addressMapsLink'].forEach(id => { document.getElementById(id).value=''; });
+  ['clientName','clientPhone','orderNotes','facturaRuc','facturaRazon','facturaDireccion','facturaEmail','addressText','addressMapsLink','addressGPS','addressGPSLink'].forEach(id => { document.getElementById(id).value=''; });
+  document.getElementById('gpsStatus').textContent = '';
   document.getElementById('facturaToggle').checked = false;
   document.getElementById('facturaFields').classList.remove('show');
   document.getElementById('transferInfo').style.display = 'none';
