@@ -1872,7 +1872,15 @@ ${addrLabel}${facturaInfo}${notesInfo}
 ━━━━━━━━━━━━━━━━━━
 ✅ Pedido desde la app`;
 
-  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  // Usar <a> click para compatibilidad con Safari/iOS que bloquea window.open
+  const a = document.createElement('a');
+  a.href = waUrl;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
   document.getElementById('formView').style.display = 'none';
   document.getElementById('successView').classList.add('show');
 }
