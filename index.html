@@ -1666,37 +1666,63 @@ body {
           <input class="form-input" id="facturaEmail" type="email" placeholder="Correo electrónico">
         </div>
 
-        <label class="form-label">Dirección de entrega *</label>
-        <div class="location-tabs">
-          <button class="loc-tab active" id="locTabText" onclick="selectLocTab('text')">✍️ Escribir</button>
-          <button class="loc-tab" id="locTabGPS" onclick="selectLocTab('gps')">📍 Mi ubicación</button>
-          <button class="loc-tab" id="locTabMaps" onclick="selectLocTab('maps')">🔗 Link Maps</button>
+        <label class="form-label">Modalidad *</label>
+        <div class="payment-opts">
+          <div class="payment-opt" id="mode-delivery" onclick="selectMode('delivery')">
+            <span class="payment-opt-icon">🚗</span>Delivery
+          </div>
+          <div class="payment-opt" id="mode-pickup" onclick="selectMode('pickup')">
+            <span class="payment-opt-icon">🏪</span>Retiro en local
+          </div>
         </div>
-        <div id="locTextArea">
-          <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba">
+
+        <div id="pickupSection" style="display:none">
+          <label class="form-label">Elige tu sucursal *</label>
+          <div class="payment-opts" style="flex-direction:column;gap:8px;">
+            <div class="payment-opt" id="branch-centro" onclick="selectBranch('centro')" style="justify-content:flex-start;padding:12px 14px;">
+              <span class="payment-opt-icon">📍</span>
+              <div style="text-align:left"><strong>Super Happy Centro</strong><br><span style="font-size:0.78rem;color:#666;">Uruguay y Ayacucho</span></div>
+            </div>
+            <div class="payment-opt" id="branch-norte" onclick="selectBranch('norte')" style="justify-content:flex-start;padding:12px 14px;">
+              <span class="payment-opt-icon">📍</span>
+              <div style="text-align:left"><strong>Super Happy Norte</strong><br><span style="font-size:0.78rem;color:#666;">Sucursal Norte</span></div>
+            </div>
+          </div>
         </div>
-        <div id="locGPSArea" style="display:none">
-          <button type="button" onclick="obtenerUbicacionGPS()" style="width:100%;padding:12px;background:linear-gradient(135deg,#4285f4,#34a853);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:0.95rem;cursor:pointer;margin-bottom:8px;">📍 Enviar mi ubicación actual</button>
-          <div id="gpsStatus" style="font-size:0.8rem;color:#666;margin-bottom:10px;text-align:center;"></div>
-          <input class="form-input" id="addressGPS" type="text" placeholder="Tu ubicación aparecerá aquí..." readonly style="background:#f0f0f0;">
-          <input type="hidden" id="addressGPSLink">
-        </div>
-        <div id="locMapsArea" style="display:none">
-          <input class="form-input" id="addressMapsLink" type="url" placeholder="Pega aquí el link de Google Maps">
-          <div style="font-size:0.75rem;color:#aaa;margin-top:-8px;margin-bottom:10px;">Abre Maps → mantén presionado tu punto → copia el link</div>
+
+        <div id="deliverySection">
+          <label class="form-label">Dirección de entrega *</label>
+          <div class="location-tabs">
+            <button class="loc-tab active" id="locTabText" onclick="selectLocTab('text')">✍️ Escribir</button>
+            <button class="loc-tab" id="locTabGPS" onclick="selectLocTab('gps')">📍 Mi ubicación</button>
+            <button class="loc-tab" id="locTabMaps" onclick="selectLocTab('maps')">🔗 Link Maps</button>
+          </div>
+          <div id="locTextArea">
+            <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba">
+          </div>
+          <div id="locGPSArea" style="display:none">
+            <button type="button" onclick="obtenerUbicacionGPS()" style="width:100%;padding:12px;background:linear-gradient(135deg,#4285f4,#34a853);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:0.95rem;cursor:pointer;margin-bottom:8px;">📍 Enviar mi ubicación actual</button>
+            <div id="gpsStatus" style="font-size:0.8rem;color:#666;margin-bottom:10px;text-align:center;"></div>
+            <input class="form-input" id="addressGPS" type="text" placeholder="Tu ubicación aparecerá aquí..." readonly style="background:#f0f0f0;">
+            <input type="hidden" id="addressGPSLink">
+          </div>
+          <div id="locMapsArea" style="display:none">
+            <input class="form-input" id="addressMapsLink" type="url" placeholder="Pega aquí el link de Google Maps">
+            <div style="font-size:0.75rem;color:#aaa;margin-top:-8px;margin-bottom:10px;">Abre Maps → mantén presionado tu punto → copia el link</div>
+          </div>
         </div>
 
         <label class="form-label">Nota adicional (opcional)</label>
         <textarea class="form-textarea" id="orderNotes" placeholder="Ej: Sin picante, extra salsa, timbre color azul..."></textarea>
       </div>
-      <button class="submit-btn" onclick="submitOrder()">🍗 Enviar Pedido por WhatsApp</button>
+      <button class="submit-btn" onclick="submitOrder()">🍗 Enviar Pedido</button>
     </div>
 
     <!-- Success -->
     <div class="success-screen" id="successView">
       <div class="success-icon">🎉</div>
-      <div class="success-title">¡Pedido enviado!</div>
-      <div class="success-msg">Tu pedido llegó al restaurante por WhatsApp.<br>Te confirman en breve. ¡Gracias!</div>
+      <div class="success-title" id="successTitle">¡Pedido enviado!</div>
+      <div class="success-msg" id="successMsg">Tu pedido llegó al restaurante.<br>¡Gracias!</div>
       <button class="submit-btn" style="margin-top:20px;width:calc(100% - 28px);" onclick="resetOrder()">Hacer otro pedido</button>
     </div>
   </div>
@@ -1706,8 +1732,26 @@ body {
 let cart = [];
 let paymentMethod = '';
 let locTabActive = 'text';
+let orderMode = ''; // 'delivery' or 'pickup'
+let selectedBranch = ''; // 'centro' or 'norte'
 
 const WA_NUMBER = '593963334221'; // ← número de prueba (real: 593985723122)
+const WEBHOOK_URL = 'https://superhappy-n8n.bqspdc.easypanel.host/webhook/superhappy-app';
+
+function selectMode(mode) {
+  orderMode = mode;
+  document.getElementById('mode-delivery').classList.toggle('selected', mode==='delivery');
+  document.getElementById('mode-pickup').classList.toggle('selected', mode==='pickup');
+  document.getElementById('deliverySection').style.display = mode==='delivery' ? 'block' : 'none';
+  document.getElementById('pickupSection').style.display = mode==='pickup' ? 'block' : 'none';
+  if (mode==='pickup') selectedBranch = '';
+}
+
+function selectBranch(branch) {
+  selectedBranch = branch;
+  document.getElementById('branch-centro').classList.toggle('selected', branch==='centro');
+  document.getElementById('branch-norte').classList.toggle('selected', branch==='norte');
+}
 
 function showPage(page, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1845,21 +1889,32 @@ function submitOrder() {
   const razon = document.getElementById('facturaRazon').value.trim();
   const facturaDireccion = document.getElementById('facturaDireccion').value.trim();
   const facturaEmail = document.getElementById('facturaEmail').value.trim();
-  let address = '';
-  if (locTabActive==='text') address = document.getElementById('addressText').value.trim();
-  else if (locTabActive==='gps') address = document.getElementById('addressGPSLink').value.trim() || document.getElementById('addressGPS').value.trim();
-  else address = document.getElementById('addressMapsLink').value.trim();
 
   if (!name) { alert('Por favor ingresa tu nombre.'); return; }
   if (!phone) { alert('Por favor ingresa tu WhatsApp.'); return; }
   if (!paymentMethod) { alert('Por favor selecciona un método de pago.'); return; }
-  if (!address) { alert('Por favor ingresa tu dirección de entrega.'); return; }
+  if (!orderMode) { alert('Por favor selecciona Delivery o Retiro en local.'); return; }
   if (facturaOn && (!ruc || !razon || !facturaDireccion || !facturaEmail)) { alert('Por favor completa todos los datos de factura.'); return; }
+
+  let address = '';
+  let addrLabel = '';
+
+  if (orderMode === 'pickup') {
+    if (!selectedBranch) { alert('Por favor selecciona una sucursal.'); return; }
+    const sucursal = selectedBranch === 'centro' ? 'Super Happy Centro - Uruguay y Ayacucho' : 'Super Happy Norte - Sucursal Norte';
+    address = sucursal;
+    addrLabel = `🏪 Retiro: ${sucursal}`;
+  } else {
+    if (locTabActive==='text') address = document.getElementById('addressText').value.trim();
+    else if (locTabActive==='gps') address = document.getElementById('addressGPSLink').value.trim() || document.getElementById('addressGPS').value.trim();
+    else address = document.getElementById('addressMapsLink').value.trim();
+    if (!address) { alert('Por favor ingresa tu dirección de entrega.'); return; }
+    addrLabel = (locTabActive==='maps' || locTabActive==='gps') ? `📍 Maps: ${address}` : `📍 ${address}`;
+  }
 
   const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
   const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${(i.price*i.qty).toFixed(2)}`).join('\n');
   const payLabel = paymentMethod==='cash' ? '💵 Efectivo' : '📲 Transferencia';
-  const addrLabel = (locTabActive==='maps' || locTabActive==='gps') ? `📍 Maps: ${address}` : `📍 ${address}`;
   const facturaInfo = facturaOn ? `\n🧾 *FACTURA*:\n  RUC/CI: ${ruc}\n  Nombre: ${razon}\n  Dir: ${facturaDireccion}\n  Email: ${facturaEmail}` : '';
   const notesInfo = notes ? `\n📝 Nota: ${notes}` : '';
 
@@ -1879,7 +1934,6 @@ ${addrLabel}${facturaInfo}${notesInfo}
 ✅ Pedido desde la app`;
 
   const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
-  // Usar <a> click para compatibilidad con Safari/iOS que bloquea window.open
   const a = document.createElement('a');
   a.href = waUrl;
   a.target = '_blank';
