@@ -831,12 +831,8 @@ body {
 
 <!-- HEADER -->
 <div class="header">
-  <div class="header-inner">
-    <img src="img/logo-superhappy-new.jpg" alt="Super Happy" style="flex:1;min-width:0;width:100%;height:auto;border-radius:8px;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.15));">
-    <div class="header-right" style="flex-shrink:0;">
-      <div class="header-phone">📞 0985723122</div>
-      <div class="header-slogan">· IRRESISTIBLE ·</div>
-    </div>
+  <div class="header-inner" style="padding:0;">
+    <img src="img/logo-superhappy-new.jpg" alt="Super Happy" style="width:100%;height:auto;border-radius:0;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.15));display:block;">
   </div>
 </div>
 
@@ -1408,19 +1404,15 @@ body {
       </div>
     </div>
 
-    <div class="pcard" onclick="addToCart('2 Presas + Ensalada + Papas',5.4)">
+    <div class="pcard" onclick="addToCart('2 Presas + Papas + Arroz + Ensalada',5.4)">
       <div class="pcard-img">
-        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:10px;text-align:center;">
-          <span style="font-size:2.2rem;">🍗</span>
-          <span style="font-family:'Righteous',cursive;font-size:0.75rem;color:white;line-height:1.2;">2 Presas con Ensalada</span>
-        </div>
+        <img src="img/2_presas_completa.jpg" alt="2 Presas + Papas + Arroz + Ensalada" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
         <div class="pcard-img-overlay"></div>
         <span class="pcard-price-tag">$5.40</span>
       </div>
       <div class="pcard-body">
-        <div class="pcard-name">2 Presas con Ensalada</div>
-        <div class="pcard-desc">+ Ensalada + Papas fritas</div>
-        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('2 Presas + Ensalada + Papas',5.4)">+</button></div>
+        <div class="pcard-name">2 Presas + Papas + Arroz + Ensalada</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();addToCart('2 Presas + Papas + Arroz + Ensalada',5.4)">+</button></div>
       </div>
     </div>
 
@@ -1448,11 +1440,11 @@ body {
   <!-- 300ml -->
   <div style="margin:10px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 300 ml</div>
   <div class="products-grid">
-    <div class="pcard" onclick="addToCart('Coca Cola 300ml',0.70)"><div class="pcard-img"><img src="img/coca_cola_300.jpg" alt="Coca Cola 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Coca Cola 300ml',0.70)"><div class="pcard-img"><img src="img/sprite_300.jpg" alt="Coca Cola 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Fiora 300ml',0.70)"><div class="pcard-img"><img src="img/fiora_300.jpg" alt="Fiora 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Fiora</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Fanta 300ml',0.70)"><div class="pcard-img"><img src="img/fanta_300.jpg" alt="Fanta 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Fanta</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Inka Cola 300ml',0.70)"><div class="pcard-img"><img src="img/inka_cola_300.jpg" alt="Inka Cola 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Inka Cola</div><div class="pcard-desc">300ml</div></div></div>
-    <div class="pcard" onclick="addToCart('Sprite 300ml',0.70)"><div class="pcard-img"><img src="img/sprite_300.jpg" alt="Sprite 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Sprite</div><div class="pcard-desc">300ml</div></div></div>
+    <div class="pcard" onclick="addToCart('Sprite 300ml',0.70)"><div class="pcard-img"><img src="img/coca_cola_300.jpg" alt="Sprite 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Sprite</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Agua 300ml',0.70)"><div class="pcard-img"><img src="img/agua_300.jpg" alt="Agua 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Agua</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Fuze Tea 300ml',0.70)"><div class="pcard-img"><img src="img/fuze_tea_300.jpg" alt="Fuze Tea 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Fuze Tea</div><div class="pcard-desc">300ml</div></div></div>
     <div class="pcard" onclick="addToCart('Jugo del Valle 300ml',0.70)"><div class="pcard-img"><img src="img/jugo_del_valle_300.jpg" alt="Jugo del Valle 300ml" loading="lazy"><span class="pcard-price-tag">$0.70</span></div><div class="pcard-body"><div class="pcard-name">Jugo del Valle</div><div class="pcard-desc">300ml</div></div></div>
@@ -1476,7 +1468,7 @@ body {
   <!-- 1.35lt -->
   <div style="margin:14px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 1.35 Litro</div>
   <div class="products-grid">
-    <div class="pcard" onclick="addToCart('Coca Cola 1.35lt',1.80)"><div class="pcard-img"><img src="img/coca_cola_135.jpg" alt="Coca Cola 1.35lt" loading="lazy"><span class="pcard-price-tag">$1.80</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">1.35 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Coca Cola 1lt',1.80)"><div class="pcard-img"><img src="img/coca_cola_135.jpg" alt="Coca Cola 1lt" loading="lazy"><span class="pcard-price-tag">$1.80</span></div><div class="pcard-body"><div class="pcard-name">Coca Cola</div><div class="pcard-desc">1 lt</div></div></div>
     <div class="pcard" onclick="addToCart('Fiora 1.35lt',1.80)"><div class="pcard-img"><img src="img/fiora_135.jpg" alt="Fiora 1.35lt" loading="lazy"><span class="pcard-price-tag">$1.80</span></div><div class="pcard-body"><div class="pcard-name">Fiora</div><div class="pcard-desc">1.35 lt</div></div></div>
     <div class="pcard" onclick="addToCart('Fanta 1.35lt',1.80)"><div class="pcard-img"><img src="img/fanta_135.jpg" alt="Fanta 1.35lt" loading="lazy"><span class="pcard-price-tag">$1.80</span></div><div class="pcard-body"><div class="pcard-name">Fanta</div><div class="pcard-desc">1.35 lt</div></div></div>
     <div class="pcard" onclick="addToCart('Inka Cola 1.35lt',1.80)"><div class="pcard-img"><img src="img/inka_cola_135.jpg" alt="Inka Cola 1.35lt" loading="lazy"><span class="pcard-price-tag">$1.80</span></div><div class="pcard-body"><div class="pcard-name">Inka Cola</div><div class="pcard-desc">1.35 lt</div></div></div>
@@ -1487,8 +1479,8 @@ body {
   <!-- 1.5lt -->
   <div style="margin:14px 12px 6px;font-weight:900;font-size:0.85rem;color:#6A1FBE;">📦 1.5 Litro</div>
   <div class="products-grid">
-    <div class="pcard" onclick="addToCart('Frezno 1.5lt',1.80)"><div class="pcard-img"><img src="img/frezno_15.jpg" alt="Frezno 1.5lt" loading="lazy"><span class="pcard-price-tag">$1.80</span></div><div class="pcard-body"><div class="pcard-name">Frezno</div><div class="pcard-desc">1.5 lt</div></div></div>
-    <div class="pcard" onclick="addToCart('Fuze Tea 1.5lt',1.80)"><div class="pcard-img"><img src="img/fuze_tea_15.jpg" alt="Fuze Tea 1.5lt" loading="lazy"><span class="pcard-price-tag">$1.80</span></div><div class="pcard-body"><div class="pcard-name">Fuze Tea</div><div class="pcard-desc">1.5 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Frezno 1.5lt',2.30)"><div class="pcard-img"><img src="img/frezno_15.jpg" alt="Frezno 1.5lt" loading="lazy"><span class="pcard-price-tag">$2.30</span></div><div class="pcard-body"><div class="pcard-name">Frezno</div><div class="pcard-desc">1.5 lt</div></div></div>
+    <div class="pcard" onclick="addToCart('Fuze Tea 1.5lt',2.30)"><div class="pcard-img"><img src="img/fuze_tea_15.jpg" alt="Fuze Tea 1.5lt" loading="lazy"><span class="pcard-price-tag">$2.30</span></div><div class="pcard-body"><div class="pcard-name">Fuze Tea</div><div class="pcard-desc">1.5 lt</div></div></div>
   </div>
 
   <!-- 3lt -->
@@ -1945,7 +1937,7 @@ const ADMIN_PRODUCTS = [
     { alt: "Hamburguesa Doble", name: "Hamburguesa Doble" },
     { alt: "1 Presa Completa",     name: "1 Presa + Menestra + Arroz + Papas" },
     { alt: "1 Presa con Ensalada", name: "1 Presa + Ensalada + Arroz + Papas" },
-    { alt: "2 Presas con Ensalada",name: "2 Presas + Ensalada + Papas" },
+    { alt: "2 Presas Completa",name: "2 Presas + Papas + Arroz + Ensalada" },
   ]},
   { section: "⭐ Especiales", items: [
     { alt: "Bomba Chocolate", name: "Bomba de Chocolate" },
@@ -2049,7 +2041,7 @@ function downloadUpdatedMenu() {
 
 
 // ─── OPTIONS / MODIFIERS ───
-const PRESA_COMBOS = {'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1, 'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2, 'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8, '1 Presa + Papas Fritas': 1, '2 Presas + Papas Fritas': 2, '3 Presas + Papas Fritas': 3, '4 Presas + Papas Fritas': 4, '5 Presas + Papas Fritas': 5, '6 Presas + Papas Fritas': 6, '7 Presas + Papas Fritas': 7, '8 Presas + Papas Fritas': 8, '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas con Ensalada': 2, '1 Presa + Salchicha + Papas': 1};
+const PRESA_COMBOS = {'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1, 'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2, 'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8, '1 Presa + Papas Fritas': 1, '2 Presas + Papas Fritas': 2, '3 Presas + Papas Fritas': 3, '4 Presas + Papas Fritas': 4, '5 Presas + Papas Fritas': 5, '6 Presas + Papas Fritas': 6, '7 Presas + Papas Fritas': 7, '8 Presas + Papas Fritas': 8, '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas + Papas + Arroz + Ensalada': 2, '1 Presa + Salchicha + Papas': 1};
 // Combos que incluyen bebida - solo eligen sabor (sin tamaño)
 const DRINK_COMBOS = ['Combo Happy', 'Combo Super Happy', 'Combo Twins', 'Combo Festín', 'Combo Ideal', 'Combo Star', 'Happy Lunch', 'Combo Irresistible', 'Happy Burger', 'Super Burger', 'Combo Especial', 'Super Lunch', 'Mega Familiar', 'Super Star'];
 
