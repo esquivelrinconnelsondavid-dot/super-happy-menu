@@ -1648,13 +1648,14 @@ body {
           </div>
         </div>
 
-        <label class="form-label">¿Necesitas factura?</label>
-        <div class="factura-row">
-          <label class="toggle-switch">
-            <input type="checkbox" id="facturaToggle" onchange="toggleFactura()">
-            <span class="toggle-slider"></span>
-          </label>
-          <span class="toggle-label">Sí, necesito factura</span>
+        <label class="form-label">Facturación *</label>
+        <div class="payment-opts">
+          <div class="payment-opt selected" id="bill-final" onclick="selectBilling('final')">
+            <span class="payment-opt-icon">📋</span>Consumidor Final
+          </div>
+          <div class="payment-opt" id="bill-factura" onclick="selectBilling('factura')">
+            <span class="payment-opt-icon">🧾</span>Con Factura
+          </div>
         </div>
         <div class="factura-fields" id="facturaFields">
           <input class="form-input" id="facturaRuc" type="text" placeholder="RUC / Cédula">
@@ -1744,6 +1745,7 @@ let paymentMethod = '';
 let locTabActive = 'text';
 let orderMode = ''; // 'delivery' or 'pickup'
 let selectedBranch = ''; // 'centro' or 'norte'
+let billingType = 'final'; // 'final' or 'factura'
 
 const WA_NUMBER = '593985723122';
 const WEBHOOK_URL = 'https://superhappy-n8n.bqspdc.easypanel.host/webhook/superhappy-app';
@@ -1839,8 +1841,11 @@ function selectPayment(m) {
   document.getElementById('pay-transfer').classList.toggle('selected', m==='transfer');
   document.getElementById('transferInfo').style.display = m==='transfer' ? 'block' : 'none';
 }
-function toggleFactura() {
-  document.getElementById('facturaFields').classList.toggle('show', document.getElementById('facturaToggle').checked);
+function selectBilling(type) {
+  billingType = type;
+  document.getElementById('bill-final').classList.toggle('selected', type==='final');
+  document.getElementById('bill-factura').classList.toggle('selected', type==='factura');
+  document.getElementById('facturaFields').classList.toggle('show', type==='factura');
 }
 function selectLocTab(tab) {
   locTabActive = tab;
@@ -1893,7 +1898,7 @@ function obtenerUbicacionGPS() {
 function submitOrder() {
   const name = document.getElementById('clientName').value.trim();
   const notes = document.getElementById('orderNotes').value.trim();
-  const facturaOn = document.getElementById('facturaToggle').checked;
+  const facturaOn = billingType === 'factura';
   const ruc = document.getElementById('facturaRuc').value.trim();
   const razon = document.getElementById('facturaRazon').value.trim();
   const facturaDireccion = document.getElementById('facturaDireccion').value.trim();
@@ -1941,7 +1946,9 @@ function submitOrder() {
   const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
   const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${(i.price*i.qty).toFixed(2)}`).join('\n');
   const payLabel = paymentMethod==='cash' ? '💵 Efectivo' : '📲 Transferencia';
-  const facturaInfo = facturaOn ? `\n🧾 *FACTURA*:\n  RUC/CI: ${ruc}\n  Nombre: ${razon}\n  Dir: ${facturaDireccion}\n  Email: ${facturaEmail}` : '';
+  const facturaInfo = facturaOn
+    ? `\n🧾 *FACTURA*:\n  RUC/CI: ${ruc}\n  Nombre: ${razon}\n  Dir: ${facturaDireccion}\n  Email: ${facturaEmail}`
+    : `\n🧾 Factura: Consumidor Final`;
   const notesInfo = notes ? `\n📝 Nota: ${notes}` : '';
   const scheduleInfo = scheduleLabel ? `\n⏰ Hora solicitada: ${scheduleLabel}` : '';
 
@@ -1981,8 +1988,7 @@ function resetOrder() {
   cart = []; paymentMethod = '';
   ['clientName','orderNotes','facturaRuc','facturaRazon','facturaDireccion','facturaEmail','addressText','addressMapsLink','addressGPS','addressGPSLink','scheduleTime'].forEach(id => { document.getElementById(id).value=''; });
   document.getElementById('gpsStatus').textContent = '';
-  document.getElementById('facturaToggle').checked = false;
-  document.getElementById('facturaFields').classList.remove('show');
+  selectBilling('final');
   document.getElementById('transferInfo').style.display = 'none';
   document.getElementById('scheduleToggle').checked = false;
   document.getElementById('scheduleFields').style.display = 'none';
