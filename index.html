@@ -1654,7 +1654,7 @@ body {
             <span class="payment-opt-icon">📋</span>Consumidor Final
           </div>
           <div class="payment-opt" id="bill-factura" onclick="selectBilling('factura')">
-            <span class="payment-opt-icon">🧾</span>Con Factura
+            <span class="payment-opt-icon">🧾</span>Datos de Facturación
           </div>
         </div>
         <div class="factura-fields" id="facturaFields">
@@ -1696,7 +1696,7 @@ body {
             <button class="loc-tab" id="locTabMaps" onclick="selectLocTab('maps')">🔗 Link Maps</button>
           </div>
           <div id="locTextArea">
-            <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba">
+            <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba" onblur="calculateShipping()">
           </div>
           <div id="locGPSArea" style="display:none">
             <button type="button" onclick="obtenerUbicacionGPS()" style="width:100%;padding:12px;background:linear-gradient(135deg,#4285f4,#34a853);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:0.95rem;cursor:pointer;margin-bottom:8px;">📍 Enviar mi ubicación actual</button>
@@ -1705,9 +1705,10 @@ body {
             <input type="hidden" id="addressGPSLink">
           </div>
           <div id="locMapsArea" style="display:none">
-            <input class="form-input" id="addressMapsLink" type="url" placeholder="Pega aquí el link de Google Maps">
+            <input class="form-input" id="addressMapsLink" type="url" placeholder="Pega aquí el link de Google Maps" onblur="calculateShipping()">
             <div style="font-size:0.75rem;color:#aaa;margin-top:-8px;margin-bottom:10px;">Abre Maps → mantén presionado tu punto → copia el link</div>
           </div>
+          <div id="shippingBox" style="display:none;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:0.85rem;line-height:1.5;"></div>
         </div>
 
         <label class="form-label">⏰ ¿Desea recibir su pedido a una hora específica?</label>
@@ -1725,6 +1726,12 @@ body {
 
         <label class="form-label">Nota adicional (opcional)</label>
         <textarea class="form-textarea" id="orderNotes" placeholder="Ej: Sin picante, extra salsa, timbre color azul..."></textarea>
+
+        <div id="formTotals" style="background:#f8f6ff;border:2px solid #ece4ff;border-radius:12px;padding:12px 14px;margin-top:12px;font-size:0.9rem;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>Subtotal:</span><span id="formSubtotal">$0.00</span></div>
+          <div id="formShippingRow" style="display:none;justify-content:space-between;margin-bottom:4px;"><span>Envío:</span><span id="formShipping">$0.00</span></div>
+          <div style="display:flex;justify-content:space-between;font-weight:900;font-size:1rem;color:#6A1FBE;border-top:1px dashed #d8ccff;padding-top:6px;margin-top:6px;"><span>Total:</span><span id="formTotal">$0.00</span></div>
+        </div>
       </div>
       <button class="submit-btn" onclick="submitOrder()">🍗 Enviar Pedido</button>
     </div>
@@ -1749,6 +1756,13 @@ let billingType = 'final'; // 'final' or 'factura'
 
 const WA_NUMBER = '593985723122';
 const WEBHOOK_URL = 'https://superhappy-n8n.bqspdc.easypanel.host/webhook/superhappy-app';
+const SHIPPING_URL = 'https://superhappy-n8n.bqspdc.easypanel.host/webhook/calculo-envio';
+
+let shippingState = 'idle'; // 'idle' | 'loading' | 'ok' | 'error'
+let shippingCost = 0;
+let shippingOrigin = '';
+let shippingMessage = '';
+let lastShippingQuery = '';
 
 function selectMode(mode) {
   orderMode = mode;
@@ -1756,7 +1770,13 @@ function selectMode(mode) {
   document.getElementById('mode-pickup').classList.toggle('selected', mode==='pickup');
   document.getElementById('deliverySection').style.display = mode==='delivery' ? 'block' : 'none';
   document.getElementById('pickupSection').style.display = mode==='pickup' ? 'block' : 'none';
-  if (mode==='pickup') selectedBranch = '';
+  if (mode==='pickup') {
+    selectedBranch = '';
+    resetShipping();
+  } else if (mode==='delivery') {
+    if (getDeliveryQuery()) calculateShipping();
+  }
+  updateFormTotals();
 }
 
 function selectBranch(branch) {
@@ -1791,6 +1811,7 @@ function updateCartUI() {
   document.getElementById('cartBadge').textContent = count;
   document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
   document.getElementById('cartFab').classList.toggle('hidden', cart.length === 0);
+  if (typeof updateFormTotals === 'function') updateFormTotals();
 
   const list = document.getElementById('cartList');
   if (!cart.length) {
@@ -1833,7 +1854,7 @@ function openCart() {
 }
 function closeCart() { document.getElementById('cartOverlay').classList.remove('show'); }
 function closeOnOverlay(e) { if (e.target === document.getElementById('cartOverlay')) closeCart(); }
-function showForm() { if (!cart.length) return; document.getElementById('cartView').style.display='none'; document.getElementById('formView').style.display=''; }
+function showForm() { if (!cart.length) return; document.getElementById('cartView').style.display='none'; document.getElementById('formView').style.display=''; updateFormTotals(); }
 function backToCart() { document.getElementById('cartView').style.display=''; document.getElementById('formView').style.display='none'; }
 function selectPayment(m) {
   paymentMethod = m;
@@ -1855,6 +1876,8 @@ function selectLocTab(tab) {
   document.getElementById('locTextArea').style.display = tab==='text' ? '' : 'none';
   document.getElementById('locGPSArea').style.display = tab==='gps' ? '' : 'none';
   document.getElementById('locMapsArea').style.display = tab==='maps' ? '' : 'none';
+  resetShipping();
+  if (getDeliveryQuery()) calculateShipping();
 }
 
 function obtenerUbicacionGPS() {
@@ -1880,6 +1903,7 @@ function obtenerUbicacionGPS() {
       linkEl.value = mapsLink;
       statusEl.innerHTML = `✅ Ubicación obtenida — <a href="${mapsLink}" target="_blank" style="color:#4285f4;text-decoration:underline;">Ver en Maps</a>`;
       statusEl.style.color = '#27ae60';
+      calculateShipping();
     },
     function(err) {
       if (err.code === 1) {
@@ -1893,6 +1917,114 @@ function obtenerUbicacionGPS() {
     },
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
   );
+}
+
+function getDeliveryQuery() {
+  if (orderMode !== 'delivery') return '';
+  if (locTabActive === 'text') return document.getElementById('addressText').value.trim();
+  if (locTabActive === 'gps') {
+    const link = document.getElementById('addressGPSLink').value.trim();
+    if (!link) return '';
+    const m = link.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    return m ? `${m[1]}, ${m[2]}` : link;
+  }
+  if (locTabActive === 'maps') return document.getElementById('addressMapsLink').value.trim();
+  return '';
+}
+
+function resetShipping() {
+  shippingState = 'idle';
+  shippingCost = 0;
+  shippingOrigin = '';
+  shippingMessage = '';
+  lastShippingQuery = '';
+  const box = document.getElementById('shippingBox');
+  box.style.display = 'none';
+  box.innerHTML = '';
+  updateFormTotals();
+}
+
+function renderShippingBox() {
+  const box = document.getElementById('shippingBox');
+  if (shippingState === 'idle') {
+    box.style.display = 'none';
+    box.innerHTML = '';
+    return;
+  }
+  box.style.display = 'block';
+  if (shippingState === 'loading') {
+    box.style.background = '#f0f4ff';
+    box.style.border = '2px solid #d6e0ff';
+    box.style.color = '#3b5bdb';
+    box.innerHTML = '⏳ Calculando envío...';
+  } else if (shippingState === 'ok') {
+    box.style.background = '#e8f8ee';
+    box.style.border = '2px solid #b7e4c7';
+    box.style.color = '#1b6b3a';
+    box.innerHTML = shippingMessage;
+  } else {
+    box.style.background = '#fdecec';
+    box.style.border = '2px solid #f5b5b5';
+    box.style.color = '#c0392b';
+    box.innerHTML = shippingMessage || '❌ No se pudo calcular el envío.';
+  }
+}
+
+function updateFormTotals() {
+  const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const showShipping = orderMode === 'delivery' && shippingState === 'ok';
+  const ship = showShipping ? shippingCost : 0;
+  const subEl = document.getElementById('formSubtotal');
+  const shipRow = document.getElementById('formShippingRow');
+  const shipEl = document.getElementById('formShipping');
+  const totEl = document.getElementById('formTotal');
+  if (!subEl) return;
+  subEl.textContent = '$' + subtotal.toFixed(2);
+  shipRow.style.display = showShipping ? 'flex' : 'none';
+  shipEl.textContent = '$' + ship.toFixed(2);
+  totEl.textContent = '$' + (subtotal + ship).toFixed(2);
+}
+
+function calculateShipping() {
+  const query = getDeliveryQuery();
+  if (!query) { resetShipping(); return; }
+  if (query === lastShippingQuery && shippingState === 'ok') return;
+  lastShippingQuery = query;
+  shippingState = 'loading';
+  renderShippingBox();
+  updateFormTotals();
+  fetch(SHIPPING_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query })
+  })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+    .then(data => {
+      if (query !== lastShippingQuery) return; // stale response
+      if (data && data.exito && !data.error) {
+        shippingCost = parseFloat(data.costo) || 0;
+        shippingOrigin = data.sucursalOrigen || '';
+        shippingState = 'ok';
+        shippingMessage =
+          `<div><strong>🚗 Envío:</strong> ${data.costoEnvio || ('$' + shippingCost.toFixed(2))}</div>` +
+          (shippingOrigin ? `<div>📍 Desde: ${shippingOrigin}</div>` : '') +
+          (data.tiempo ? `<div>⏱️ Tiempo estimado: ${data.tiempo}</div>` : '');
+      } else {
+        shippingState = 'error';
+        shippingCost = 0;
+        shippingMessage = '❌ ' + ((data && data.mensaje) || 'No se pudo calcular el envío. Verifica la dirección.');
+      }
+      renderShippingBox();
+      updateFormTotals();
+    })
+    .catch(err => {
+      if (query !== lastShippingQuery) return;
+      shippingState = 'error';
+      shippingCost = 0;
+      shippingMessage = '❌ No se pudo calcular el envío. Intenta de nuevo.';
+      renderShippingBox();
+      updateFormTotals();
+    });
 }
 
 function submitOrder() {
@@ -1941,9 +2073,13 @@ function submitOrder() {
     else address = document.getElementById('addressMapsLink').value.trim();
     if (!address) { alert('Por favor ingresa tu dirección de entrega.'); return; }
     addrLabel = (locTabActive==='maps' || locTabActive==='gps') ? `📍 Maps: ${address}` : `📍 ${address}`;
+    if (shippingState === 'loading') { alert('Espera un momento, todavía estamos calculando el envío.'); return; }
+    if (shippingState !== 'ok') { alert('No se pudo calcular el envío para esta dirección. Verifica e intenta de nuevo.'); return; }
   }
 
-  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const ship = orderMode === 'delivery' ? shippingCost : 0;
+  const total = subtotal + ship;
   const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${(i.price*i.qty).toFixed(2)}`).join('\n');
   const payLabel = paymentMethod==='cash' ? '💵 Efectivo' : '📲 Transferencia';
   const facturaInfo = facturaOn
@@ -1951,6 +2087,9 @@ function submitOrder() {
     : `\n🧾 Factura: Consumidor Final`;
   const notesInfo = notes ? `\n📝 Nota: ${notes}` : '';
   const scheduleInfo = scheduleLabel ? `\n⏰ Hora solicitada: ${scheduleLabel}` : '';
+  const shippingInfo = orderMode === 'delivery'
+    ? `\n🚗 Envío: $${shippingCost.toFixed(2)}${shippingOrigin ? ` (desde ${shippingOrigin})` : ''}`
+    : '';
 
   const msg =
 `⭐ *NUEVO PEDIDO - Super Happy!* ⭐
@@ -1960,6 +2099,7 @@ function submitOrder() {
 🛒 *Pedido:*
 ${items}
 ━━━━━━━━━━━━━━━━━━
+🧮 Subtotal: $${subtotal.toFixed(2)}${shippingInfo}
 💰 *TOTAL: $${total.toFixed(2)}*
 💳 Pago: ${payLabel}
 ${addrLabel}${scheduleInfo}${facturaInfo}${notesInfo}
@@ -1985,15 +2125,21 @@ function toggleSchedule() {
 }
 
 function resetOrder() {
-  cart = []; paymentMethod = '';
+  cart = []; paymentMethod = ''; orderMode = ''; selectedBranch = '';
   ['clientName','orderNotes','facturaRuc','facturaRazon','facturaDireccion','facturaEmail','addressText','addressMapsLink','addressGPS','addressGPSLink','scheduleTime'].forEach(id => { document.getElementById(id).value=''; });
   document.getElementById('gpsStatus').textContent = '';
   selectBilling('final');
   document.getElementById('transferInfo').style.display = 'none';
   document.getElementById('scheduleToggle').checked = false;
   document.getElementById('scheduleFields').style.display = 'none';
+  document.getElementById('mode-delivery').classList.remove('selected');
+  document.getElementById('mode-pickup').classList.remove('selected');
+  document.getElementById('deliverySection').style.display = 'block';
+  document.getElementById('pickupSection').style.display = 'none';
+  resetShipping();
   selectLocTab('text');
   updateCartUI();
+  updateFormTotals();
   closeCart();
 }
 
