@@ -2001,18 +2001,19 @@ function calculateShipping() {
     .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
     .then(data => {
       if (query !== lastShippingQuery) return; // stale response
-      if (data && data.exito && !data.error) {
-        shippingCost = parseFloat(data.costo) || 0;
-        shippingOrigin = data.sucursalOrigen || '';
+      const result = Array.isArray(data) ? data[0] : data;
+      if (result && result.exito && !result.error) {
+        shippingCost = parseFloat(result.costo) || 0;
+        shippingOrigin = result.sucursalOrigen || '';
         shippingState = 'ok';
         shippingMessage =
-          `<div><strong>🚗 Envío:</strong> ${data.costoEnvio || ('$' + shippingCost.toFixed(2))}</div>` +
+          `<div><strong>🚗 Envío:</strong> ${result.costoEnvio || ('$' + shippingCost.toFixed(2))}</div>` +
           (shippingOrigin ? `<div>📍 Desde: ${shippingOrigin}</div>` : '') +
-          (data.tiempo ? `<div>⏱️ Tiempo estimado: ${data.tiempo}</div>` : '');
+          (result.tiempo ? `<div>⏱️ Tiempo estimado: ${result.tiempo}</div>` : '');
       } else {
         shippingState = 'error';
         shippingCost = 0;
-        shippingMessage = '❌ ' + ((data && data.mensaje) || 'No se pudo calcular el envío. Verifica la dirección.');
+        shippingMessage = '❌ ' + ((result && result.mensaje) || 'No se pudo calcular el envío. Verifica la dirección.');
       }
       renderShippingBox();
       updateFormTotals();
