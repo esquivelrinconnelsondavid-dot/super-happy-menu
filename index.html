@@ -2073,7 +2073,7 @@ function submitOrder() {
     else if (locTabActive==='gps') address = document.getElementById('addressGPSLink').value.trim() || document.getElementById('addressGPS').value.trim();
     else address = document.getElementById('addressMapsLink').value.trim();
     if (!address) { alert('Por favor ingresa tu dirección de entrega.'); return; }
-    addrLabel = (locTabActive==='maps' || locTabActive==='gps') ? `📍 Maps: ${address}` : `📍 ${address}`;
+    addrLabel = (locTabActive==='maps' || locTabActive==='gps') ? `📍 DIRECCIÓN DE ENTREGA (Maps): ${address}` : `📍 DIRECCIÓN DE ENTREGA: ${address}`;
     if (shippingState === 'loading') { alert('Espera un momento, todavía estamos calculando el envío.'); return; }
     if (shippingState !== 'ok') { alert('No se pudo calcular el envío para esta dirección. Verifica e intenta de nuevo.'); return; }
   }
