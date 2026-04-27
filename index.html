@@ -860,7 +860,7 @@ body {
   <div class="section-title">🍗 Presas + Papas Fritas</div>
   <div class="products-grid">
 
-    <div class="pcard" onclick="openOptions('1 Presa + Papas Fritas',2.80)">
+    <div class="pcard" onclick="openOptions('1 Presa + Papas Fritas (individual)',2.80)">
       <div class="pcard-img">
         <img src="img/1_presa.jpg" alt="1 presa" loading="lazy">
         <div class="pcard-img-overlay"></div>
@@ -868,9 +868,9 @@ body {
         <span class="pcard-qty" id="qb-p0"></span>
       </div>
       <div class="pcard-body">
-        <div class="pcard-name">1 Presa</div>
+        <div class="pcard-name">1 Presa (individual)</div>
         <div class="pcard-desc">+ Papas fritas</div>
-        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('1 Presa + Papas Fritas',2.80)">+</button></div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('1 Presa + Papas Fritas (individual)',2.80)">+</button></div>
       </div>
     </div>
 
@@ -2150,7 +2150,7 @@ updateCartUI();
 // ─── ADMIN PANEL ───
 const ADMIN_PRODUCTS = [
   { section: "🍗 Presas + Papas", items: [
-    { alt: "1 presa",  name: "1 Presa + Papas" },
+    { alt: "1 presa",  name: "1 Presa + Papas (individual)" },
     { alt: "2 presas", name: "2 Presas + Papas" },
     { alt: "3 presas", name: "3 Presas + Papas" },
     { alt: "4 presas", name: "4 Presas + Papas" },
@@ -2297,7 +2297,7 @@ function downloadUpdatedMenu() {
 
 
 // ─── OPTIONS / MODIFIERS ───
-const PRESA_COMBOS = {'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1, 'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2, 'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8, '1 Presa + Papas Fritas': 1, '2 Presas + Papas Fritas': 2, '3 Presas + Papas Fritas': 3, '4 Presas + Papas Fritas': 4, '5 Presas + Papas Fritas': 5, '6 Presas + Papas Fritas': 6, '7 Presas + Papas Fritas': 7, '8 Presas + Papas Fritas': 8, '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas + Papas + Arroz + Ensalada': 2, '1 Presa + Salchicha + Papas': 1, '2 Presas + Papas + Menestra + Arroz': 2};
+const PRESA_COMBOS = {'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1, 'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2, 'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8, '1 Presa + Papas Fritas (individual)': 1, '2 Presas + Papas Fritas': 2, '3 Presas + Papas Fritas': 3, '4 Presas + Papas Fritas': 4, '5 Presas + Papas Fritas': 5, '6 Presas + Papas Fritas': 6, '7 Presas + Papas Fritas': 7, '8 Presas + Papas Fritas': 8, '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas + Papas + Arroz + Ensalada': 2, '1 Presa + Salchicha + Papas': 1, '2 Presas + Papas + Menestra + Arroz': 2};
 // Combos que incluyen bebida - solo eligen sabor (sin tamaño)
 const DRINK_COMBOS = ['Combo Happy', 'Combo Super Happy', 'Combo Twins', 'Combo Festín', 'Combo Ideal', 'Combo Star', 'Happy Lunch', 'Combo Irresistible', 'Happy Burger', 'Super Burger', 'Combo Especial', 'Super Lunch', 'Mega Familiar', 'Super Star'];
 
@@ -2410,24 +2410,34 @@ function openOptions(name, price) {
     presaSection.style.display = 'block';
     const combos = PRESA_COMBINATIONS[presasNeeded];
 
-    // Restricción SOLO para individuales (1 Presa + Papas Fritas), NO para combos
+    // Restricción SOLO para individuales (1 Presa + Papas Fritas (individual)), NO para combos
     let disabledPresas = [];
-    const isIndividual = presasNeeded === 1 && optCurrent.name === '1 Presa + Papas Fritas';
+    const isIndividual = presasNeeded === 1 && optCurrent.name === '1 Presa + Papas Fritas (individual)';
     if (isIndividual) {
-      const indivInCart = cart.filter(i => i.name.startsWith('1 Presa + Papas Fritas ['));
+      const indivInCart = cart.filter(i => i.name.startsWith('1 Presa + Papas Fritas (individual) ['));
       const presasEnCarrito = indivInCart.map(i => {
         const match = i.name.match(/\[(.+)\]/);
         return match ? match[1] : '';
       });
-      const pechugas = presasEnCarrito.filter(p => p === 'Pechuga').length;
-      const alas = presasEnCarrito.filter(p => p === 'Ala').length;
-      if (pechugas >= 1 || alas >= 1) {
+      const grandesEnCarrito = presasEnCarrito.filter(p => p === 'Pechuga' || p === 'Ala').length;
+      const totalIndividuales = indivInCart.length + 1; // incluye la presa que se está agregando
+      // Límite de presas grandes (Pechuga/Ala) según el total de individuales en el pedido
+      // 1-2: 1 grande, 3-4: 2 grandes, 5-6: 3 grandes, 7+: 4 grandes
+      let maxGrandes;
+      if (totalIndividuales <= 2) maxGrandes = 1;
+      else if (totalIndividuales <= 4) maxGrandes = 2;
+      else if (totalIndividuales <= 6) maxGrandes = 3;
+      else maxGrandes = 4;
+
+      if (grandesEnCarrito >= maxGrandes) {
         if (!disabledPresas.includes('Pechuga')) disabledPresas.push('Pechuga');
         if (!disabledPresas.includes('Ala')) disabledPresas.push('Ala');
       }
 
       document.getElementById('presaCounter').textContent = 'Elige tu presa:' +
-        (disabledPresas.length > 0 ? ' (' + disabledPresas.join(' y ') + ' no disponible)' : '');
+        (disabledPresas.length > 0
+          ? ' (máx. ' + maxGrandes + ' grande' + (maxGrandes === 1 ? '' : 's') + ' alcanzado)'
+          : '');
     } else if (presasNeeded === 1) {
       document.getElementById('presaCounter').textContent = 'Elige tu presa:';
     } else {
@@ -2447,7 +2457,7 @@ function openOptions(name, price) {
       // Deshabilitar opciones no válidas solo para individuales
       if (isIndividual && disabledPresas.includes(label)) {
         btn.classList.add('disabled');
-        btn.onclick = () => showOptError(label + ' no disponible. Ya tienes ' + label + ' o Pechuga/Ala en tu pedido.');
+        btn.onclick = () => showOptError(label + ' no disponible. Has alcanzado el máximo de presas grandes (Pechuga/Ala) permitido para tu pedido.');
       } else {
         btn.onclick = () => selectPresaCombo(idx);
       }
