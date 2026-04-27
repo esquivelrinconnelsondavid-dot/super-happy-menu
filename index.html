@@ -1691,22 +1691,17 @@ body {
         <div id="deliverySection">
           <label class="form-label">Dirección de entrega *</label>
           <div class="location-tabs">
-            <button class="loc-tab active" id="locTabText" onclick="selectLocTab('text')">✍️ Escribir</button>
-            <button class="loc-tab" id="locTabGPS" onclick="selectLocTab('gps')">📍 Mi ubicación</button>
-            <button class="loc-tab" id="locTabMaps" onclick="selectLocTab('maps')">🔗 Link Maps</button>
+            <button class="loc-tab active" id="locTabGPS" onclick="selectLocTab('gps')">📍 Mi ubicación</button>
+            <button class="loc-tab" id="locTabText" onclick="selectLocTab('text')">✍️ Escribir</button>
           </div>
-          <div id="locTextArea">
-            <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba" onblur="calculateShipping()">
-          </div>
-          <div id="locGPSArea" style="display:none">
+          <div id="locGPSArea">
             <button type="button" onclick="obtenerUbicacionGPS()" style="width:100%;padding:12px;background:linear-gradient(135deg,#4285f4,#34a853);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:0.95rem;cursor:pointer;margin-bottom:8px;">📍 Enviar mi ubicación actual</button>
             <div id="gpsStatus" style="font-size:0.8rem;color:#666;margin-bottom:10px;text-align:center;"></div>
             <input class="form-input" id="addressGPS" type="text" placeholder="Tu ubicación aparecerá aquí..." readonly style="background:#f0f0f0;">
             <input type="hidden" id="addressGPSLink">
           </div>
-          <div id="locMapsArea" style="display:none">
-            <input class="form-input" id="addressMapsLink" type="url" placeholder="Pega aquí el link de Google Maps" onblur="calculateShipping()">
-            <div style="font-size:0.75rem;color:#aaa;margin-top:-8px;margin-bottom:10px;">Abre Maps → mantén presionado tu punto → copia el link</div>
+          <div id="locTextArea" style="display:none">
+            <input class="form-input" id="addressText" type="text" placeholder="Ej: Av. Daniel León Borja, Riobamba" onblur="calculateShipping()">
           </div>
           <div id="shippingBox" style="display:none;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:0.85rem;line-height:1.5;"></div>
         </div>
@@ -1749,7 +1744,7 @@ body {
 <script>
 let cart = [];
 let paymentMethod = '';
-let locTabActive = 'text';
+let locTabActive = 'gps';
 let orderMode = ''; // 'delivery' or 'pickup'
 let selectedBranch = ''; // 'centro' or 'norte'
 let billingType = 'final'; // 'final' or 'factura'
@@ -1870,12 +1865,10 @@ function selectBilling(type) {
 }
 function selectLocTab(tab) {
   locTabActive = tab;
-  document.getElementById('locTabText').classList.toggle('active', tab==='text');
   document.getElementById('locTabGPS').classList.toggle('active', tab==='gps');
-  document.getElementById('locTabMaps').classList.toggle('active', tab==='maps');
-  document.getElementById('locTextArea').style.display = tab==='text' ? '' : 'none';
+  document.getElementById('locTabText').classList.toggle('active', tab==='text');
   document.getElementById('locGPSArea').style.display = tab==='gps' ? '' : 'none';
-  document.getElementById('locMapsArea').style.display = tab==='maps' ? '' : 'none';
+  document.getElementById('locTextArea').style.display = tab==='text' ? '' : 'none';
   resetShipping();
   if (getDeliveryQuery()) calculateShipping();
 }
@@ -1921,14 +1914,13 @@ function obtenerUbicacionGPS() {
 
 function getDeliveryQuery() {
   if (orderMode !== 'delivery') return '';
-  if (locTabActive === 'text') return document.getElementById('addressText').value.trim();
   if (locTabActive === 'gps') {
     const link = document.getElementById('addressGPSLink').value.trim();
     if (!link) return '';
     const m = link.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
     return m ? `${m[1]}, ${m[2]}` : link;
   }
-  if (locTabActive === 'maps') return document.getElementById('addressMapsLink').value.trim();
+  if (locTabActive === 'text') return document.getElementById('addressText').value.trim();
   return '';
 }
 
@@ -2069,11 +2061,10 @@ function submitOrder() {
     address = sucursal;
     addrLabel = `🏪 Retiro: ${sucursal}`;
   } else {
-    if (locTabActive==='text') address = document.getElementById('addressText').value.trim();
-    else if (locTabActive==='gps') address = document.getElementById('addressGPSLink').value.trim() || document.getElementById('addressGPS').value.trim();
-    else address = document.getElementById('addressMapsLink').value.trim();
+    if (locTabActive==='gps') address = document.getElementById('addressGPSLink').value.trim() || document.getElementById('addressGPS').value.trim();
+    else address = document.getElementById('addressText').value.trim();
     if (!address) { alert('Por favor ingresa tu dirección de entrega.'); return; }
-    addrLabel = (locTabActive==='maps' || locTabActive==='gps') ? `📍 DIRECCIÓN DE ENTREGA (Maps): ${address}` : `📍 DIRECCIÓN DE ENTREGA: ${address}`;
+    addrLabel = locTabActive==='gps' ? `📍 DIRECCIÓN DE ENTREGA (Maps): ${address}` : `📍 DIRECCIÓN DE ENTREGA: ${address}`;
     if (shippingState === 'loading') { alert('Espera un momento, todavía estamos calculando el envío.'); return; }
     if (shippingState !== 'ok') { alert('No se pudo calcular el envío para esta dirección. Verifica e intenta de nuevo.'); return; }
   }
@@ -2127,7 +2118,7 @@ function toggleSchedule() {
 
 function resetOrder() {
   cart = []; paymentMethod = ''; orderMode = ''; selectedBranch = '';
-  ['clientName','orderNotes','facturaRuc','facturaRazon','facturaDireccion','facturaEmail','addressText','addressMapsLink','addressGPS','addressGPSLink','scheduleTime'].forEach(id => { document.getElementById(id).value=''; });
+  ['clientName','orderNotes','facturaRuc','facturaRazon','facturaDireccion','facturaEmail','addressText','addressGPS','addressGPSLink','scheduleTime'].forEach(id => { document.getElementById(id).value=''; });
   document.getElementById('gpsStatus').textContent = '';
   selectBilling('final');
   document.getElementById('transferInfo').style.display = 'none';
@@ -2138,7 +2129,7 @@ function resetOrder() {
   document.getElementById('deliverySection').style.display = 'block';
   document.getElementById('pickupSection').style.display = 'none';
   resetShipping();
-  selectLocTab('text');
+  selectLocTab('gps');
   updateCartUI();
   updateFormTotals();
   closeCart();
