@@ -2072,7 +2072,7 @@ function submitOrder() {
   const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
   const ship = orderMode === 'delivery' ? shippingCost : 0;
   const total = subtotal + ship;
-  const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${(i.price*i.qty).toFixed(2)}`).join('\n');
+  const items = cart.map(i=>`  • ${i.qty}x ${i.name} → $${i.price.toFixed(2)}`).join('\n');
   const payLabel = paymentMethod==='cash' ? '💵 Efectivo' : '📲 Transferencia';
   const facturaInfo = facturaOn
     ? `\n🧾 *FACTURA*:\n  RUC/CI: ${ruc}\n  Nombre: ${razon}\n  Dir: ${facturaDireccion}\n  Email: ${facturaEmail}`
