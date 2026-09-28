@@ -829,7 +829,13 @@ body {
 .upsell-body{padding:4px 14px 6px}
 .upsell-title{font-family:'Righteous',cursive;font-size:1.35rem;color:var(--purple);text-align:center;margin:6px 0 2px}
 .upsell-sub{text-align:center;color:#666;font-size:.88rem;font-weight:700;margin-bottom:14px}
+.upsell-sabores{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;margin:0 -2px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.upsell-sabores::-webkit-scrollbar{display:none}
+.upsell-sabor{flex-shrink:0;border:2px solid #ece4ff;background:#fff;color:#555;border-radius:999px;padding:9px 14px;font-weight:900;font-size:.86rem;font-family:inherit;cursor:pointer;white-space:nowrap}
+.upsell-sabor.sel{background:linear-gradient(135deg,var(--pink),var(--pink-dark));border-color:transparent;color:#fff;box-shadow:0 4px 12px rgba(233,30,140,.35)}
 .upsell-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
+.upsell-opts.c2{grid-template-columns:repeat(2,1fr)}
+.upsell-opt .uo-size{font-weight:700;font-size:.74rem;color:#999}
 .upsell-opt{border:2px solid #ece4ff;background:#fff;border-radius:16px;padding:8px 6px 10px;text-align:center;cursor:pointer;font-family:inherit;color:inherit}
 .upsell-opt:active{transform:scale(.97)}
 .upsell-opt img{width:100%;height:84px;object-fit:contain;display:block}
@@ -884,7 +890,8 @@ body.modo-mesa #clientName{font-size:1.15rem;padding:14px;border-width:2.5px;bac
 .mesa-ayuda-nombre{font-size:.8rem;color:#777;font-weight:700;margin:0 0 14px 2px}
 .mesa-info-pago{background:#FFF4D6;border-radius:14px;padding:11px 12px;font-size:.85rem;font-weight:800;color:#6b4e00;line-height:1.4;margin-top:12px}
 /* confirmación tipo ticket */
-.mt{width:100%;background:#F4EEFF;border-radius:26px;padding:14px;text-align:center;animation:mesaSube .35s ease both}
+.mt{width:100%;background:#F4EEFF;border-radius:26px;padding:14px;text-align:center}
+.mt.mt-entra{animation:mesaSube .35s ease both}
 .mt-ticket{background:#fff;border-radius:22px;box-shadow:0 10px 28px rgba(106,31,190,.16);overflow:hidden;position:relative}
 .mt-top{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;padding:16px 14px 50px;transition:background .4s}
 .mt-top.e-en_cocina{background:linear-gradient(135deg,#0d47a1,#2F80ED)}
@@ -893,7 +900,8 @@ body.modo-mesa #clientName{font-size:1.15rem;padding:14px;border-width:2.5px;bac
 .mt-top.e-anulado{background:linear-gradient(135deg,#B71C1C,#E57373)}
 .mt-titulo{font-family:'Righteous',cursive;font-size:1.35rem;line-height:1.2}
 .mt-sub{font-weight:800;font-size:.84rem;opacity:.92;margin-top:4px}
-.mt-num{width:112px;height:112px;margin:-44px auto 8px;border-radius:50%;background:var(--yellow);color:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 7px #fff,0 10px 22px rgba(0,0,0,.16);position:relative;animation:mesaPop .55s .1s cubic-bezier(.3,1.6,.5,1) both}
+.mt-num{width:112px;height:112px;margin:-44px auto 8px;border-radius:50%;background:var(--yellow);color:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 7px #fff,0 10px 22px rgba(0,0,0,.16);position:relative}
+.mt-entra .mt-num{animation:mesaPop .55s .1s cubic-bezier(.3,1.6,.5,1) both}
 .mt-num small{font-weight:900;font-size:.58rem;letter-spacing:2px}
 .mt-num b{font-family:'Righteous',cursive;font-size:2.7rem;line-height:1}
 .mt-nombre{font-family:'Righteous',cursive;font-size:1.7rem;color:var(--black);padding:0 14px;word-break:break-word;line-height:1.15}
@@ -1741,7 +1749,7 @@ body.modo-mesa .success-screen{padding:18px 14px 20px}
     </div>
 
 
-    <!-- ¿Le agregamos una cola? (antes de los datos del pedido) -->
+    <!-- ¿Le agregamos una bebida? sabor + tamaño (antes de los datos del pedido) -->
     <div id="upsellView" style="display:none">
       <div class="modal-header">
         <button class="close-btn" onclick="backToCart()" style="background:none;font-size:0.95rem;color:#555;width:auto;height:auto;border-radius:0;">← Atrás</button>
@@ -1749,13 +1757,10 @@ body.modo-mesa .success-screen{padding:18px 14px 20px}
         <button class="close-btn" onclick="closeCart()">✕</button>
       </div>
       <div class="upsell-body">
-        <div class="upsell-title">¿Le agregamos una cola?</div>
-        <div class="upsell-sub">Para acompañar su pedido 🍗</div>
-        <div class="upsell-opts">
-          <button type="button" class="upsell-opt" onclick="agregarColaUpsell('Coca Cola 300ml',0.70)"><img src="img/sprite_300.jpg" alt="Coca Cola personal"><div class="uo-name">Personal</div><div class="uo-price">$0.70</div></button>
-          <button type="button" class="upsell-opt" onclick="agregarColaUpsell('Coca Cola 1lt',1.80)"><img src="img/coca_cola_135.jpg" alt="Coca Cola 1 litro"><div class="uo-name">1 litro</div><div class="uo-price">$1.80</div></button>
-          <button type="button" class="upsell-opt" onclick="agregarColaUpsell('Coca Cola 3lt',4.30)"><img src="img/coca_cola_3lt.jpg" alt="Coca Cola 3 litros"><div class="uo-name">3 litros</div><div class="uo-price">$4.30</div></button>
-        </div>
+        <div class="upsell-title">¿Le agregamos una bebida?</div>
+        <div class="upsell-sub">Elija el sabor y el tamaño 🍗</div>
+        <div class="upsell-sabores" id="upsellSabores"></div>
+        <div class="upsell-opts" id="upsellOpts"></div>
         <button type="button" class="upsell-no" onclick="irAlFormulario()">No, gracias</button>
       </div>
     </div>
@@ -2290,7 +2295,7 @@ function resetOrder() {
   if (MODO_MESA) {
     orderMode = 'mesa';
     const nm = lsGet(MESA_LS_NOMBRE); if (nm) document.getElementById('clientName').value = nm;
-    document.getElementById('mesaSuccess').style.display = 'none';
+    const ms = document.getElementById('mesaSuccess'); ms.style.display = 'none'; ms.dataset.firma = '';
     ['successIconDef', 'successTitle', 'successMsg'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = ''; });
   }
   updateCartUI();
@@ -2310,8 +2315,64 @@ function debeOfrecerCola() {
   if (cart.some(i => RE_BEBIDA_SUELTA.test(i.name))) return false;          // ya lleva una bebida suelta
   return cart.some(i => !DRINK_COMBOS.includes(baseItemCarrito(i.name)));  // algo que NO trae su cola
 }
+// Catálogo de bebidas sacado de la pestaña Bebidas del menú (nombre, precio, foto, marca y tamaño).
+let catalogoBebidas = null;
+let saborUpsell = '';
+const ORDEN_SABORES = ['Coca Cola', 'Sprite', 'Fanta', 'Fiora', 'Inka Cola', 'Fuze Tea', 'Frezno', 'Sunny Mora', 'Sunny Durazno', 'Jugo del Valle', 'Agua', 'Agua Splendor'];
+function leerCatalogoBebidas() {
+  if (catalogoBebidas) return catalogoBebidas;
+  const porMarca = {};
+  document.querySelectorAll('#page-bebidas .pcard').forEach(c => {
+    const m = String(c.getAttribute('onclick') || '').match(/addToCart\('([^']+)',\s*([\d.]+)\)/);
+    if (!m) return;
+    const marca = ((c.querySelector('.pcard-name') || {}).textContent || '').trim() || m[1];
+    const img = c.querySelector('img');
+    (porMarca[marca] = porMarca[marca] || []).push({ nombre: m[1], precio: parseFloat(m[2]), foto: img ? img.getAttribute('src') : '', tam: ((c.querySelector('.pcard-desc') || {}).textContent || '').trim() });
+  });
+  const marcas = Object.keys(porMarca).sort((a, b) => {
+    const ia = ORDEN_SABORES.indexOf(a), ib = ORDEN_SABORES.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
+  marcas.forEach(k => porMarca[k].sort((a, b) => a.precio - b.precio));
+  catalogoBebidas = { marcas, porMarca };
+  return catalogoBebidas;
+}
+function nombreTamano(t) {
+  const s = String(t || '').toLowerCase().replace(/\s+/g, '');
+  if (s === '300ml') return 'Personal';
+  if (s === '500ml') return 'Mediana';
+  if (s === '1lt' || s === '1l') return '1 litro';
+  if (s === '1.35lt') return '1,35 litros';
+  if (s === '1.5lt') return '1,5 litros';
+  if (s === '3lt') return '3 litros';
+  return t;
+}
+function pintarUpsellBebida(marca) {
+  const cat = leerCatalogoBebidas();
+  if (!cat.marcas.length) return;
+  saborUpsell = (marca && cat.porMarca[marca]) ? marca : (saborUpsell && cat.porMarca[saborUpsell] ? saborUpsell : cat.marcas[0]);
+  document.getElementById('upsellSabores').innerHTML = cat.marcas.map(k =>
+    '<button type="button" class="upsell-sabor' + (k === saborUpsell ? ' sel' : '') + '" data-sabor="' + escHtml(k) + '">' + escHtml(k) + '</button>').join('');
+  const lista = cat.porMarca[saborUpsell];
+  const ops = document.getElementById('upsellOpts');
+  ops.classList.toggle('c2', lista.length === 4 || lista.length === 2);
+  ops.innerHTML = lista.map((b, i) =>
+    '<button type="button" class="upsell-opt" data-i="' + i + '">' +
+      (b.foto ? '<img src="' + escHtml(b.foto) + '" alt="' + escHtml(b.nombre) + '">' : '') +
+      '<div class="uo-name">' + escHtml(nombreTamano(b.tam)) + '</div>' +
+      (/^(Personal|Mediana)$/.test(nombreTamano(b.tam)) ? '<div class="uo-size">' + escHtml(b.tam) + '</div>' : '') +
+      '<div class="uo-price">$' + b.precio.toFixed(2) + '</div></button>').join('');
+  document.querySelectorAll('#upsellSabores .upsell-sabor').forEach(bt => bt.onclick = () => pintarUpsellBebida(bt.getAttribute('data-sabor')));
+  document.querySelectorAll('#upsellOpts .upsell-opt').forEach(bt => bt.onclick = () => {
+    const b = cat.porMarca[saborUpsell][Number(bt.getAttribute('data-i'))];
+    agregarColaUpsell(b.nombre, b.precio);
+  });
+  const sel = document.querySelector('#upsellSabores .upsell-sabor.sel');
+  if (sel && sel.scrollIntoView) { try { sel.scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (e) {} }
+}
 function mostrarUpsellCola() {
   colaOfrecida = true;
+  pintarUpsellBebida('');
   document.getElementById('cartView').style.display = 'none';
   document.getElementById('formView').style.display = 'none';
   document.getElementById('upsellView').style.display = '';
@@ -2548,6 +2609,10 @@ function partirItemMesa(n) {
 function pintarPedidoMesa() {
   const p = mesaPedido; if (!p) return;
   const est = mesaEstado || 'por_cobrar';
+  const el0 = document.getElementById('mesaSuccess');
+  const firma = [est, p.numero, p.nombre, Number(p.total || 0).toFixed(2), JSON.stringify(p.items || [])].join('|');
+  if (el0.dataset.firma === firma && el0.style.display !== 'none' && el0.innerHTML) return;   // nada cambió: no redibujar
+  const primera = el0.dataset.token !== String(p.token || '');                                  // la animación de entrada solo la 1.ª vez
   const nivel = { por_cobrar: 0, en_cocina: 1, listo: 2, entregado: 3 }[est];
   let pasos = '';
   if (nivel != null) {
@@ -2570,9 +2635,10 @@ function pintarPedidoMesa() {
     ? '<div class="mt-caja">👉 Acérquese a caja con su nombre, <b>' + escHtml(p.nombre) + '</b>, para cancelar su pedido.</div>'
     : '';
   const puedeMostrar = est === 'por_cobrar' || est === 'en_cocina' || est === 'listo';
-  const el = document.getElementById('mesaSuccess');
+  const el = el0;
+  el.dataset.firma = firma; el.dataset.token = String(p.token || '');
   el.innerHTML =
-    '<div class="mt">' +
+    '<div class="mt' + (primera ? ' mt-entra' : '') + '">' +
       '<div class="mt-ticket">' +
         '<div class="mt-top e-' + est + '">' +
           '<div class="mt-titulo">' + (MESA_ICONO[est] || '') + ' ' + (MESA_TITULO[est] || '') + '</div>' +
@@ -2608,8 +2674,10 @@ function mostrarEnCajaMesa() {
 function pintarFabMesa() {
   const fab = document.getElementById('mesaFab'); if (!fab || !mesaPedido) return;
   const est = mesaEstado || 'por_cobrar';
-  fab.className = 'mesa-fab show e-' + est;
-  fab.innerHTML = '<span class="mf-dot"></span>Mi pedido #' + escHtml(mesaPedido.numero) + ' · ' + (MESA_FAB[est] || '');
+  const clase = 'mesa-fab show e-' + est;
+  const html = '<span class="mf-dot"></span>Mi pedido #' + escHtml(mesaPedido.numero) + ' · ' + (MESA_FAB[est] || '');
+  if (fab.className !== clase) fab.className = clase;          // sin tocar lo que no cambió (no parpadea)
+  if (fab.innerHTML !== html) fab.innerHTML = html;
 }
 
 function arrancarSondeoMesa() {

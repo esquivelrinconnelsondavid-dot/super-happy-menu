@@ -488,7 +488,7 @@ function comandaHTML(p, prueba) {
   var items = (p.items || []).map(function (i) { return '<div class="it">' + esc(i.qty) + ' x ' + esc(String(i.nombre).toUpperCase()) + '</div>'; }).join('');
   var pagado = p.metodo_pago ? 'PAGADO ' + String(p.metodo_pago).toUpperCase() : 'POR COBRAR';
   return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Comanda</title><style>' +
-    '@page{size:72mm auto;margin:0}html,body{margin:0;padding:0}' +
+    'html,body{margin:0;padding:0}' +
     'body{width:72mm;font-family:Consolas,"Lucida Console","Courier New",monospace;font-weight:700;color:#000}' +
     '.t{padding:2mm 3mm 12mm;font-size:13px;line-height:1.25}.c{text-align:center}.g{font-size:20px}.xg{font-size:36px;line-height:1.05}' +
     'hr{border:0;border-top:2px dashed #000;margin:2mm 0}.it{margin:1.4mm 0;font-size:15px}.row{display:flex;justify-content:space-between}' +
@@ -506,12 +506,19 @@ function imprimir(p, prueba) {
   try {
     var f = document.createElement('iframe');
     f.setAttribute('aria-hidden', 'true');
-    f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+    f.style.cssText = 'position:fixed;left:-10000px;top:0;width:320px;height:200px;border:0';
     document.body.appendChild(f);
     var d = f.contentWindow.document;
     d.open(); d.write(comandaHTML(p, prueba)); d.close();
     setTimeout(function () {
-      try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { toast('No se pudo imprimir.'); }
+      try {
+        // hoja del largo exacto del ticket (+ 12 mm para cortar): así la térmica no saca papel en blanco
+        var alto = Math.ceil((d.body.scrollHeight || d.documentElement.scrollHeight || 400) * 25.4 / 96) + 12;
+        var st = d.createElement('style');
+        st.textContent = '@page{size:72mm ' + Math.max(60, Math.min(alto, 600)) + 'mm;margin:0}';
+        d.head.appendChild(st);
+        f.contentWindow.focus(); f.contentWindow.print();
+      } catch (e) { toast('No se pudo imprimir.'); }
       setTimeout(function () { if (f.parentNode) f.parentNode.removeChild(f); }, 4000);
     }, 350);
   } catch (e) { toast('No se pudo imprimir.'); }
