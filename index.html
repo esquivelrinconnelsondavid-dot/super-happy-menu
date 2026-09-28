@@ -824,6 +824,40 @@ body {
   margin-bottom: 10px; font-size: 0.82rem; font-weight: 800; color: #3d0070;
 }
 
+/* ══════════ PEDIDO EN MESA (QR) + SUGERENCIA DE COLA · 28-sep ══════════ */
+.mesa-banner{display:none;margin:10px 14px 0;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,var(--purple),#8E3FE0);color:#fff;line-height:1.35;box-shadow:var(--shadow-card)}
+.mesa-banner.show{display:block}
+.mesa-banner .mb-top{font-family:'Righteous',cursive;font-size:1.15rem}
+.mesa-banner .mb-sub{font-size:.84rem;font-weight:700;opacity:.92;margin-top:2px}
+.upsell-body{padding:4px 14px 6px}
+.upsell-title{font-family:'Righteous',cursive;font-size:1.35rem;color:var(--purple);text-align:center;margin:6px 0 2px}
+.upsell-sub{text-align:center;color:#666;font-size:.88rem;font-weight:700;margin-bottom:14px}
+.upsell-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
+.upsell-opt{border:2px solid #ece4ff;background:#fff;border-radius:16px;padding:8px 6px 10px;text-align:center;cursor:pointer;font-family:inherit;color:inherit}
+.upsell-opt:active{transform:scale(.97)}
+.upsell-opt img{width:100%;height:84px;object-fit:contain;display:block}
+.upsell-opt .uo-name{font-weight:900;font-size:.86rem;color:#333;margin-top:4px}
+.upsell-opt .uo-price{font-weight:900;color:var(--pink);font-size:1rem}
+.upsell-no{display:block;width:100%;background:none;border:none;color:#666;font-weight:800;font-size:.95rem;padding:14px;cursor:pointer;font-family:inherit;text-decoration:underline}
+.form-error{display:none;background:#fdecec;color:#b71c1c;border-radius:12px;padding:10px 12px;font-weight:800;font-size:.86rem;margin:10px 14px 0}
+.form-error.show{display:block}
+.mesa-ok{width:100%;text-align:center}
+.mesa-num{font-family:'Righteous',cursive;font-size:3.3rem;color:var(--purple);line-height:1;margin:6px 0 2px}
+.mesa-meta{color:#666;font-weight:800;font-size:.9rem;margin-bottom:12px}
+.mesa-caja{background:#FFF4D6;border:2px dashed var(--orange);border-radius:16px;padding:14px;margin:4px 0 12px;font-size:1.05rem;line-height:1.45;color:#333;font-weight:800}
+.mesa-caja b{color:var(--pink);font-size:1.2rem}
+.mesa-total{font-size:1.3rem;font-weight:900;color:#222;margin-bottom:10px}
+.mesa-estado{border-radius:14px;padding:12px;font-weight:900;font-size:1rem;margin:2px 0 12px}
+.mesa-estado.e-por_cobrar{background:#fff3cd;color:#8a6100}
+.mesa-estado.e-en_cocina{background:#e3f2fd;color:#0d47a1}
+.mesa-estado.e-listo{background:#e8f8ee;color:#1b6b3a;animation:mesaPulso 1.2s ease-in-out infinite}
+.mesa-estado.e-entregado{background:#f1f1f1;color:#444}
+.mesa-estado.e-anulado{background:#fdecec;color:#b71c1c}
+@keyframes mesaPulso{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.mesa-items{text-align:left;background:#faf8ff;border-radius:12px;padding:10px 12px;font-size:.85rem;color:#444;margin-bottom:6px}
+.mesa-items div{padding:2px 0}
+.mesa-fab{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;z-index:250;background:var(--purple);color:#fff;border:none;border-radius:999px;padding:11px 20px;font-weight:900;font-size:.95rem;font-family:inherit;box-shadow:0 6px 20px rgba(106,31,190,.4);display:none;cursor:pointer}
+.mesa-fab.show{display:block}
 </style>
 </head>
 <body style="">
@@ -835,6 +869,8 @@ body {
     <img src="img/logo-superhappy-new.jpg" alt="Super Happy" style="width:100%;height:auto;border-radius:0;filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.15));display:block;">
   </div>
 </div>
+
+<div class="mesa-banner" id="mesaBanner"></div>
 
 <!-- HERO -->
 <div class="hero">
@@ -1591,6 +1627,7 @@ body {
 </div>
 
 <!-- CART FAB -->
+<button class="mesa-fab" id="mesaFab" type="button" onclick="verMiPedidoMesa()">🧾 Ver mi pedido</button>
 <button class="cart-fab hidden" id="cartFab" onclick="openCart()">
   🛒 Ver pedido
   <span class="cart-badge" id="cartBadge">0</span>
@@ -1617,6 +1654,26 @@ body {
       </div>
     </div>
 
+
+    <!-- ¿Le agregamos una cola? (antes de los datos del pedido) -->
+    <div id="upsellView" style="display:none">
+      <div class="modal-header">
+        <button class="close-btn" onclick="backToCart()" style="background:none;font-size:0.95rem;color:#555;width:auto;height:auto;border-radius:0;">← Atrás</button>
+        <span class="modal-title">🥤 Algo de tomar</span>
+        <button class="close-btn" onclick="closeCart()">✕</button>
+      </div>
+      <div class="upsell-body">
+        <div class="upsell-title">¿Le agregamos una cola?</div>
+        <div class="upsell-sub">Para acompañar su pedido 🍗</div>
+        <div class="upsell-opts">
+          <button type="button" class="upsell-opt" onclick="agregarColaUpsell('Coca Cola 300ml',0.70)"><img src="img/sprite_300.jpg" alt="Coca Cola personal"><div class="uo-name">Personal</div><div class="uo-price">$0.70</div></button>
+          <button type="button" class="upsell-opt" onclick="agregarColaUpsell('Coca Cola 1lt',1.80)"><img src="img/coca_cola_135.jpg" alt="Coca Cola 1 litro"><div class="uo-name">1 litro</div><div class="uo-price">$1.80</div></button>
+          <button type="button" class="upsell-opt" onclick="agregarColaUpsell('Coca Cola 3lt',4.30)"><img src="img/coca_cola_3lt.jpg" alt="Coca Cola 3 litros"><div class="uo-name">3 litros</div><div class="uo-price">$4.30</div></button>
+        </div>
+        <button type="button" class="upsell-no" onclick="irAlFormulario()">No, gracias</button>
+      </div>
+    </div>
+
     <!-- Form view -->
     <div id="formView" style="display:none">
       <div class="modal-header">
@@ -1625,9 +1682,10 @@ body {
         <button class="close-btn" onclick="closeCart()">✕</button>
       </div>
       <div class="form-section">
-        <label class="form-label">Tu nombre *</label>
+        <label class="form-label" id="clientNameLabel">Tu nombre *</label>
         <input class="form-input" id="clientName" type="text" placeholder="Ej: María García">
 
+        <div id="camposEnvio">
         <label class="form-label">Método de pago *</label>
         <div class="payment-opts">
           <div class="payment-opt" id="pay-cash" onclick="selectPayment('cash')">
@@ -1719,6 +1777,8 @@ body {
           <div style="font-size:0.75rem;color:#888;margin-top:-8px;margin-bottom:4px;">La hora debe ser al menos 30 minutos en el futuro. Si no programas hora, tu pedido se procesa con los tiempos normales (25-30 min delivery, 10 min retiro).</div>
         </div>
 
+        </div><!-- /camposEnvio -->
+
         <label class="form-label">Nota adicional (opcional)</label>
         <textarea class="form-textarea" id="orderNotes" placeholder="Ej: Sin picante, extra salsa, timbre color azul..."></textarea>
 
@@ -1728,15 +1788,17 @@ body {
           <div style="display:flex;justify-content:space-between;font-weight:900;font-size:1rem;color:#6A1FBE;border-top:1px dashed #d8ccff;padding-top:6px;margin-top:6px;"><span>Total:</span><span id="formTotal">$0.00</span></div>
         </div>
       </div>
-      <button class="submit-btn" onclick="submitOrder()">🍗 Enviar Pedido</button>
+      <div class="form-error" id="formError"></div>
+      <button class="submit-btn" id="submitBtn" onclick="submitOrder()">🍗 Enviar Pedido</button>
     </div>
 
     <!-- Success -->
     <div class="success-screen" id="successView">
-      <div class="success-icon">🎉</div>
+      <div class="success-icon" id="successIconDef">🎉</div>
       <div class="success-title" id="successTitle">¡Pedido enviado!</div>
       <div class="success-msg" id="successMsg">Tu pedido llegó al restaurante.<br>¡Gracias!</div>
-      <button class="submit-btn" style="margin-top:20px;width:calc(100% - 28px);" onclick="resetOrder()">Hacer otro pedido</button>
+      <div class="mesa-ok" id="mesaSuccess" style="display:none"></div>
+      <button class="submit-btn" id="successAgainBtn" style="margin-top:20px;width:calc(100% - 28px);" onclick="resetOrder()">Hacer otro pedido</button>
     </div>
   </div>
 </div>
@@ -1788,6 +1850,7 @@ function showPage(page, btn) {
 }
 
 function addToCart(name, price) {
+  mesaUid = null; // el carrito cambió: si se vuelve a enviar, es un pedido nuevo
   // Presas con selección [xxx] son únicas, no se acumulan
   if (name.includes('[')) {
     cart.push({ name, price, qty: 1, unique: true });
@@ -1829,6 +1892,7 @@ function updateCartUI() {
 }
 
 function changeQty(idx, delta) {
+  mesaUid = null;
   cart[idx].qty += delta;
   if (cart[idx].qty <= 0) cart.splice(idx, 1);
   updateCartUI();
@@ -1843,14 +1907,19 @@ function animateFab() {
 function openCart() {
   document.getElementById('cartOverlay').classList.add('show');
   document.getElementById('cartView').style.display = '';
+  document.getElementById('upsellView').style.display = 'none';
   document.getElementById('formView').style.display = 'none';
   document.getElementById('successView').classList.remove('show');
   updateCartUI();
 }
 function closeCart() { document.getElementById('cartOverlay').classList.remove('show'); }
 function closeOnOverlay(e) { if (e.target === document.getElementById('cartOverlay')) closeCart(); }
-function showForm() { if (!cart.length) return; document.getElementById('cartView').style.display='none'; document.getElementById('formView').style.display=''; updateFormTotals(); }
-function backToCart() { document.getElementById('cartView').style.display=''; document.getElementById('formView').style.display='none'; }
+function showForm() {
+  if (!cart.length) return;
+  if (!colaOfrecida && debeOfrecerCola()) { mostrarUpsellCola(); return; }
+  irAlFormulario();
+}
+function backToCart() { document.getElementById('cartView').style.display=''; document.getElementById('upsellView').style.display='none'; document.getElementById('formView').style.display='none'; }
 function selectPayment(m) {
   paymentMethod = m;
   document.getElementById('pay-cash').classList.toggle('selected', m==='cash');
@@ -2021,6 +2090,7 @@ function calculateShipping() {
 }
 
 function submitOrder() {
+  if (MODO_MESA) { enviarPedidoMesa(); return; }
   const name = document.getElementById('clientName').value.trim();
   const notes = document.getElementById('orderNotes').value.trim();
   const facturaOn = billingType === 'factura';
@@ -2130,6 +2200,13 @@ function resetOrder() {
   document.getElementById('pickupSection').style.display = 'none';
   resetShipping();
   selectLocTab('gps');
+  colaOfrecida = false;
+  if (MODO_MESA) {
+    orderMode = 'mesa';
+    const nm = lsGet(MESA_LS_NOMBRE); if (nm) document.getElementById('clientName').value = nm;
+    document.getElementById('mesaSuccess').style.display = 'none';
+    ['successIconDef', 'successTitle', 'successMsg'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = ''; });
+  }
   updateCartUI();
   updateFormTotals();
   closeCart();
@@ -2137,6 +2214,247 @@ function resetOrder() {
 
 updateCartUI();
 
+
+// ─── ¿LE AGREGAMOS UNA COLA? (al final del carrito, antes de los datos) ───
+let colaOfrecida = false;
+const RE_BEBIDA_SUELTA = /^(coca cola|sprite|fanta|fiora|inka cola|agua|fuze tea|jugo del valle|frezno|fresno tea|sunny)/i;
+function baseItemCarrito(n) { return String(n || '').split(' [')[0].split(' + ')[0].trim(); }
+function debeOfrecerCola() {
+  if (!cart.length) return false;
+  if (cart.some(i => RE_BEBIDA_SUELTA.test(i.name))) return false;          // ya lleva una bebida suelta
+  return cart.some(i => !DRINK_COMBOS.includes(baseItemCarrito(i.name)));  // algo que NO trae su cola
+}
+function mostrarUpsellCola() {
+  colaOfrecida = true;
+  document.getElementById('cartView').style.display = 'none';
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('upsellView').style.display = '';
+}
+function agregarColaUpsell(nombre, precio) { addToCart(nombre, precio); irAlFormulario(); }
+function irAlFormulario() {
+  document.getElementById('cartView').style.display = 'none';
+  document.getElementById('upsellView').style.display = 'none';
+  document.getElementById('formView').style.display = '';
+  errorForm('');
+  updateFormTotals();
+}
+function errorForm(msg) {
+  const el = document.getElementById('formError'); if (!el) return;
+  el.textContent = msg || '';
+  el.classList.toggle('show', !!msg);
+}
+
+// ─── PEDIDO EN MESA (QR) ───
+// El QR de cada mesa abre esta misma app con ?local=avenida&mesa=5 (o local=norte).
+// En ese modo el cliente solo pone su nombre: el pedido entra directo al PANEL DE MESAS
+// (Supabase, tabla pedidos_mesa, sin WhatsApp) y se paga en caja diciendo el nombre.
+const MESA_QS = new URLSearchParams(location.search);
+const MESA_NUM = String(MESA_QS.get('mesa') || '').trim().replace(/[^0-9A-Za-z-]/g, '').slice(0, 10);
+const MESA_LOCAL = String(MESA_QS.get('local') || '').trim().toLowerCase();
+const MESA_LOCALES = { avenida: 'Local Avenida', norte: 'Local Norte' };
+const MODO_MESA = !!MESA_NUM && Object.prototype.hasOwnProperty.call(MESA_LOCALES, MESA_LOCAL);
+const SUPA_URL = 'https://wfpdtjmmrhhfuxayvpzu.supabase.co';
+const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmcGR0am1tcmhoZnV4YXl2cHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNzE1NDksImV4cCI6MjA4ODY0NzU0OX0.Iyeogfs5AIiVrM5agXuMZsgFrud460OYvn0zkYgJH0s';
+const SH_RESTAURANTE_ID = '5a181295-24ac-4d82-83ae-1859dc109d3a';
+const MESA_LS_PEDIDO = 'sh_mesa_pedido';
+const MESA_LS_NOMBRE = 'sh_nombre';
+const MESA_TXT_ESTADO = {
+  por_cobrar: '⏳ Esperando su pago en caja',
+  en_cocina: '💰 ¡Pagado! Su pedido ya está en cocina 👨‍🍳',
+  listo: '🔔 ¡Su pedido está listo!',
+  entregado: '✅ Entregado. ¡Buen provecho! 😋',
+  anulado: '❌ Este pedido se anuló. Si fue un error, acérquese a caja.'
+};
+let mesaUid = null;
+let enviandoMesa = false;
+let mesaPedido = null;   // {token, numero, mesa, local, nombre, total, items, t}
+let mesaEstado = '';
+let mesaTimer = null;
+let mesaAudio = null;
+
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function nuevoUid() {
+  try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+  return 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+}
+function rpcSupa(fn, args) {
+  return fetch(SUPA_URL + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SUPA_ANON, Authorization: 'Bearer ' + SUPA_ANON },
+    body: JSON.stringify(args || {})
+  }).then(r => r.text().then(t => {
+    let d = null; try { d = t ? JSON.parse(t) : null; } catch (e) { d = null; }
+    if (!r.ok) { const er = new Error((d && d.message) || ('HTTP ' + r.status)); er.status = r.status; throw er; }
+    return d;
+  }));
+}
+
+function initMesa() {
+  if (!MODO_MESA) return;
+  document.body.classList.add('modo-mesa');
+  const b = document.getElementById('mesaBanner');
+  b.innerHTML = '<div class="mb-top">🍽️ Mesa ' + escHtml(MESA_NUM) + ' · ' + MESA_LOCALES[MESA_LOCAL] + '</div>' +
+                '<div class="mb-sub">Arme su pedido aquí y pague en caja con su nombre.</div>';
+  b.classList.add('show');
+  const hs = document.querySelector('.hero-sub'); if (hs) hs.textContent = 'Pida desde su mesa, sin hacer fila 🙌';
+  const ce = document.getElementById('camposEnvio'); if (ce) ce.style.display = 'none';
+  const lbl = document.getElementById('clientNameLabel'); if (lbl) lbl.textContent = 'Su nombre * (con este nombre le atienden en caja)';
+  const inp = document.getElementById('clientName');
+  if (inp) { inp.placeholder = 'Ej: María'; inp.maxLength = 40; inp.setAttribute('autocomplete', 'given-name'); inp.value = lsGet(MESA_LS_NOMBRE) || ''; }
+  const notas = document.getElementById('orderNotes'); if (notas) notas.placeholder = 'Ej: sin ají, una parte para llevar…';
+  const btn = document.getElementById('submitBtn'); if (btn) btn.textContent = '✅ Confirmar pedido';
+  orderMode = 'mesa';
+  // ¿quedó un pedido en marcha en este celular? (se sigue viendo al volver a abrir el QR)
+  let prev = null; try { prev = JSON.parse(lsGet(MESA_LS_PEDIDO) || 'null'); } catch (e) { prev = null; }
+  if (prev && prev.token && (Date.now() - (prev.t || 0)) < 6 * 3600 * 1000) {
+    mesaPedido = prev;
+    const fab = document.getElementById('mesaFab');
+    fab.textContent = '🧾 Mi pedido #' + prev.numero;
+    fab.classList.add('show');
+    consultarEstadoMesa(true);
+  }
+}
+
+function mensajeErrorMesa(err) {
+  const m = String((err && err.message) || '');
+  if (/nombre_invalido/.test(m)) return 'Escriba su nombre (mínimo 2 letras).';
+  if (/demasiados_pendientes/.test(m)) return 'Esta mesa ya tiene pedidos esperando pago. Acérquese a caja, por favor.';
+  if (/local_invalido|mesa_invalida/.test(m)) return 'Este código QR no es válido. Pida ayuda en caja.';
+  if (/items_invalidos|total_invalido/.test(m)) return 'Revise su pedido e intente otra vez.';
+  if (!err || !err.status) return 'No se pudo enviar. Revise su internet e intente de nuevo.';
+  return 'No se pudo enviar el pedido. Intente de nuevo o pida en caja.';
+}
+
+function enviarPedidoMesa() {
+  if (enviandoMesa) return;
+  const inp = document.getElementById('clientName');
+  const nombre = inp.value.trim().replace(/\s+/g, ' ');
+  const nota = document.getElementById('orderNotes').value.trim();
+  if (nombre.length < 2) { errorForm('Escriba su nombre para que le atiendan en caja.'); inp.focus(); return; }
+  if (!cart.length) { errorForm('Su pedido está vacío.'); return; }
+  errorForm('');
+  // este toque habilita el sonido de "su pedido está listo"
+  try { if (!mesaAudio && (window.AudioContext || window.webkitAudioContext)) mesaAudio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { mesaAudio = null; }
+  if (!mesaUid) mesaUid = nuevoUid();
+  const items = cart.map(i => ({ nombre: i.name, precio: Math.round(i.price * 100) / 100, qty: i.qty }));
+  const btn = document.getElementById('submitBtn');
+  enviandoMesa = true; btn.disabled = true; btn.textContent = '⏳ Enviando su pedido…';
+  rpcSupa('mesa_crear_pedido', {
+    p_restaurante_id: SH_RESTAURANTE_ID, p_local: MESA_LOCAL, p_mesa: MESA_NUM,
+    p_nombre: nombre, p_items: items, p_nota: nota || null, p_cliente_uid: mesaUid
+  }).then(res => {
+    if (!res || !res.token) throw new Error('sin_respuesta');
+    lsSet(MESA_LS_NOMBRE, nombre);
+    mesaPedido = { token: res.token, numero: res.numero, total: Number(res.total), mesa: MESA_NUM, local: MESA_LOCAL, nombre: nombre, items: items, t: Date.now() };
+    lsSet(MESA_LS_PEDIDO, JSON.stringify(mesaPedido));
+    mesaUid = null;
+    mesaEstado = 'por_cobrar';
+    cart = []; colaOfrecida = false; updateCartUI();
+    document.getElementById('orderNotes').value = '';
+    mostrarPedidoMesa();
+  }).catch(err => {
+    errorForm(mensajeErrorMesa(err));
+  }).finally(() => {
+    enviandoMesa = false; btn.disabled = false; btn.textContent = '✅ Confirmar pedido';
+  });
+}
+
+function mostrarPedidoMesa() {
+  if (!mesaPedido) return;
+  document.getElementById('cartOverlay').classList.add('show');
+  document.getElementById('cartView').style.display = 'none';
+  document.getElementById('upsellView').style.display = 'none';
+  document.getElementById('formView').style.display = 'none';
+  document.getElementById('successView').classList.add('show');
+  ['successIconDef', 'successTitle', 'successMsg'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  pintarPedidoMesa();
+  const fab = document.getElementById('mesaFab');
+  fab.textContent = '🧾 Mi pedido #' + mesaPedido.numero;
+  fab.classList.add('show');
+  arrancarSondeoMesa();
+}
+
+function pintarPedidoMesa() {
+  const p = mesaPedido; if (!p) return;
+  const est = mesaEstado || 'por_cobrar';
+  const items = (p.items || []).map(i => '<div>' + (i.qty || 1) + 'x ' + escHtml(i.nombre) + ' · $' + (Number(i.precio) * (i.qty || 1)).toFixed(2) + '</div>').join('');
+  const titulo = est === 'por_cobrar' ? '¡Pedido confirmado!' : est === 'anulado' ? 'Pedido anulado' : '¡Gracias, ' + escHtml(p.nombre) + '!';
+  const icono = est === 'anulado' ? '😕' : est === 'listo' ? '🔔' : est === 'entregado' ? '😋' : '✅';
+  const caja = est === 'por_cobrar'
+    ? '<div class="mesa-caja">👉 Acérquese a caja con su nombre, <b>' + escHtml(p.nombre) + '</b>, para cancelar su pedido.</div>'
+    : '';
+  const el = document.getElementById('mesaSuccess');
+  el.innerHTML =
+    '<div class="success-icon">' + icono + '</div>' +
+    '<div class="success-title">' + titulo + '</div>' +
+    '<div class="mesa-num">#' + escHtml(p.numero) + '</div>' +
+    '<div class="mesa-meta">Mesa ' + escHtml(p.mesa) + ' · ' + (MESA_LOCALES[p.local] || '') + '</div>' +
+    caja +
+    '<div class="mesa-total">Total: $' + Number(p.total || 0).toFixed(2) + '</div>' +
+    '<div class="mesa-estado e-' + est + '">' + (MESA_TXT_ESTADO[est] || '') + '</div>' +
+    (items ? '<div class="mesa-items">' + items + '</div>' : '');
+  el.style.display = '';
+}
+
+function arrancarSondeoMesa() {
+  pararSondeoMesa();
+  if (!mesaPedido || mesaEstado === 'entregado' || mesaEstado === 'anulado') return;
+  mesaTimer = setInterval(() => { if (!document.hidden) consultarEstadoMesa(false); }, 5000);
+}
+function pararSondeoMesa() { if (mesaTimer) { clearInterval(mesaTimer); mesaTimer = null; } }
+
+function consultarEstadoMesa(alAbrir) {
+  if (!mesaPedido || !mesaPedido.token) return;
+  rpcSupa('mesa_estado', { p_token: mesaPedido.token }).then(d => {
+    if (!d) { if (alAbrir) { lsDel(MESA_LS_PEDIDO); mesaPedido = null; document.getElementById('mesaFab').classList.remove('show'); } return; }
+    const antes = mesaEstado;
+    mesaEstado = d.estado || mesaEstado || 'por_cobrar';
+    if (d.numero) mesaPedido.numero = d.numero;
+    if (d.total != null) mesaPedido.total = Number(d.total);
+    if (Array.isArray(d.items)) mesaPedido.items = d.items;
+    if (d.nombre) mesaPedido.nombre = d.nombre;
+    const sv = document.getElementById('successView');
+    const viendo = sv.classList.contains('show') && document.getElementById('mesaSuccess').style.display !== 'none';
+    const fab = document.getElementById('mesaFab');
+    if (antes && antes !== 'listo' && mesaEstado === 'listo') { avisarListoMesa(); if (!viendo) { mostrarPedidoMesa(); return; } }
+    if (viendo) pintarPedidoMesa();
+    if (mesaEstado === 'entregado' || mesaEstado === 'anulado') {
+      pararSondeoMesa();
+      lsDel(MESA_LS_PEDIDO);
+      if (!viendo) { fab.classList.remove('show'); if (alAbrir) mesaPedido = null; }
+    } else if (alAbrir) {
+      arrancarSondeoMesa();
+    }
+  }).catch(() => {});
+}
+
+function avisarListoMesa() {
+  try { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 600]); } catch (e) {}
+  try {
+    if (!mesaAudio) return;
+    if (mesaAudio.state === 'suspended') mesaAudio.resume();
+    [0, 0.35, 0.7].forEach(t => {
+      const o = mesaAudio.createOscillator(), g = mesaAudio.createGain();
+      o.frequency.value = 880; o.connect(g); g.connect(mesaAudio.destination);
+      const t0 = mesaAudio.currentTime + t;
+      g.gain.setValueAtTime(0.25, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
+      o.start(t0); o.stop(t0 + 0.32);
+    });
+  } catch (e) {}
+}
+
+function verMiPedidoMesa() {
+  if (!mesaPedido) return;
+  mostrarPedidoMesa();
+  consultarEstadoMesa(false);
+}
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && MODO_MESA && mesaPedido && mesaEstado !== 'entregado' && mesaEstado !== 'anulado') consultarEstadoMesa(false);
+});
+initMesa();
 
 // ─── ADMIN PANEL ───
 const ADMIN_PRODUCTS = [
