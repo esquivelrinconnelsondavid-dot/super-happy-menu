@@ -2498,8 +2498,7 @@ function initMesa() {
     pintarFabMesa();
     consultarEstadoMesa(true);
   } else {
-    const vista = Number(lsGet('sh_mesa_bienv_' + MESA_LOCAL + '_' + MESA_NUM) || 0);
-    if (Date.now() - vista > 3 * 3600 * 1000) mostrarBienvenidaMesa();
+    mostrarBienvenidaMesa();   // cada vez que se abre el QR (si hay un pedido en marcha, se ve el pedido)
   }
 }
 
@@ -2528,7 +2527,6 @@ function mostrarBienvenidaMesa() {
 function cerrarBienvenidaMesa() {
   const d = document.getElementById('mesaBienv'); if (d) d.remove();
   document.body.style.overflow = '';
-  lsSet('sh_mesa_bienv_' + MESA_LOCAL + '_' + MESA_NUM, String(Date.now()));
 }
 
 function textoBotonMesa() { const t = cart.reduce((s, i) => s + i.price * i.qty, 0); return '✅ Confirmar pedido · $' + t.toFixed(2); }
@@ -2691,7 +2689,7 @@ function consultarEstadoMesa(alAbrir) {
   if (!mesaPedido || !mesaPedido.token) return;
   rpcSupa('mesa_estado', { p_token: mesaPedido.token }).then(d => {
     const fab = document.getElementById('mesaFab');
-    if (!d) { if (alAbrir) { lsDel(MESA_LS_PEDIDO); mesaPedido = null; fab.className = 'mesa-fab'; } return; }
+    if (!d) { if (alAbrir) { lsDel(MESA_LS_PEDIDO); mesaPedido = null; fab.className = 'mesa-fab'; mostrarBienvenidaMesa(); } return; }
     const antes = mesaEstado;
     mesaEstado = d.estado || mesaEstado || 'por_cobrar';
     if (d.numero) mesaPedido.numero = d.numero;
@@ -2705,7 +2703,7 @@ function consultarEstadoMesa(alAbrir) {
     if (mesaEstado === 'entregado' || mesaEstado === 'anulado') {
       pararSondeoMesa();
       lsDel(MESA_LS_PEDIDO);
-      if (viendo) pintarFabMesa(); else { fab.className = 'mesa-fab'; if (alAbrir) mesaPedido = null; }
+      if (viendo) pintarFabMesa(); else { fab.className = 'mesa-fab'; if (alAbrir) { mesaPedido = null; mostrarBienvenidaMesa(); } }
     } else {
       pintarFabMesa();
       if (alAbrir) arrancarSondeoMesa();
