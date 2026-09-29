@@ -865,7 +865,7 @@ body {
 .mesa-bienv-card{width:100%;max-width:480px;max-height:96vh;overflow-y:auto;background:linear-gradient(160deg,#3d0070 0%,#6A1FBE 52%,#E91E8C 100%);color:#fff;border-radius:28px 28px 0 0;padding:22px 20px 26px;text-align:center;position:relative;animation:mesaSube .35s cubic-bezier(.4,0,.2,1) both}
 .mesa-bienv-card:before{content:'';position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,214,0,.12)}
 .mb-logo{display:inline-block;background:#fff;border-radius:18px;padding:8px 16px;box-shadow:0 6px 20px rgba(0,0,0,.2);position:relative}
-.mb-logo img{height:56px;display:block}
+.mb-logo img{display:block;width:104px;height:48px}
 .mb-hola{font-family:'Righteous',cursive;font-size:1.55rem;color:var(--yellow);margin:14px 0 12px;position:relative}
 .mb-mesa{width:132px;height:132px;margin:0 auto 10px;border-radius:50%;background:var(--yellow);color:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 7px rgba(255,255,255,.95),0 14px 34px rgba(0,0,0,.35);animation:mesaPop .6s .12s cubic-bezier(.3,1.6,.5,1) both;position:relative}
 .mb-mesa small{font-weight:900;font-size:.8rem;letter-spacing:3px}
@@ -2507,7 +2507,7 @@ function mostrarBienvenidaMesa() {
   const d = document.createElement('div');
   d.className = 'mesa-bienv'; d.id = 'mesaBienv';
   d.innerHTML = '<div class="mesa-bienv-card" role="dialog" aria-label="Bienvenida">' +
-    '<div class="mb-logo"><img src="img/logo-superhappy-new.jpg" alt="Super Happy"></div>' +
+    '<div class="mb-logo"><img src="img/logo-sh-color-104.png" srcset="img/logo-sh-color-104.png 1x, img/logo-sh-color-208.png 2x, img/logo-sh-color-312.png 3x" width="104" height="48" alt="Super Happy"></div>' +
     '<div class="mb-hola">¡Bienvenido! 👋</div>' +
     '<div class="mb-mesa"><small>MESA</small><b>' + escHtml(MESA_NUM) + '</b></div>' +
     '<div class="mb-local">' + MESA_LOCALES[MESA_LOCAL] + '</div>' +
