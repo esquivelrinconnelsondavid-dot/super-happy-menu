@@ -1351,6 +1351,19 @@ body.modo-mesa .success-screen{padding:18px 14px 20px}
   <div class="section-title">➕ Adicionales</div>
   <div class="products-grid">
 
+    <div class="pcard" onclick="openOptions('Presa Sola',2.10)">
+      <div class="pcard-img">
+        <img src="img/presa_sola.png" alt="Presa Sola" loading="lazy" style="object-fit:contain;padding:7% 8% 12%;background:radial-gradient(circle at 50% 42%,#ffffff 0%,#f4efe9 80%);">
+        <div class="pcard-img-overlay"></div>
+        <span class="pcard-price-tag">$2.10</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-name">Presa Sola</div>
+        <div class="pcard-desc">Sin papas</div>
+        <div class="pcard-footer"><button class="add-btn" onclick="event.stopPropagation();openOptions('Presa Sola',2.10)">+</button></div>
+      </div>
+    </div>
+
     <div class="pcard" onclick="addToCart('Papas Fritas',1.80)">
       <div class="pcard-img">
         <img src="img/papas.jpg" alt="Papas" loading="lazy">
@@ -2767,6 +2780,7 @@ const ADMIN_PRODUCTS = [
     { alt: "Ideal Doble",   name: "IDEAL DOBLE" },
   ]},
   { section: "➕ Adicionales", items: [
+    { alt: "Presa Sola",        name: "Presa Sola" },
     { alt: "Papas",             name: "Papas Fritas" },
     { alt: "Salchipapa",        name: "Salchipapa" },
     { alt: "Salchidoble",       name: "Salchidoble" },
@@ -2886,7 +2900,7 @@ function downloadUpdatedMenu() {
 
 
 // ─── OPTIONS / MODIFIERS ───
-const PRESA_COMBOS = {'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1, 'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2, 'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8, '1 Presa + Papas Fritas (individual)': 1, '2 Presas + Papas Fritas': 2, '3 Presas + Papas Fritas': 3, '4 Presas + Papas Fritas': 4, '5 Presas + Papas Fritas': 5, '6 Presas + Papas Fritas': 6, '7 Presas + Papas Fritas': 7, '8 Presas + Papas Fritas': 8, '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas + Papas + Arroz + Ensalada': 2, '1 Presa + Salchicha + Papas': 1, '2 Presas + Papas + Menestra + Arroz': 2};
+const PRESA_COMBOS = {'Combo Happy': 1, 'Combo Super Happy': 1, 'Combo Ideal': 1, 'Combo Star': 1, 'Happy Lunch': 1, 'Happy Box': 1, 'Ideal Doble': 2, 'Combo Irresistible': 2, 'Combo Especial': 4, 'Super Lunch': 4, 'Mega Familiar': 8, 'Super Star': 8, '1 Presa + Papas Fritas (individual)': 1, '2 Presas + Papas Fritas': 2, '3 Presas + Papas Fritas': 3, '4 Presas + Papas Fritas': 4, '5 Presas + Papas Fritas': 5, '6 Presas + Papas Fritas': 6, '7 Presas + Papas Fritas': 7, '8 Presas + Papas Fritas': 8, '1 Presa Completa': 1, '1 Presa con Ensalada': 1, '2 Presas + Papas + Arroz + Ensalada': 2, '1 Presa + Salchicha + Papas': 1, '2 Presas + Papas + Menestra + Arroz': 2, 'Presa Sola': 1};
 // Combos que incluyen bebida - solo eligen sabor (sin tamaño)
 const DRINK_COMBOS = ['Combo Happy', 'Combo Super Happy', 'Combo Twins', 'Combo Festín', 'Combo Ideal', 'Combo Star', 'Happy Lunch', 'Combo Irresistible', 'Happy Burger', 'Super Burger', 'Combo Especial', 'Super Lunch', 'Mega Familiar', 'Super Star'];
 
