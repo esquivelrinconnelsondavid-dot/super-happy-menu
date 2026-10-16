@@ -187,6 +187,11 @@ button{font-family:inherit;cursor:pointer}
 .panel.ancho{max-width:560px}
 .campo{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--borde2);font-size:1rem;font-family:var(--ui);margin-bottom:8px;background:var(--superficie);color:var(--tinta)}
 .campo:focus{outline:none;border-color:var(--rosa)}
+/* cierre automático (SQL 047): la cajera solo cobra */
+.cierre-auto .c-listo,.cierre-auto .s-listo{display:none}
+.cierre-auto .resumen-in{grid-template-columns:repeat(2,minmax(140px,.9fr)) minmax(300px,1.7fr) minmax(200px,1.2fr)}
+@media (max-width:1180px){ .cierre-auto .resumen-in{grid-template-columns:repeat(2,1fr)} }
+.auto-t{display:inline-flex;align-items:center;gap:6px;flex:1 1 100%;font-size:.84rem;font-weight:600;color:var(--tinta2)}
 
 .hist{margin:0 20px 26px;background:var(--superficie);border-radius:14px;padding:12px 18px;box-shadow:0 0 0 1px var(--borde)}
 .hist summary{cursor:pointer;font-weight:600;color:var(--tinta2);padding:4px;font-size:.92rem}
@@ -316,7 +321,8 @@ var IC = {
 var cfg = { local: '', codigo: '', imprimir: true, imprimirFactura: true, sonido: true };
 var FACTURA_URL = 'https://n8n.dewansas.com/webhook/sh-mesa-factura';
 var FACTURA_DOC = 'https://n8n.dewansas.com/webhook/sh-mesa-factura-doc';
-var facturaModo = 'apagada';     // apagada · pruebas · produccion (por local, en mesas_locales)
+var facturaModo = 'apagada';
+var cierreAuto = 0;              // minutos para cerrar solo un pedido cobrado (0 = con botones Listo/Entregado)     // apagada · pruebas · produccion (por local, en mesas_locales)
 var comprobantesVistos = null;   // id|hora del comprobante ya avisado
 var pedidos = [];
 var caja = null;
@@ -443,6 +449,8 @@ function aplicar(d) {
   if (d.ahora) offset = new Date(d.ahora).getTime() - Date.now();
   nombreLocal = d.local || LOCALES[cfg.local] || 'Super Happy';
   facturaModo = d.factura_modo || 'apagada';
+  cierreAuto = Number(d.cierre_auto_min) || 0;
+  document.body.classList.toggle('cierre-auto', cierreAuto > 0);
   $('localNombre').textContent = nombreLocal;
   var lista = Array.isArray(d.pedidos) ? d.pedidos : [];
   var llegados = [];
@@ -520,6 +528,11 @@ function tarjeta(p) {
     bot = '<button class="b b-ef" data-a="cobrar" data-m="efectivo" data-id="' + p.id + '"' + dis + '>' + IC.efectivo + 'Efectivo</button>' +
           '<button class="b b-tr" data-a="cobrar" data-m="transferencia" data-id="' + p.id + '"' + dis + '>' + IC.transfer + 'Transferencia</button>';
     anular = '<button class="b b-x' + (conf ? ' confirmar' : '') + '" data-a="anular" data-id="' + p.id + '"' + dis + '>' + (conf ? '¿Anular? Toque otra vez' : IC.x + 'Anular') + '</button>';
+  } else if (p.estado === 'en_cocina' && cierreAuto > 0) {
+    var queda = Math.max(0, cierreAuto - minDesde(p.cobrado_at || p.creado_at));
+    bot = '<span class="auto-t">' + IC.reloj + (queda > 0 ? 'Se cierra solo en ' + queda + ' min' : 'Cerrándose…') + '</span>' +
+          '<button class="b b-sec" data-a="entregar" data-id="' + p.id + '"' + dis + '>' + IC.check + 'Entregado</button>' +
+          '<button class="b b-sec" data-a="imprimir" data-id="' + p.id + '" title="Reimprimir comanda">' + IC.imprimir + '</button>';
   } else if (p.estado === 'en_cocina') {
     bot = '<button class="b b-listo" data-a="listo" data-id="' + p.id + '"' + dis + '>' + IC.campana + 'Marcar como listo</button>' +
           '<button class="b b-sec" data-a="imprimir" data-id="' + p.id + '" title="Reimprimir comanda">' + IC.imprimir + '</button>';

@@ -2426,7 +2426,7 @@ const MESA_FACTURA_DOC = 'https://n8n.dewansas.com/webhook/sh-mesa-factura-doc';
 const MESA_CUENTA = { titular: 'Lizeth Cisneros', banco: 'Banco Pichincha', tipo: 'Cuenta de ahorro', numero: '2209253523', ci: '0604532168' };
 const MESA_TXT_ESTADO = {
   por_cobrar: '⏳ Esperando su pago',
-  en_cocina: '💰 ¡Pagado! Su pedido ya está en cocina 👨‍🍳',
+  en_cocina: '💰 ¡Pagado! Su pedido ya está en cocina. Se lo llevamos a su mesa 🍗',
   listo: '🔔 ¡Su pedido está listo!',
   entregado: '✅ Entregado. ¡Buen provecho! 😋',
   anulado: '❌ Este pedido se anuló. Si fue un error, acérquese a caja.'
@@ -2434,7 +2434,7 @@ const MESA_TXT_ESTADO = {
 const MESA_TITULO = { por_cobrar: '¡Pedido confirmado!', en_cocina: '¡Pagado! Ya está en cocina', listo: '¡Su pedido está listo!', entregado: '¡Buen provecho!', anulado: 'Pedido anulado' };
 const MESA_ICONO = { por_cobrar: '✅', en_cocina: '👨‍🍳', listo: '🔔', entregado: '😋', anulado: '😕' };
 const MESA_FAB = { por_cobrar: 'Por pagar', en_cocina: 'En cocina', listo: '¡Listo!', entregado: 'Entregado', anulado: 'Anulado' };
-const MESA_PASOS = [['💵', 'Pague'], ['👨‍🍳', 'En cocina'], ['🔔', '¡Listo!']];
+const MESA_PASOS = [['💵', 'Pague'], ['👨‍🍳', 'En cocina'], ['🍽️', 'A su mesa']];
 let mesaUid = null;
 let enviandoMesa = false;
 let mesaPedido = null;   // {token, numero, mesa, local, nombre, total, items, t}
