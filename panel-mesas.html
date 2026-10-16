@@ -172,6 +172,21 @@ button{font-family:inherit;cursor:pointer}
 .vence-f{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:6px;min-height:34px}
 .vence-t{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--naranja-t)}
 .vence-bar i{display:block;height:100%;background:var(--naranja);border-radius:4px}
+/* comprobante de transferencia y factura (SQL 046) */
+.compro{margin:8px 16px 4px 18px;border-radius:12px;padding:10px 12px;background:#EEE6FF;box-shadow:0 0 0 1.5px #C9B3F5 inset}
+.compro-t{display:flex;align-items:center;gap:8px;font-weight:800;color:#4B1D96;font-size:.95rem}
+.compro-s{font-size:.82rem;color:#5d4a86;font-weight:600;margin:3px 0 8px}
+.compro .b{min-height:40px;white-space:nowrap;flex:1 1 auto;padding:0 12px}
+.b-ver{background:#fff;color:#4B1D96;box-shadow:0 0 0 1.5px #C9B3F5 inset}
+.fac{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:6px 16px 0 18px;font-size:.85rem;font-weight:600;color:var(--tinta2)}
+.fac .txt{flex:1 1 160px;min-width:0}
+.lnk{border:0;background:none;color:var(--morado);font-weight:700;font-family:var(--ui);font-size:.84rem;cursor:pointer;padding:0;text-decoration:underline}
+.chip.fac-ok{background:var(--verde-s);color:var(--verde-t)}
+.chip.fac-mal,.chip.compro-mal{background:var(--rojo-s);color:var(--rojo-t)}
+.foto-compro{max-width:100%;max-height:60vh;display:block;margin:0 auto 14px;border-radius:10px;box-shadow:0 0 0 1px var(--borde)}
+.panel.ancho{max-width:560px}
+.campo{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--borde2);font-size:1rem;font-family:var(--ui);margin-bottom:8px;background:var(--superficie);color:var(--tinta)}
+.campo:focus{outline:none;border-color:var(--rosa)}
 
 .hist{margin:0 20px 26px;background:var(--superficie);border-radius:14px;padding:12px 18px;box-shadow:0 0 0 1px var(--borde)}
 .hist summary{cursor:pointer;font-weight:600;color:var(--tinta2);padding:4px;font-size:.92rem}
@@ -261,6 +276,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="panel">
     <h3>Ajustes de este computador</h3>
     <label class="fila">Imprimir la comanda al cobrar <input type="checkbox" id="optImprimir"></label>
+    <label class="fila">Imprimir la factura al cobrar <input type="checkbox" id="optImprimirFactura"></label>
     <label class="fila">Sonido cuando llega un pedido <input type="checkbox" id="optSonido"></label>
     <button type="button" class="b b-sec" id="btnProbar">Probar impresora</button>
     <button type="button" class="b b-sec" id="btnCambiarLocal">Cambiar de local</button>
@@ -297,7 +313,11 @@ var IC = {
   mudo: svg('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9.5l4 5M21 9.5l-4 5"/>')
 };
 
-var cfg = { local: '', codigo: '', imprimir: true, sonido: true };
+var cfg = { local: '', codigo: '', imprimir: true, imprimirFactura: true, sonido: true };
+var FACTURA_URL = 'https://n8n.dewansas.com/webhook/sh-mesa-factura';
+var FACTURA_DOC = 'https://n8n.dewansas.com/webhook/sh-mesa-factura-doc';
+var facturaModo = 'apagada';     // apagada · pruebas · produccion (por local, en mesas_locales)
+var comprobantesVistos = null;   // id|hora del comprobante ya avisado
 var pedidos = [];
 var caja = null;
 var offset = 0;              // reloj del servidor - reloj de esta PC
@@ -422,6 +442,7 @@ function aplicar(d) {
   if (!d) return;
   if (d.ahora) offset = new Date(d.ahora).getTime() - Date.now();
   nombreLocal = d.local || LOCALES[cfg.local] || 'Super Happy';
+  facturaModo = d.factura_modo || 'apagada';
   $('localNombre').textContent = nombreLocal;
   var lista = Array.isArray(d.pedidos) ? d.pedidos : [];
   var llegados = [];
@@ -432,11 +453,18 @@ function aplicar(d) {
   }
   conocidos = {};
   lista.forEach(function (p) { conocidos[p.id] = true; });
+  var comps = [];
+  lista.forEach(function (p) {
+    if (comprobantesVistos && p.estado === 'por_cobrar' && p.comprobante_estado === 'revisar' && !comprobantesVistos[p.id + '|' + p.comprobante_at]) comps.push(p);
+  });
+  comprobantesVistos = {};
+  lista.forEach(function (p) { if (p.comprobante_at) comprobantesVistos[p.id + '|' + p.comprobante_at] = true; });
+  if (comps.length) { comps.forEach(function (p) { nuevos[p.id] = Date.now() + 20000; }); pitido(3); avisoComprobante(comps[comps.length - 1]); }
   var nueva = JSON.stringify(lista) + '|' + JSON.stringify(d.caja || null);
   pedidos = lista;
   caja = d.caja || null;
   if (llegados.length) { pitido(2); avisoNuevo(llegados); }
-  if (nueva !== firma || llegados.length) { firma = nueva; pintar(); }
+  if (nueva !== firma || llegados.length || comps.length) { firma = nueva; pintar(); }
 }
 function reemplazar(fila) {
   if (!fila || !fila.id) return;
@@ -451,6 +479,14 @@ function avisoNuevo(lista) {
   el.hidden = false;
   clearTimeout(avisoT); avisoT = setTimeout(function () { el.hidden = true; }, 8000);
 }
+
+function avisoComprobante(p) {
+  var el = $('nuevoAviso');
+  el.innerHTML = '<span class="na-i">' + IC.transfer + '</span><b>Pagó por transferencia</b><span class="na-mesa">Mesa ' + esc(p.mesa) + '</span><span>' + esc(p.nombre) + ' · ' + dinero(p.total) + ' · revise el comprobante</span>';
+  el.hidden = false;
+  clearTimeout(avisoT); avisoT = setTimeout(function () { el.hidden = true; }, 10000);
+}
+function facturaActiva(p) { return facturaModo !== 'apagada' || String(p.mesa) === '99'; }
 
 // ---------- pintar ----------
 function partir(nombre) {
@@ -476,6 +512,7 @@ function tarjeta(p) {
   var meta = '<span class="num">#' + esc(p.numero) + '</span><span>' + hora(p.creado_at) + '</span>';
   if (p.cobrado_at && p.metodo_pago) meta += '<span class="chip pago">' + IC.check + 'Pagado · ' + (METODOS[p.metodo_pago] || esc(p.metodo_pago)) + '</span>';
   if (p.estado === 'anulado' && p.anulado_motivo) meta += '<span class="chip anul">' + esc(p.anulado_motivo) + '</span>';
+  if (p.estado === 'por_cobrar' && p.comprobante_estado === 'rechazado') meta += '<span class="chip compro-mal">Comprobante rechazado</span>';
   var dis = ocupado[p.id] ? ' disabled' : '';
   var bot = '', anular = '';
   if (p.estado === 'por_cobrar') {
@@ -501,9 +538,29 @@ function tarjeta(p) {
       var total = Math.max(1, new Date(p.vence_at).getTime() - new Date(p.creado_at).getTime());
       var queda = Math.max(0, new Date(p.vence_at).getTime() - ahora());
       barra = '<div class="vence-bar"><i style="width:' + Math.round(100 * queda / total) + '%"></i></div>';
-      aviso = '<span class="vence-t">Se anula en ' + minHasta(p.vence_at) + ' min si no se cobra</span>';
+      aviso = p.comprobante_estado === 'revisar' ? '<span class="vence-t">Espera que usted confirme la transferencia</span>'
+        : '<span class="vence-t">Se anula en ' + minHasta(p.vence_at) + ' min si no se cobra</span>';
     }
     vence = '<div class="vence">' + barra + '<div class="vence-f">' + aviso + anular + '</div></div>';
+  }
+  var compro = '';
+  if (p.estado === 'por_cobrar' && p.comprobante_estado === 'revisar') {
+    compro = '<div class="compro"><div class="compro-t">' + IC.transfer + 'Pagó por transferencia</div>' +
+      '<div class="compro-s">Revise en la cuenta que llegaron ' + dinero(p.total) + ' antes de confirmar.</div><div class="acc">' +
+      '<button class="b b-ver" data-a="comprobante" data-id="' + p.id + '">Ver comprobante</button>' +
+      '<button class="b b-ef" data-a="cobrar" data-m="transferencia" data-id="' + p.id + '"' + dis + '>' + IC.check + 'Sí llegó</button>' +
+      '<button class="b b-x" data-a="rechazar_comprobante" data-id="' + p.id + '"' + dis + '>' + IC.x + 'No llegó</button></div></div>';
+  }
+  var facTxt = p.fac_identificacion ? '🧾 ' + esc(p.fac_nombre) + ' · ' + esc(p.fac_identificacion) : '🧾 Consumidor final';
+  var fac = '';
+  if (p.estado === 'por_cobrar') {
+    fac = '<div class="fac"><span class="txt">' + facTxt + '</span><button class="lnk" data-a="datos" data-id="' + p.id + '">' + (p.fac_identificacion ? 'Cambiar datos' : 'Poner datos de factura') + '</button></div>';
+  } else if (p.estado !== 'anulado' && (p.fac_identificacion || p.factura_estado || facturaActiva(p))) {
+    var fe = p.factura_estado === 'emitida' ? '<span class="chip fac-ok">' + IC.check + 'Factura ' + esc(p.factura_numero) + '</span><button class="lnk" data-a="factura-imprimir" data-id="' + p.id + '">Imprimir factura</button>'
+      : p.factura_estado === 'emitiendo' ? '<span class="chip">Emitiendo factura…</span>'
+      : p.factura_estado === 'error' ? '<span class="chip fac-mal">La factura no salió</span><button class="lnk" data-a="factura-emitir" data-id="' + p.id + '">Reintentar</button>'
+      : (facturaActiva(p) ? '<button class="lnk" data-a="factura-emitir" data-id="' + p.id + '">Emitir factura</button>' : '');
+    fac = '<div class="fac"><span class="txt">' + facTxt + '</span>' + fe + '</div>';
   }
   var nuevo = nuevos[p.id] && nuevos[p.id] > Date.now() ? ' nuevo' : '';
   return '<article class="card e-' + esc(p.estado) + nuevo + '">' +
@@ -511,6 +568,7 @@ function tarjeta(p) {
     '<div class="quien"><div class="nom">' + esc(p.nombre) + '</div><div class="meta">' + meta + '</div></div>' + chipTiempo(p) + '</div>' +
     '<div class="items">' + items + '</div>' +
     (p.nota ? '<div class="nota">' + IC.nota + '<span>' + esc(p.nota) + '</span></div>' : '') +
+    compro + fac +
     '<div class="pie"><div class="tot"><span>Total</span><b>' + dinero(p.total) + '</b></div>' +
     '<div class="acc">' + bot + '</div>' + vence + '</div></article>';
 }
@@ -531,6 +589,7 @@ function pintar() {
   var q = normal($('buscar').value);
   var f = pedidos.filter(function (p) { return coincide(p, q); });
   var cobrar = f.filter(function (p) { return p.estado === 'por_cobrar'; });
+  cobrar = cobrar.filter(function (p) { return p.comprobante_estado === 'revisar'; }).concat(cobrar.filter(function (p) { return p.comprobante_estado !== 'revisar'; }));
   var cocina = f.filter(function (p) { return p.estado === 'en_cocina'; });
   var listo = f.filter(function (p) { return p.estado === 'listo'; });
   var hist = f.filter(function (p) { return p.estado === 'entregado' || p.estado === 'anulado'; }).slice().reverse();
@@ -558,6 +617,10 @@ function buscarPedido(id) { for (var i = 0; i < pedidos.length; i++) if (pedidos
 function accion(id, a, metodo) {
   var p = buscarPedido(id); if (!p) return;
   if (a === 'imprimir') { imprimir(p); return; }
+  if (a === 'datos') { abrirDatosFactura(p); return; }
+  if (a === 'comprobante') { verComprobante(p); return; }
+  if (a === 'factura-emitir') { emitirFactura(p, true); return; }
+  if (a === 'factura-imprimir') { imprimirFactura(p); return; }
   if (a === 'anular') {
     if (!(confirmarAnular[id] && confirmarAnular[id] > Date.now())) {
       confirmarAnular[id] = Date.now() + 4000; pintar();
@@ -573,6 +636,8 @@ function accion(id, a, metodo) {
       reemplazar(fila);
       if (a === 'cobrar' && cfg.imprimir) imprimir(fila);
       if (a === 'cobrar') toast('Cobrado: ' + fila.nombre + ' · ' + dinero(fila.total));
+      if (a === 'cobrar' && facturaActiva(fila)) emitirFactura(fila, false);
+      if (a === 'rechazar_comprobante') toast('Listo: al cliente le sale que su transferencia no llegó.');
     })
     .catch(function (e) {
       var m = String(e.message || '');
@@ -602,14 +667,15 @@ function comandaHTML(p, prueba) {
     '<hr><div class="row"><span>TOTAL</span><span>' + dinero(p.total) + '</span></div>' +
     '</div></body></html>';
 }
-function imprimir(p, prueba) {
+function imprimir(p, prueba) { imprimirHTML(comandaHTML(p, prueba)); }
+function imprimirHTML(html) {
   try {
     var f = document.createElement('iframe');
     f.setAttribute('aria-hidden', 'true');
     f.style.cssText = 'position:fixed;left:-10000px;top:0;width:320px;height:200px;border:0';
     document.body.appendChild(f);
     var d = f.contentWindow.document;
-    d.open(); d.write(comandaHTML(p, prueba)); d.close();
+    d.open(); d.write(html); d.close();
     setTimeout(function () {
       try {
         // hoja del largo exacto del ticket (+ 12 mm para cortar): así la térmica no saca papel en blanco
@@ -622,6 +688,74 @@ function imprimir(p, prueba) {
       setTimeout(function () { if (f.parentNode) f.parentNode.removeChild(f); }, 4000);
     }, 350);
   } catch (e) { toast('No se pudo imprimir.'); }
+}
+
+// ---------- factura electrónica (n8n -> servicio de facturas DEWAN) ----------
+function emitirFactura(p, manual) {
+  if (ocupado['f' + p.id]) return;
+  ocupado['f' + p.id] = true;
+  fetch(FACTURA_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ restaurante_id: REST_ID, codigo: cfg.codigo, local: cfg.local, id: p.id }) })
+    .then(function (r) { return r.json().catch(function () { return {}; }); })
+    .then(function (d) {
+      if (d && d.ok) { toast('Factura ' + d.numero + ' emitida'); if (cfg.imprimirFactura && d.token) imprimirFacturaToken(d.token); }
+      else if (d && d.modo === 'apagada') { if (manual) toast('La factura automática está apagada en este local.'); }
+      else toast('La factura no salió: ' + ((d && d.error) || 'sin conexión') + '. Toque «Reintentar».');
+    })
+    .catch(function () { toast('La factura no salió (sin conexión). Toque «Reintentar».'); })
+    .then(function () { delete ocupado['f' + p.id]; refrescar(); });
+}
+function imprimirFactura(p) { if (p.factura_token) imprimirFacturaToken(p.factura_token); }
+function imprimirFacturaToken(token) {
+  fetch(FACTURA_DOC + '?t=' + encodeURIComponent(token) + '&f=ticket')
+    .then(function (r) { if (!r.ok) throw new Error('doc'); return r.text(); })
+    .then(imprimirHTML)
+    .catch(function () { toast('No se pudo traer la factura para imprimir.'); });
+}
+function abrirVentana(html) {
+  cerrarVentana();
+  var v = document.createElement('div'); v.className = 'velo'; v.id = 'ventanaExtra';
+  v.innerHTML = '<div class="panel ancho">' + html + '</div>';
+  v.addEventListener('click', function (e) { if (e.target === v) cerrarVentana(); });
+  document.body.appendChild(v);
+}
+function cerrarVentana() { var v = $('ventanaExtra'); if (v) v.parentNode.removeChild(v); }
+function abrirDatosFactura(p) {
+  abrirVentana('<h3>Datos de factura · Mesa ' + esc(p.mesa) + ' · ' + esc(p.nombre) + '</h3>' +
+    '<input class="campo" id="mfId" placeholder="Cédula o RUC" inputmode="numeric" maxlength="13" value="' + esc(p.fac_identificacion || '') + '">' +
+    '<input class="campo" id="mfNom" placeholder="Nombre o razón social" maxlength="120" value="' + esc(p.fac_nombre || '') + '">' +
+    '<input class="campo" id="mfCor" placeholder="Correo (opcional)" maxlength="120" value="' + esc(p.fac_correo || '') + '">' +
+    '<div class="err" id="mfErr"></div>' +
+    '<div class="acc"><button type="button" class="b b-sec" id="mfCF">Consumidor final</button><button type="button" class="b b-ent" id="mfOk">Guardar</button></div>');
+  function guardar(fac) {
+    rpc('mesa_panel_factura_datos', { p_restaurante_id: REST_ID, p_codigo: cfg.codigo, p_id: p.id, p_factura: fac })
+      .then(function (fila) { reemplazar(fila); cerrarVentana(); pintar(); toast('Datos de factura guardados'); })
+      .catch(function (e) {
+        var m = String(e.message || '');
+        $('mfErr').textContent = /identificacion/.test(m) ? 'La cédula tiene 10 dígitos y el RUC 13.' : /factura_nombre/.test(m) ? 'Falta el nombre o la razón social.'
+          : /correo/.test(m) ? 'Revise el correo (o déjelo en blanco).' : /obligatoria/.test(m) ? 'Más de $50: el SRI pide los datos del cliente.'
+          : /ya_emitida/.test(m) ? 'La factura de este pedido ya se emitió.' : 'No se pudo guardar. Intente otra vez.';
+      });
+  }
+  $('mfOk').addEventListener('click', function () { guardar({ identificacion: $('mfId').value, nombre: $('mfNom').value, correo: $('mfCor').value }); });
+  $('mfCF').addEventListener('click', function () { guardar(null); });
+  setTimeout(function () { var i = $('mfId'); if (i) i.focus(); }, 50);
+}
+function verComprobante(p) {
+  abrirVentana('<h3>Comprobante · Mesa ' + esc(p.mesa) + ' · ' + esc(p.nombre) + ' · ' + dinero(p.total) + '</h3>' +
+    '<div id="mcFoto" class="ayuda">Cargando la foto…</div>' +
+    '<p class="ayuda">Confirme en la cuenta del banco que llegó la transferencia antes de tocar «Sí llegó».</p>' +
+    '<div class="acc"><button type="button" class="b b-x" id="mcNo">' + IC.x + 'No llegó</button>' +
+    '<button type="button" class="b b-ef" id="mcSi">' + IC.check + 'Sí llegó · cobrar</button></div>');
+  rpc('mesa_panel_comprobante', { p_restaurante_id: REST_ID, p_codigo: cfg.codigo, p_id: p.id })
+    .then(function (d) {
+      var c = $('mcFoto'); if (!c) return;
+      var img = new Image(); img.className = 'foto-compro'; img.alt = 'Comprobante de transferencia'; img.src = d.imagen;
+      c.innerHTML = ''; c.className = ''; c.appendChild(img);
+    })
+    .catch(function () { var c = $('mcFoto'); if (c) c.textContent = 'No se pudo cargar la foto.'; });
+  $('mcSi').addEventListener('click', function () { cerrarVentana(); accion(p.id, 'cobrar', 'transferencia'); });
+  $('mcNo').addEventListener('click', function () { cerrarVentana(); accion(p.id, 'rechazar_comprobante'); });
 }
 
 // ---------- ciclo ----------
@@ -643,10 +777,11 @@ $('codigo').addEventListener('keydown', function (e) { if (e.key === 'Enter') en
 $('buscar').addEventListener('input', pintar);
 $('nuevoAviso').addEventListener('click', function () { $('nuevoAviso').hidden = true; });
 $('btnSonido').addEventListener('click', function () { cfg.sonido = !cfg.sonido; guardarCfg(); activarAudio(); pintarSonido(); if (cfg.sonido) pitido(1); });
-$('btnAjustes').addEventListener('click', function () { $('optImprimir').checked = !!cfg.imprimir; $('optSonido').checked = !!cfg.sonido; $('ajustes').hidden = false; });
+$('btnAjustes').addEventListener('click', function () { $('optImprimir').checked = !!cfg.imprimir; $('optImprimirFactura').checked = cfg.imprimirFactura !== false; $('optSonido').checked = !!cfg.sonido; $('ajustes').hidden = false; });
 $('btnCerrarAjustes').addEventListener('click', function () { $('ajustes').hidden = true; });
 $('ajustes').addEventListener('click', function (e) { if (e.target === $('ajustes')) $('ajustes').hidden = true; });
 $('optImprimir').addEventListener('change', function () { cfg.imprimir = this.checked; guardarCfg(); });
+$('optImprimirFactura').addEventListener('change', function () { cfg.imprimirFactura = this.checked; guardarCfg(); });
 $('optSonido').addEventListener('change', function () { cfg.sonido = this.checked; guardarCfg(); pintarSonido(); });
 $('btnProbar').addEventListener('click', function () { imprimir({ numero: 0, mesa: '-', nombre: 'Prueba', items: [{ qty: 1, nombre: 'Ticket de prueba', precio: 0 }], total: 0 }, true); });
 $('btnCambiarLocal').addEventListener('click', function () { salir('Elija el otro local y toque Empezar turno.', true); });

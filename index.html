@@ -889,6 +889,31 @@ body {
 body.modo-mesa #clientName{font-size:1.15rem;padding:14px;border-width:2.5px;background:#fff;margin-bottom:6px;font-weight:800}
 .mesa-ayuda-nombre{font-size:.8rem;color:#777;font-weight:700;margin:0 0 14px 2px}
 .mesa-info-pago{background:#FFF4D6;border-radius:14px;padding:11px 12px;font-size:.85rem;font-weight:800;color:#6b4e00;line-height:1.4;margin-top:12px}
+/* factura con datos del cliente (modo mesa) */
+.mesa-fac{margin:2px 0 14px;border:2px solid #ece4ff;border-radius:16px;padding:12px 14px;background:#fff}
+.mesa-fac-sw{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1rem;color:#333;cursor:pointer}
+.mesa-fac-sw input{width:22px;height:22px;accent-color:#6A1FBE;margin:0}
+.mesa-fac-nota{font-size:.78rem;color:#888;font-weight:700;margin-top:4px}
+.mesa-fac-campos{display:none;margin-top:10px}
+.mesa-fac.on .mesa-fac-campos{display:block}
+.mesa-fac .form-input{margin-bottom:8px}
+/* pagar desde la mesa */
+.mt-pagar{margin:0 14px 12px;text-align:left}
+.mt-pagar-t{font-weight:900;font-size:.95rem;color:#333;margin:2px 2px 8px}
+.mt-op{border:2px solid #ece4ff;border-radius:16px;padding:12px;margin-bottom:10px;background:#fff}
+.mt-op h4{margin:0 0 6px;font-size:.98rem;font-weight:900;color:#333}
+.mt-op p{margin:0;font-size:.86rem;color:#555;font-weight:700;line-height:1.45}
+.mt-op p b{color:var(--pink)}
+.mt-cta{background:#f7f2ff;border-radius:12px;padding:10px 12px;margin:8px 0 10px;font-size:.88rem;line-height:1.55;color:#333}
+.mt-cta .nro{font-family:'Righteous',cursive;font-size:1.2rem;letter-spacing:.5px;color:var(--black)}
+.mt-copiar{border:0;background:none;color:var(--purple);font-weight:900;font-family:inherit;font-size:.82rem;cursor:pointer;padding:0 0 0 6px;text-decoration:underline}
+.mt-subir{display:block;width:100%;padding:14px 10px;border-radius:14px;border:0;background:linear-gradient(135deg,var(--purple),#8E3FE0);color:#fff;font-weight:900;font-size:1rem;cursor:pointer;font-family:inherit;box-shadow:0 6px 18px rgba(106,31,190,.3)}
+.mt-subir:disabled{opacity:.6}
+.mt-aviso{border-radius:14px;padding:11px 12px;font-weight:800;font-size:.9rem;line-height:1.45;margin-bottom:10px}
+.mt-aviso.rev{background:#e3f2fd;color:#0d47a1}
+.mt-aviso.mal{background:#fdecec;color:#b71c1c}
+.mt-fac{margin:0 14px 12px;background:#f1fbf5;border:2px solid #c6ead3;border-radius:16px;padding:10px 12px;text-align:left;font-size:.86rem;font-weight:800;color:#1b6b3a;line-height:1.45}
+.mt-fac a{display:block;text-align:center;margin-top:8px;padding:12px;border-radius:12px;background:#1b6b3a;color:#fff;text-decoration:none;font-weight:900}
 /* confirmación tipo ticket */
 .mt{width:100%;background:#F4EEFF;border-radius:26px;padding:14px;text-align:center}
 .mt.mt-entra{animation:mesaSube .35s ease both}
@@ -2396,8 +2421,11 @@ const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIs
 const SH_RESTAURANTE_ID = '5a181295-24ac-4d82-83ae-1859dc109d3a';
 const MESA_LS_PEDIDO = 'sh_mesa_pedido';
 const MESA_LS_NOMBRE = 'sh_nombre';
+const MESA_LS_FAC = 'sh_mesa_factura';
+const MESA_FACTURA_DOC = 'https://n8n.dewansas.com/webhook/sh-mesa-factura-doc';
+const MESA_CUENTA = { titular: 'Lizeth Cisneros', banco: 'Banco Pichincha', tipo: 'Cuenta de ahorro', numero: '2209253523', ci: '0604532168' };
 const MESA_TXT_ESTADO = {
-  por_cobrar: '⏳ Esperando su pago en caja',
+  por_cobrar: '⏳ Esperando su pago',
   en_cocina: '💰 ¡Pagado! Su pedido ya está en cocina 👨‍🍳',
   listo: '🔔 ¡Su pedido está listo!',
   entregado: '✅ Entregado. ¡Buen provecho! 😋',
@@ -2405,8 +2433,8 @@ const MESA_TXT_ESTADO = {
 };
 const MESA_TITULO = { por_cobrar: '¡Pedido confirmado!', en_cocina: '¡Pagado! Ya está en cocina', listo: '¡Su pedido está listo!', entregado: '¡Buen provecho!', anulado: 'Pedido anulado' };
 const MESA_ICONO = { por_cobrar: '✅', en_cocina: '👨‍🍳', listo: '🔔', entregado: '😋', anulado: '😕' };
-const MESA_FAB = { por_cobrar: 'Pague en caja', en_cocina: 'En cocina', listo: '¡Listo!', entregado: 'Entregado', anulado: 'Anulado' };
-const MESA_PASOS = [['💵', 'Pague en caja'], ['👨‍🍳', 'En cocina'], ['🔔', '¡Listo!']];
+const MESA_FAB = { por_cobrar: 'Por pagar', en_cocina: 'En cocina', listo: '¡Listo!', entregado: 'Entregado', anulado: 'Anulado' };
+const MESA_PASOS = [['💵', 'Pague'], ['👨‍🍳', 'En cocina'], ['🔔', '¡Listo!']];
 let mesaUid = null;
 let enviandoMesa = false;
 let mesaPedido = null;   // {token, numero, mesa, local, nombre, total, items, t}
@@ -2443,7 +2471,7 @@ function initMesa() {
   if (hero) {
     hero.classList.add('mesa-hero');
     const ht = hero.querySelector('.hero-title'); if (ht) ht.textContent = '¡Bienvenido a la Mesa ' + MESA_NUM + '! 🍗';
-    const hs = hero.querySelector('.hero-sub'); if (hs) hs.textContent = nomLocal + ' · Pida aquí y pague en caja';
+    const hs = hero.querySelector('.hero-sub'); if (hs) hs.textContent = nomLocal + ' · Pida aquí y pague en caja o por transferencia';
     const pill = hero.querySelector('.hero-pill');
     if (pill) {
       const bd = document.createElement('div');
@@ -2460,7 +2488,7 @@ function initMesa() {
     tira.setAttribute('role', 'button'); tira.setAttribute('aria-label', 'Cómo pedir desde la mesa'); tira.tabIndex = 0;
     tira.innerHTML = '<div class="mesa-paso"><i>1</i><span>Elija su comida</span></div>' +
                      '<div class="mesa-paso"><i>2</i><span>Escriba su nombre</span></div>' +
-                     '<div class="mesa-paso"><i>3</i><span>Pague en caja</span></div>';
+                     '<div class="mesa-paso"><i>3</i><span>Pague en caja o transferencia</span></div>';
     tira.addEventListener('click', mostrarBienvenidaMesa);
   }
   // formulario: solo el nombre (+ nota)
@@ -2476,7 +2504,25 @@ function initMesa() {
   }
   if (lbl) { const rs = document.createElement('div'); rs.className = 'mesa-resumen'; rs.id = 'mesaResumen'; lbl.insertAdjacentElement('beforebegin', rs); }
   const tot = document.getElementById('formTotals');
-  if (tot) { const ip = document.createElement('div'); ip.className = 'mesa-info-pago'; ip.textContent = '💵 Pague en caja diciendo su nombre. Su pedido entra a cocina apenas pague.'; tot.insertAdjacentElement('afterend', ip); }
+  if (tot) { const ip = document.createElement('div'); ip.className = 'mesa-info-pago'; ip.textContent = '💵 Pague en caja con su nombre o 📲 por transferencia desde aquí. Su pedido entra a cocina apenas se confirme el pago.'; tot.insertAdjacentElement('afterend', ip); }
+  const notasLbl = document.getElementById('orderNotes');
+  if (notasLbl) {
+    let fac = {}; try { fac = JSON.parse(lsGet(MESA_LS_FAC) || '{}') || {}; } catch (e) { fac = {}; }
+    const fb = document.createElement('div'); fb.className = 'mesa-fac'; fb.id = 'mesaFac';
+    fb.innerHTML = '<label class="mesa-fac-sw"><input type="checkbox" id="mesaFacOn"> 🧾 Quiero factura con mis datos</label>' +
+      '<div class="mesa-fac-nota">Si no la marca, sale a consumidor final.</div>' +
+      '<div class="mesa-fac-campos">' +
+        '<input class="form-input" id="mesaFacId" inputmode="numeric" maxlength="13" placeholder="Cédula o RUC" autocomplete="off">' +
+        '<input class="form-input" id="mesaFacNom" maxlength="120" placeholder="Nombre o razón social">' +
+        '<input class="form-input" id="mesaFacCorreo" type="email" maxlength="120" placeholder="Correo (opcional)">' +
+      '</div>';
+    const lblN = notasLbl.previousElementSibling && notasLbl.previousElementSibling.tagName === 'LABEL' ? notasLbl.previousElementSibling : notasLbl;
+    lblN.insertAdjacentElement('beforebegin', fb);
+    document.getElementById('mesaFacId').value = fac.identificacion || '';
+    document.getElementById('mesaFacNom').value = fac.nombre || '';
+    document.getElementById('mesaFacCorreo').value = fac.correo || '';
+    document.getElementById('mesaFacOn').addEventListener('change', e => fb.classList.toggle('on', e.target.checked));
+  }
   const notas = document.getElementById('orderNotes'); if (notas) notas.placeholder = 'Ej: sin ají, una parte para llevar…';
   const btn = document.getElementById('submitBtn'); if (btn) btn.textContent = '✅ Confirmar pedido';
   const again = document.getElementById('successAgainBtn'); if (again) again.textContent = 'Pedir algo más 🍗';
@@ -2504,7 +2550,7 @@ function mostrarBienvenidaMesa() {
     '<div class="mb-pasos">' +
       '<div class="mb-paso"><i>🍗</i><div>Elija lo que se le antoja<small>Presas, combos, bebidas y más</small></div></div>' +
       '<div class="mb-paso"><i>✍️</i><div>Escriba su nombre<small>Así le atendemos en caja</small></div></div>' +
-      '<div class="mb-paso"><i>💵</i><div>Pague en caja y listo<small>Su pedido entra a cocina al pagar</small></div></div>' +
+      '<div class="mb-paso"><i>💵</i><div>Pague en caja o por transferencia<small>Su pedido entra a cocina al confirmar el pago</small></div></div>' +
     '</div>' +
     '<button type="button" class="mb-btn" id="mbVerMenu">Ver el menú 👉</button>' +
     '<div class="mb-nota">Sin descargar nada · Sin hacer fila</div>' +
@@ -2536,6 +2582,10 @@ function mensajeErrorMesa(err) {
   if (/demasiados_pendientes/.test(m)) return 'Esta mesa ya tiene pedidos esperando pago. Acérquese a caja, por favor.';
   if (/local_invalido|mesa_invalida/.test(m)) return 'Este código QR no es válido. Pida ayuda en caja.';
   if (/items_invalidos|total_invalido/.test(m)) return 'Revise su pedido e intente otra vez.';
+  if (/factura_identificacion/.test(m)) return 'La cédula tiene 10 dígitos y el RUC 13. Revise el número de la factura.';
+  if (/factura_nombre/.test(m)) return 'Escriba el nombre o la razón social para la factura.';
+  if (/factura_correo/.test(m)) return 'Revise el correo de la factura (o déjelo en blanco).';
+  if (/factura_obligatoria/.test(m)) return 'Para pedidos de más de $50 el SRI pide sus datos: marque «Quiero factura con mis datos».';
   if (!err || !err.status) return 'No se pudo enviar. Revise su internet e intente de nuevo.';
   return 'No se pudo enviar el pedido. Intente de nuevo o pida en caja.';
 }
@@ -2547,6 +2597,16 @@ function enviarPedidoMesa() {
   const nota = document.getElementById('orderNotes').value.trim();
   if (nombre.length < 2) { errorForm('Escriba su nombre para que le atiendan en caja.'); inp.focus(); return; }
   if (!cart.length) { errorForm('Su pedido está vacío.'); return; }
+  let factura = null;
+  if (document.getElementById('mesaFacOn') && document.getElementById('mesaFacOn').checked) {
+    factura = { identificacion: document.getElementById('mesaFacId').value.replace(/\D/g, ''),
+                nombre: document.getElementById('mesaFacNom').value.trim(),
+                correo: document.getElementById('mesaFacCorreo').value.trim() };
+    if (!/^(\d{10}|\d{13})$/.test(factura.identificacion)) { errorForm('La cédula tiene 10 dígitos y el RUC 13. Revise el número de la factura.'); return; }
+    if (factura.nombre.length < 3) { errorForm('Escriba el nombre o la razón social para la factura.'); return; }
+  } else if (cart.reduce((s, i) => s + i.price * i.qty, 0) > 50) {
+    errorForm('Para pedidos de más de $50 el SRI pide sus datos: marque «Quiero factura con mis datos».'); return;
+  }
   errorForm('');
   // este toque habilita el sonido de "su pedido está listo"
   try { if (!mesaAudio && (window.AudioContext || window.webkitAudioContext)) mesaAudio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { mesaAudio = null; }
@@ -2554,13 +2614,21 @@ function enviarPedidoMesa() {
   const items = cart.map(i => ({ nombre: i.name, precio: Math.round(i.price * 100) / 100, qty: i.qty }));
   const btn = document.getElementById('submitBtn');
   enviandoMesa = true; btn.disabled = true; btn.textContent = '⏳ Enviando su pedido…';
-  rpcSupa('mesa_crear_pedido', {
-    p_restaurante_id: SH_RESTAURANTE_ID, p_local: MESA_LOCAL, p_mesa: MESA_NUM,
-    p_nombre: nombre, p_items: items, p_nota: nota || null, p_cliente_uid: mesaUid
+  const args = { p_restaurante_id: SH_RESTAURANTE_ID, p_local: MESA_LOCAL, p_mesa: MESA_NUM,
+    p_nombre: nombre, p_items: items, p_nota: nota || null, p_cliente_uid: mesaUid, p_factura: factura };
+  // sinSql046: si la base todavía no tiene el SQL 046 (no conoce p_factura), el pedido sale igual sin factura
+  rpcSupa('mesa_crear_pedido', args).catch(err => {
+    if (!factura && (err.status === 404 || /PGRST202|Could not find the function/.test(String(err.message)))) {
+      const viejo = Object.assign({}, args); delete viejo.p_factura;
+      return rpcSupa('mesa_crear_pedido', viejo);
+    }
+    throw err;
   }).then(res => {
     if (!res || !res.token) throw new Error('sin_respuesta');
     lsSet(MESA_LS_NOMBRE, nombre);
-    mesaPedido = { token: res.token, numero: res.numero, total: Number(res.total), mesa: MESA_NUM, local: MESA_LOCAL, nombre: nombre, items: items, t: Date.now() };
+    if (factura) lsSet(MESA_LS_FAC, JSON.stringify(factura));
+    mesaPedido = { token: res.token, numero: res.numero, total: Number(res.total), mesa: MESA_NUM, local: MESA_LOCAL, nombre: nombre, items: items, t: Date.now(),
+                   facNombre: factura ? factura.nombre.toUpperCase() : null };
     lsSet(MESA_LS_PEDIDO, JSON.stringify(mesaPedido));
     mesaUid = null;
     mesaEstado = 'por_cobrar';
@@ -2598,7 +2666,8 @@ function pintarPedidoMesa() {
   const p = mesaPedido; if (!p) return;
   const est = mesaEstado || 'por_cobrar';
   const el0 = document.getElementById('mesaSuccess');
-  const firma = [est, p.numero, p.nombre, Number(p.total || 0).toFixed(2), JSON.stringify(p.items || [])].join('|');
+  const firma = [est, p.numero, p.nombre, Number(p.total || 0).toFixed(2), JSON.stringify(p.items || []), p.comprobante || '', p.facNombre || '',
+                 p.facturaNumero || '', p.facturaToken || '', subiendoComprobante ? 1 : 0, p.errorComprobante || ''].join('|');
   if (el0.dataset.firma === firma && el0.style.display !== 'none' && el0.innerHTML) return;   // nada cambió: no redibujar
   const primera = el0.dataset.token !== String(p.token || '');                                  // la animación de entrada solo la 1.ª vez
   const nivel = { por_cobrar: 0, en_cocina: 1, listo: 2, entregado: 3 }[est];
@@ -2619,9 +2688,14 @@ function pintarPedidoMesa() {
   }).join('');
   let hora = '';
   try { if (p.t) hora = new Date(p.t).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }); } catch (e) { hora = ''; }
-  const caja = est === 'por_cobrar'
-    ? '<div class="mt-caja">👉 Acérquese a caja con su nombre, <b>' + escHtml(p.nombre) + '</b>, para cancelar su pedido.</div>'
-    : '';
+  const caja = est === 'por_cobrar' ? htmlPagarMesa(p) : '';
+  let factura = '';
+  if (p.facturaNumero && p.facturaToken) {
+    factura = '<div class="mt-fac">🧾 Factura N.º ' + escHtml(p.facturaNumero) + (p.facNombre ? ' · ' + escHtml(p.facNombre) : '') +
+      '<a href="' + MESA_FACTURA_DOC + '?t=' + encodeURIComponent(p.facturaToken) + '&f=pdf" target="_blank" rel="noopener">📄 Descargar mi factura (PDF)</a></div>';
+  } else if (p.facNombre && est !== 'anulado') {
+    factura = '<div class="mt-fac">🧾 Factura a nombre de ' + escHtml(p.facNombre) + '</div>';
+  }
   const puedeMostrar = est === 'por_cobrar' || est === 'en_cocina' || est === 'listo';
   const el = el0;
   el.dataset.firma = firma; el.dataset.token = String(p.token || '');
@@ -2635,15 +2709,97 @@ function pintarPedidoMesa() {
         '<div class="mt-num"><small>PEDIDO</small><b>#' + escHtml(p.numero) + '</b></div>' +
         '<div class="mt-nombre">' + escHtml(p.nombre) + '</div>' +
         '<div class="mt-perfo"><i></i><i></i></div>' +
-        caja +
-        '<div class="mt-total"><span>Total a pagar</span><b>$' + Number(p.total || 0).toFixed(2) + '</b></div>' +
+        '<div class="mt-total"><span>' + (est === 'por_cobrar' ? 'Total a pagar' : 'Total') + '</span><b>$' + Number(p.total || 0).toFixed(2) + '</b></div>' +
+        caja + factura +
       '</div>' +
       pasos +
-      '<div class="mt-estado e-' + est + '">' + (MESA_TXT_ESTADO[est] || '') + '</div>' +
+      '<div class="mt-estado e-' + est + '">' + (est === 'por_cobrar' && p.comprobante === 'revisar' ? '📲 Revisando su transferencia…' : (MESA_TXT_ESTADO[est] || '')) + '</div>' +
       (puedeMostrar ? '<div class="mt-acc"><button type="button" class="mt-btn prim" onclick="mostrarEnCajaMesa()">📲 Mostrar en caja</button></div>' : '') +
       (items ? '<details class="mt-det"><summary>🧾 Ver mi pedido · ' + nItems + ' producto' + (nItems === 1 ? '' : 's') + '</summary>' + items + '</details>' : '') +
     '</div>';
   el.style.display = '';
+}
+
+let subiendoComprobante = false;
+function htmlPagarMesa(p) {
+  const total = '$' + Number(p.total || 0).toFixed(2);
+  if (p.comprobante === 'revisar') {
+    return '<div class="mt-pagar"><div class="mt-aviso rev">⏳ Recibimos su comprobante. En caja están confirmando que llegó la transferencia; apenas la confirmen, su pedido entra a cocina.</div>' +
+      '<button type="button" class="mt-copiar" onclick="elegirComprobanteMesa()">Cambiar la foto del comprobante</button></div>';
+  }
+  const malo = p.comprobante === 'rechazado'
+    ? '<div class="mt-aviso mal">❌ En caja no pudieron confirmar su transferencia. Revise el comprobante y súbalo otra vez, o acérquese a caja con su nombre.</div>' : '';
+  const err = p.errorComprobante ? '<div class="mt-aviso mal">' + escHtml(p.errorComprobante) + '</div>' : '';
+  const c = MESA_CUENTA;
+  return '<div class="mt-pagar">' + malo + err +
+    '<div class="mt-pagar-t">¿Cómo desea pagar?</div>' +
+    '<div class="mt-op"><h4>💵 En caja</h4><p>Acérquese a caja con su nombre, <b>' + escHtml(p.nombre) + '</b>.</p></div>' +
+    '<div class="mt-op"><h4>📲 Por transferencia, sin ir a caja</h4>' +
+      '<div class="mt-cta">' + escHtml(c.banco) + ' · ' + escHtml(c.tipo) + '<br>Nº <span class="nro">' + escHtml(c.numero) + '</span>' +
+        '<button type="button" class="mt-copiar" onclick="copiarCuentaMesa()">Copiar</button><br>' +
+        escHtml(c.titular) + ' · CI ' + escHtml(c.ci) + '<br>Valor: <b>' + total + '</b></div>' +
+      '<p style="margin-bottom:10px">Transfiera y suba la foto del comprobante:</p>' +
+      '<button type="button" class="mt-subir" id="btnComprobante" onclick="elegirComprobanteMesa()"' + (subiendoComprobante ? ' disabled' : '') + '>' +
+        (subiendoComprobante ? '⏳ Subiendo su comprobante…' : '📷 Subir comprobante') + '</button>' +
+    '</div></div>';
+}
+function copiarCuentaMesa() {
+  const n = MESA_CUENTA.numero;
+  try { navigator.clipboard.writeText(n).then(() => toastMesa('Número de cuenta copiado')).catch(() => toastMesa('Cuenta: ' + n)); }
+  catch (e) { toastMesa('Cuenta: ' + n); }
+}
+function toastMesa(t) {
+  let el = document.getElementById('mesaToast');
+  if (!el) { el = document.createElement('div'); el.id = 'mesaToast'; el.style.cssText = 'position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#1D1D1B;color:#fff;font-weight:800;padding:10px 16px;border-radius:12px;z-index:99999;font-size:.9rem'; document.body.appendChild(el); }
+  el.textContent = t; el.style.display = 'block'; clearTimeout(el._t); el._t = setTimeout(() => { el.style.display = 'none'; }, 2600);
+}
+function elegirComprobanteMesa() {
+  if (subiendoComprobante || !mesaPedido) return;
+  let inp = document.getElementById('mesaComprobanteInput');
+  if (!inp) {
+    inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.id = 'mesaComprobanteInput'; inp.style.display = 'none';
+    inp.addEventListener('change', () => { const f = inp.files && inp.files[0]; inp.value = ''; if (f) subirComprobanteMesa(f); });
+    document.body.appendChild(inp);
+  }
+  inp.click();
+}
+// la foto se achica en el celular (máx. 1400 px, JPEG) para que suba rápido con datos móviles
+function achicarFotoMesa(file) {
+  return new Promise((ok, mal) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        let w = img.naturalWidth, h = img.naturalHeight;
+        const prob = [[1400, 0.72], [1100, 0.6], [900, 0.5]];
+        let out = '';
+        for (const [max, q] of prob) {
+          const k = Math.min(1, max / Math.max(w, h));
+          const c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
+          const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+          out = c.toDataURL('image/jpeg', q);
+          if (out.length < 1400000) break;
+        }
+        URL.revokeObjectURL(url); ok(out);
+      } catch (e) { URL.revokeObjectURL(url); mal(e); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); mal(new Error('foto')); };
+    img.src = url;
+  });
+}
+function subirComprobanteMesa(file) {
+  if (!mesaPedido || subiendoComprobante) return;
+  subiendoComprobante = true; mesaPedido.errorComprobante = ''; pintarPedidoMesa();
+  achicarFotoMesa(file)
+    .then(img => rpcSupa('mesa_subir_comprobante', { p_token: mesaPedido.token, p_imagen: img }))
+    .then(() => { mesaPedido.comprobante = 'revisar'; lsSet(MESA_LS_PEDIDO, JSON.stringify(mesaPedido)); toastMesa('✅ Comprobante enviado'); })
+    .catch(err => {
+      const m = String((err && err.message) || '');
+      mesaPedido.errorComprobante = /pedido_vencido|estado_invalido/.test(m) ? 'Este pedido ya no está por pagar. Acérquese a caja.'
+        : /imagen_invalida|foto/.test(m) ? 'No pudimos leer esa foto. Tome una captura del comprobante e intente otra vez.'
+        : 'No se pudo subir. Revise su internet e intente otra vez.';
+    })
+    .finally(() => { subiendoComprobante = false; pintarPedidoMesa(); consultarEstadoMesa(false); });
 }
 
 function mostrarEnCajaMesa() {
@@ -2663,14 +2819,15 @@ function pintarFabMesa() {
   const fab = document.getElementById('mesaFab'); if (!fab || !mesaPedido) return;
   const est = mesaEstado || 'por_cobrar';
   const clase = 'mesa-fab show e-' + est;
-  const html = '<span class="mf-dot"></span>Mi pedido #' + escHtml(mesaPedido.numero) + ' · ' + (MESA_FAB[est] || '');
+  const html = '<span class="mf-dot"></span>Mi pedido #' + escHtml(mesaPedido.numero) + ' · ' + (est === 'por_cobrar' && mesaPedido.comprobante === 'revisar' ? 'Revisando pago' : (MESA_FAB[est] || ''));
   if (fab.className !== clase) fab.className = clase;          // sin tocar lo que no cambió (no parpadea)
   if (fab.innerHTML !== html) fab.innerHTML = html;
 }
 
 function arrancarSondeoMesa() {
   pararSondeoMesa();
-  if (!mesaPedido || mesaEstado === 'entregado' || mesaEstado === 'anulado') return;
+  if (!mesaPedido || mesaEstado === 'anulado') return;
+  if (mesaEstado === 'entregado' && (mesaPedido.facturaNumero || !mesaPedido.facNombre)) return;
   mesaTimer = setInterval(() => { if (!document.hidden) consultarEstadoMesa(false); }, 5000);
 }
 function pararSondeoMesa() { if (mesaTimer) { clearInterval(mesaTimer); mesaTimer = null; } }
@@ -2686,6 +2843,10 @@ function consultarEstadoMesa(alAbrir) {
     if (d.total != null) mesaPedido.total = Number(d.total);
     if (Array.isArray(d.items)) mesaPedido.items = d.items;
     if (d.nombre) mesaPedido.nombre = d.nombre;
+    if ('comprobante_estado' in d) mesaPedido.comprobante = d.comprobante_estado || null;
+    if ('fac_nombre' in d) mesaPedido.facNombre = d.fac_nombre || null;
+    if ('factura_numero' in d) mesaPedido.facturaNumero = d.factura_estado === 'emitida' ? d.factura_numero : null;
+    if ('factura_token' in d) mesaPedido.facturaToken = d.factura_token || null;
     const sv = document.getElementById('successView');
     const viendo = sv.classList.contains('show') && document.getElementById('mesaSuccess').style.display !== 'none';
     if (antes && antes !== 'listo' && mesaEstado === 'listo') { avisarListoMesa(); if (!viendo) { mostrarPedidoMesa(); return; } }
