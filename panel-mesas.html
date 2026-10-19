@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pedidos en mesa · Super Happy</title>
+<title>Pedidos por QR · Super Happy</title>
 <link rel="icon" type="image/svg+xml" href="img/logo-sh.svg">
 <link rel="alternate icon" type="image/png" href="img/logo-sh-color-104.png">
 <meta name="robots" content="noindex">
@@ -223,8 +223,8 @@ button{font-family:inherit;cursor:pointer}
   <div class="estrella" style="width:230px;height:230px;right:-70px;bottom:-60px;opacity:.18;transform:rotate(14deg)"></div>
   <div class="login-box">
     <div class="login-logo"><img src="img/logo-sh.svg" width="216" height="99" alt="Super Happy"></div>
-    <h1>Pedidos en <span>mesa</span></h1>
-    <p>Aquí llegan solo los pedidos que los clientes hacen desde la mesa con el código QR.</p>
+    <h1>Pedidos por <span>QR</span></h1>
+    <p>Aquí llegan solo los pedidos que los clientes hacen desde su celular con el código QR.</p>
     <span class="lbl">Local</span>
     <div class="locales">
       <button type="button" class="loc-btn" data-local="avenida"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>Avenida</button>
@@ -243,7 +243,7 @@ button{font-family:inherit;cursor:pointer}
     <div class="top-1">
       <img class="brand-logo" src="img/logo-sh.svg" width="126" height="58" alt="Super Happy">
       <span class="sep"></span>
-      <div><div class="brand-t">Pedidos en mesa</div><div class="brand-l"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg><span id="localNombre">Super Happy</span></div></div>
+      <div><div class="brand-t">Pedidos por QR</div><div class="brand-l"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg><span id="localNombre">Super Happy</span></div></div>
       <div class="top-acc">
         <span class="conexion" id="conexion" title="Conexión con el sistema"><i></i><span>En línea</span></span>
         <span class="reloj" id="reloj">--:--</span>
@@ -257,7 +257,7 @@ button{font-family:inherit;cursor:pointer}
         <div class="stat s-cocina"><div class="stat-i"><svg class="ic" viewBox="0 0 24 24"><path d="M4 10h16M6 10v7a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-7M9 6.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5"/></svg></div><div><div class="stat-t">En cocina</div><div class="stat-v"><b id="kCocina">0</b><small id="kCocinaV"></small></div></div></div>
         <div class="stat s-listo"><div class="stat-i"><svg class="ic" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></div><div><div class="stat-t">Listos</div><div class="stat-v"><b id="kListo">0</b><small id="kListoV"></small></div></div></div>
         <div class="caja" id="caja"><div class="stat-i"><svg class="ic" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></div><div><div class="stat-t">Caja de hoy</div><div class="caja-v">$0.00</div></div></div>
-        <label class="buscar-w"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input class="buscar" id="buscar" type="search" placeholder="Buscar nombre o mesa" autocomplete="off"></label>
+        <label class="buscar-w"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input class="buscar" id="buscar" type="search" placeholder="Buscar nombre o número" autocomplete="off"></label>
       </div>
     </div>
   </header>
@@ -412,7 +412,7 @@ function entrar() {
   }).catch(function (e) {
     var m = String(e.message || '');
     if (/codigo_incorrecto/.test(m)) errLogin('Código incorrecto.');
-    else if (/local_invalido/.test(m)) errLogin('Ese local no tiene pedidos en mesa activados.');
+    else if (/local_invalido/.test(m)) errLogin('Ese local no tiene pedidos por QR activados.');
     else if (/mesa_panel|does not exist|PGRST202/.test(m)) errLogin('El sistema de mesas todavía no está instalado en la base de datos.');
     else errLogin('No hay conexión. Revise el internet e intente otra vez.');
   }).then(function () { $('btnEntrar').disabled = false; $('btnEntrar').textContent = 'Empezar turno'; });
@@ -482,7 +482,7 @@ function reemplazar(fila) {
 function avisoNuevo(lista) {
   var p = lista[lista.length - 1];
   var el = $('nuevoAviso');
-  el.innerHTML = '<span class="na-i">' + IC.campana + '</span><b>Nuevo pedido</b><span class="na-mesa">Mesa ' + esc(p.mesa) + '</span><span>' + esc(p.nombre) + ' · ' + dinero(p.total) + '</span>' +
+  el.innerHTML = '<span class="na-i">' + IC.campana + '</span><b>Nuevo pedido</b><span class="na-mesa">' + etiqueta(p) + '</span><span>' + esc(p.nombre) + ' · ' + dinero(p.total) + '</span>' +
     (lista.length > 1 ? '<span style="opacity:.7">+' + (lista.length - 1) + ' más</span>' : '');
   el.hidden = false;
   clearTimeout(avisoT); avisoT = setTimeout(function () { el.hidden = true; }, 8000);
@@ -490,10 +490,13 @@ function avisoNuevo(lista) {
 
 function avisoComprobante(p) {
   var el = $('nuevoAviso');
-  el.innerHTML = '<span class="na-i">' + IC.transfer + '</span><b>Pagó por transferencia</b><span class="na-mesa">Mesa ' + esc(p.mesa) + '</span><span>' + esc(p.nombre) + ' · ' + dinero(p.total) + ' · revise el comprobante</span>';
+  el.innerHTML = '<span class="na-i">' + IC.transfer + '</span><b>Pagó por transferencia</b><span class="na-mesa">' + etiqueta(p) + '</span><span>' + esc(p.nombre) + ' · ' + dinero(p.total) + ' · revise el comprobante</span>';
   el.hidden = false;
   clearTimeout(avisoT); avisoT = setTimeout(function () { el.hidden = true; }, 10000);
 }
+// pedido del QR del local (sin mesa): la app manda «QR-xxxxxx» (código del celular) en vez del número de mesa
+function esMesa(p) { return !!p.mesa && !/^QR-/i.test(String(p.mesa)); }
+function etiqueta(p) { return esMesa(p) ? 'Mesa ' + esc(p.mesa) : 'Pedido #' + esc(p.numero); }
 function facturaActiva(p) { return facturaModo !== 'apagada' || String(p.mesa) === '99'; }
 
 // ---------- pintar ----------
@@ -517,7 +520,7 @@ function tarjeta(p) {
     return '<div class="it"><span class="q">' + esc(i.qty) + '</span><div class="it-n">' + esc(x.base) + (x.det ? '<small>' + esc(x.det) + '</small>' : '') +
       '</div><span class="it-p">' + dinero(Number(i.precio) * Number(i.qty)) + '</span></div>';
   }).join('');
-  var meta = '<span class="num">#' + esc(p.numero) + '</span><span>' + hora(p.creado_at) + '</span>';
+  var meta = (esMesa(p) ? '<span class="num">#' + esc(p.numero) + '</span>' : '') + '<span>' + hora(p.creado_at) + '</span>';
   if (p.cobrado_at && p.metodo_pago) meta += '<span class="chip pago">' + IC.check + 'Pagado · ' + (METODOS[p.metodo_pago] || esc(p.metodo_pago)) + '</span>';
   if (p.estado === 'anulado' && p.anulado_motivo) meta += '<span class="chip anul">' + esc(p.anulado_motivo) + '</span>';
   if (p.estado === 'por_cobrar' && p.comprobante_estado === 'rechazado') meta += '<span class="chip compro-mal">Comprobante rechazado</span>';
@@ -577,7 +580,7 @@ function tarjeta(p) {
   }
   var nuevo = nuevos[p.id] && nuevos[p.id] > Date.now() ? ' nuevo' : '';
   return '<article class="card e-' + esc(p.estado) + nuevo + '">' +
-    '<div class="c-h"><div class="mesa"><small>MESA</small><b>' + esc(p.mesa) + '</b></div>' +
+    '<div class="c-h"><div class="mesa">' + (esMesa(p) ? '<small>MESA</small><b>' + esc(p.mesa) + '</b>' : '<small>PEDIDO</small><b>' + esc(p.numero) + '</b>') + '</div>' +
     '<div class="quien"><div class="nom">' + esc(p.nombre) + '</div><div class="meta">' + meta + '</div></div>' + chipTiempo(p) + '</div>' +
     '<div class="items">' + items + '</div>' +
     (p.nota ? '<div class="nota">' + IC.nota + '<span>' + esc(p.nota) + '</span></div>' : '') +
@@ -606,7 +609,7 @@ function pintar() {
   var cocina = f.filter(function (p) { return p.estado === 'en_cocina'; });
   var listo = f.filter(function (p) { return p.estado === 'listo'; });
   var hist = f.filter(function (p) { return p.estado === 'entregado' || p.estado === 'anulado'; }).slice().reverse();
-  lista($('lCobrar'), cobrar, IC.recibo, q ? 'Nadie con ese nombre por cobrar' : 'Aquí aparecen los pedidos nuevos de las mesas');
+  lista($('lCobrar'), cobrar, IC.recibo, q ? 'Nadie con ese nombre por cobrar' : 'Aquí aparecen los pedidos nuevos del QR');
   lista($('lCocina'), cocina, IC.olla, 'No hay pedidos en cocina');
   lista($('lListo'), listo, IC.campana, 'No hay pedidos listos por entregar');
   $('lHist').innerHTML = hist.map(tarjeta).join('');
@@ -622,7 +625,7 @@ function pintar() {
   var c = caja || {};
   $('caja').innerHTML = '<div class="stat-i">' + IC.efectivo + '</div><div><div class="stat-t">Caja de hoy</div><div class="caja-v">' + dinero(c.total) + '<small>' + (c.pedidos || 0) + ' pedido' + ((c.pedidos || 0) === 1 ? '' : 's') + '</small></div></div>' +
     '<div class="caja-d"><span>Efectivo <b>' + dinero(c.efectivo) + '</b></span><span>Transferencia <b>' + dinero(c.transferencia) + '</b></span>' + (Number(c.deuna) ? '<span>Deuna <b>' + dinero(c.deuna) + '</b></span>' : '') + '</div>';
-  document.title = (pc.length ? '(' + pc.length + ') ' : '') + 'Pedidos en mesa · Super Happy';
+  document.title = (pc.length ? '(' + pc.length + ') ' : '') + 'Pedidos por QR · Super Happy';
 }
 
 // ---------- acciones ----------
@@ -672,7 +675,7 @@ function comandaHTML(p, prueba) {
     'hr{border:0;border-top:2px dashed #000;margin:2mm 0}.it{margin:1.4mm 0;font-size:15px}.row{display:flex;justify-content:space-between}' +
     '</style></head><body><div class="t">' +
     '<div class="c">' + esc(String(nombreLocal || 'SUPER HAPPY').toUpperCase()) + '</div>' +
-    '<div class="c g">' + (prueba ? 'PRUEBA DE IMPRESORA' : 'MESA ' + esc(p.mesa)) + '</div>' +
+    '<div class="c g">' + (prueba ? 'PRUEBA DE IMPRESORA' : esMesa(p) ? 'MESA ' + esc(p.mesa) : 'PEDIDO QR') + '</div>' +
     '<div class="c xg">#' + esc(p.numero) + '</div>' +
     '<div class="c g">' + esc(String(p.nombre || '').toUpperCase()) + '</div>' +
     '<div class="c">' + hora(p.cobrado_at || p.creado_at || new Date().toISOString()) + ' · ' + pagado + '</div><hr>' +
@@ -734,7 +737,7 @@ function abrirVentana(html) {
 }
 function cerrarVentana() { var v = $('ventanaExtra'); if (v) v.parentNode.removeChild(v); }
 function abrirDatosFactura(p) {
-  abrirVentana('<h3>Datos de factura · Mesa ' + esc(p.mesa) + ' · ' + esc(p.nombre) + '</h3>' +
+  abrirVentana('<h3>Datos de factura · ' + etiqueta(p) + ' · ' + esc(p.nombre) + '</h3>' +
     '<input class="campo" id="mfId" placeholder="Cédula o RUC" inputmode="numeric" maxlength="13" value="' + esc(p.fac_identificacion || '') + '">' +
     '<input class="campo" id="mfNom" placeholder="Nombre o razón social" maxlength="120" value="' + esc(p.fac_nombre || '') + '">' +
     '<input class="campo" id="mfCor" placeholder="Correo (opcional)" maxlength="120" value="' + esc(p.fac_correo || '') + '">' +
@@ -755,7 +758,7 @@ function abrirDatosFactura(p) {
   setTimeout(function () { var i = $('mfId'); if (i) i.focus(); }, 50);
 }
 function verComprobante(p) {
-  abrirVentana('<h3>Comprobante · Mesa ' + esc(p.mesa) + ' · ' + esc(p.nombre) + ' · ' + dinero(p.total) + '</h3>' +
+  abrirVentana('<h3>Comprobante · ' + etiqueta(p) + ' · ' + esc(p.nombre) + ' · ' + dinero(p.total) + '</h3>' +
     '<div id="mcFoto" class="ayuda">Cargando la foto…</div>' +
     '<p class="ayuda">Confirme en la cuenta del banco que llegó la transferencia antes de tocar «Sí llegó».</p>' +
     '<div class="acc"><button type="button" class="b b-x" id="mcNo">' + IC.x + 'No llegó</button>' +

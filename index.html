@@ -912,6 +912,24 @@ body.modo-mesa #clientName{font-size:1.15rem;padding:14px;border-width:2.5px;bac
 .mt-aviso{border-radius:14px;padding:11px 12px;font-weight:800;font-size:.9rem;line-height:1.45;margin-bottom:10px}
 .mt-aviso.rev{background:#e3f2fd;color:#0d47a1}
 .mt-aviso.mal{background:#fdecec;color:#b71c1c}
+.mt-otro{display:block;margin:2px auto 0;border:0;background:none;color:var(--purple);font-weight:900;font-family:inherit;font-size:.86rem;cursor:pointer;text-decoration:underline;padding:6px}
+/* cómo va a pagar: se elige ANTES de confirmar (19-oct) */
+.mesa-pago{margin-top:14px}
+.mp-t{font-weight:900;font-size:1rem;color:#333;margin:0 2px 8px}
+.mp-ops{display:flex;gap:10px}
+.mp-op{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 8px;border-radius:16px;border:2.5px solid #ece4ff;background:#fff;font-family:inherit;cursor:pointer;color:#333;transition:border-color .15s,background .15s}
+.mp-op i{font-style:normal;font-size:1.7rem;line-height:1.1}
+.mp-op b{font-weight:900;font-size:1rem}
+.mp-op small{font-weight:700;font-size:.74rem;color:#777;line-height:1.2;text-align:center}
+.mp-op.sel{border-color:var(--purple);background:#f7f2ff;box-shadow:0 0 0 3px rgba(106,31,190,.12)}
+.mp-op.sel small{color:var(--purple)}
+.mesa-pago.falta .mp-op:not(.sel){border-color:#f3b4b4}
+.mp-det{margin-top:10px}
+.mp-det:empty{display:none}
+.mp-info{background:#FFF4D6;border-radius:14px;padding:11px 12px;font-size:.86rem;font-weight:800;color:#6b4e00;line-height:1.45}
+.mp-foto{display:flex;align-items:center;gap:10px;background:#f1fbf5;border:2px solid #c6ead3;border-radius:14px;padding:8px 10px;font-weight:900;font-size:.9rem;color:#1b6b3a}
+.mp-foto img{width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.mp-foto span{flex:1;min-width:0}
 .mt-fac{margin:0 14px 12px;background:#f1fbf5;border:2px solid #c6ead3;border-radius:16px;padding:10px 12px;text-align:left;font-size:.86rem;font-weight:800;color:#1b6b3a;line-height:1.45}
 .mt-fac a{display:block;text-align:center;margin-top:8px;padding:12px;border-radius:12px;background:#1b6b3a;color:#fff;text-decoration:none;font-weight:900}
 /* confirmación tipo ticket */
@@ -2408,14 +2426,25 @@ function errorForm(msg) {
 }
 
 // ─── PEDIDO EN MESA (QR) ───
-// El QR de cada mesa abre esta misma app con ?local=avenida&mesa=5 (o local=norte).
-// En ese modo el cliente solo pone su nombre: el pedido entra directo al PANEL DE MESAS
-// (Supabase, tabla pedidos_mesa, sin WhatsApp) y se paga en caja diciendo el nombre.
+// El QR abre esta misma app con ?local=avenida&qr=1 (un solo QR por local; basta el nombre)
+// o, el de una mesa, con ?local=avenida&mesa=5. En ese modo el cliente solo pone su nombre
+// y elige cómo paga: el pedido entra directo al PANEL DE MESAS (Supabase, tabla pedidos_mesa, sin WhatsApp).
 const MESA_QS = new URLSearchParams(location.search);
 const MESA_NUM = String(MESA_QS.get('mesa') || '').trim().replace(/[^0-9A-Za-z-]/g, '').slice(0, 10);
 const MESA_LOCAL = String(MESA_QS.get('local') || '').trim().toLowerCase();
 const MESA_LOCALES = { avenida: 'Local Avenida', norte: 'Local Norte' };
-const MODO_MESA = !!MESA_NUM && Object.prototype.hasOwnProperty.call(MESA_LOCALES, MESA_LOCAL);
+const MODO_MESA = (!!MESA_NUM || MESA_QS.get('qr') === '1') && Object.prototype.hasOwnProperty.call(MESA_LOCALES, MESA_LOCAL);
+const MESA_SIN = MODO_MESA && !MESA_NUM;
+// Sin mesa, la base igual pide un código de mesa: va uno de ESTE celular («QR-xxxxxx»). Así el tope
+// de 3 pedidos sin pagar es por celular (no por local) y el panel sabe que no es una mesa.
+const MESA_COD = MESA_SIN ? codigoCelularMesa() : MESA_NUM;
+function codigoCelularMesa() {
+  let c = lsGet('sh_mesa_cel') || '';
+  if (!/^QR-[0-9a-z]{6}$/.test(c)) { c = 'QR-' + (Math.random().toString(36).slice(2) + '000000').slice(0, 6); lsSet('sh_mesa_cel', c); }
+  return c;
+}
+function esMesaReal(m) { return !!m && !/^QR-/i.test(String(m)); }
+function lineaMesa(p) { return (esMesaReal(p.mesa) ? 'Mesa ' + escHtml(p.mesa) + ' · ' : '') + (MESA_LOCALES[p.local] || ''); }
 const SUPA_URL = 'https://wfpdtjmmrhhfuxayvpzu.supabase.co';
 const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmcGR0am1tcmhoZnV4YXl2cHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNzE1NDksImV4cCI6MjA4ODY0NzU0OX0.Iyeogfs5AIiVrM5agXuMZsgFrud460OYvn0zkYgJH0s';
 const SH_RESTAURANTE_ID = '5a181295-24ac-4d82-83ae-1859dc109d3a';
@@ -2426,7 +2455,7 @@ const MESA_FACTURA_DOC = 'https://n8n.dewansas.com/webhook/sh-mesa-factura-doc';
 const MESA_CUENTA = { titular: 'Lizeth Cisneros', banco: 'Banco Pichincha', tipo: 'Cuenta de ahorro', numero: '2209253523', ci: '0604532168' };
 const MESA_TXT_ESTADO = {
   por_cobrar: '⏳ Esperando su pago',
-  en_cocina: '💰 ¡Pagado! Su pedido ya está en cocina. Se lo llevamos a su mesa 🍗',
+  en_cocina: MESA_SIN ? '💰 ¡Pagado! Su pedido ya está en cocina 🍗' : '💰 ¡Pagado! Su pedido ya está en cocina. Se lo llevamos a su mesa 🍗',
   listo: '🔔 ¡Su pedido está listo!',
   entregado: '✅ Entregado. ¡Buen provecho! 😋',
   anulado: '❌ Este pedido se anuló. Si fue un error, acérquese a caja.'
@@ -2434,8 +2463,10 @@ const MESA_TXT_ESTADO = {
 const MESA_TITULO = { por_cobrar: '¡Pedido confirmado!', en_cocina: '¡Pagado! Ya está en cocina', listo: '¡Su pedido está listo!', entregado: '¡Buen provecho!', anulado: 'Pedido anulado' };
 const MESA_ICONO = { por_cobrar: '✅', en_cocina: '👨‍🍳', listo: '🔔', entregado: '😋', anulado: '😕' };
 const MESA_FAB = { por_cobrar: 'Por pagar', en_cocina: 'En cocina', listo: '¡Listo!', entregado: 'Entregado', anulado: 'Anulado' };
-const MESA_PASOS = [['💵', 'Pague'], ['👨‍🍳', 'En cocina'], ['🍽️', 'A su mesa']];
+const MESA_PASOS = [['💵', 'Pague'], ['👨‍🍳', 'En cocina'], MESA_SIN ? ['😋', '¡A comer!'] : ['🍽️', 'A su mesa']];
 let mesaUid = null;
+let mesaPago = '';          // 'efectivo' | 'transferencia': se elige en el formulario, antes de confirmar
+let mesaFotoPago = null;    // foto del comprobante (ya achicada) elegida antes de confirmar
 let enviandoMesa = false;
 let mesaPedido = null;   // {token, numero, mesa, local, nombre, total, items, t}
 let mesaEstado = '';
@@ -2470,10 +2501,10 @@ function initMesa() {
   const hero = document.querySelector('.hero');
   if (hero) {
     hero.classList.add('mesa-hero');
-    const ht = hero.querySelector('.hero-title'); if (ht) ht.textContent = '¡Bienvenido a la Mesa ' + MESA_NUM + '! 🍗';
+    const ht = hero.querySelector('.hero-title'); if (ht) ht.textContent = MESA_SIN ? '¡Bienvenido a Super Happy! 🍗' : '¡Bienvenido a la Mesa ' + MESA_NUM + '! 🍗';
     const hs = hero.querySelector('.hero-sub'); if (hs) hs.textContent = nomLocal + ' · Pida aquí y pague en caja o por transferencia';
     const pill = hero.querySelector('.hero-pill');
-    if (pill) {
+    if (pill && !MESA_SIN) {
       const bd = document.createElement('div');
       bd.className = 'mesa-badge'; bd.setAttribute('aria-label', 'Mesa ' + MESA_NUM);
       bd.innerHTML = '<small>MESA</small><b>' + escHtml(MESA_NUM) + '</b>';
@@ -2485,7 +2516,7 @@ function initMesa() {
   if (tira) {
     if (hero) hero.insertAdjacentElement('afterend', tira);   // la tira va debajo del saludo
     tira.className = 'mesa-pasos show';
-    tira.setAttribute('role', 'button'); tira.setAttribute('aria-label', 'Cómo pedir desde la mesa'); tira.tabIndex = 0;
+    tira.setAttribute('role', 'button'); tira.setAttribute('aria-label', 'Cómo pedir'); tira.tabIndex = 0;
     tira.innerHTML = '<div class="mesa-paso"><i>1</i><span>Elija su comida</span></div>' +
                      '<div class="mesa-paso"><i>2</i><span>Escriba su nombre</span></div>' +
                      '<div class="mesa-paso"><i>3</i><span>Pague en caja o transferencia</span></div>';
@@ -2504,7 +2535,15 @@ function initMesa() {
   }
   if (lbl) { const rs = document.createElement('div'); rs.className = 'mesa-resumen'; rs.id = 'mesaResumen'; lbl.insertAdjacentElement('beforebegin', rs); }
   const tot = document.getElementById('formTotals');
-  if (tot) { const ip = document.createElement('div'); ip.className = 'mesa-info-pago'; ip.textContent = '💵 Pague en caja con su nombre o 📲 por transferencia desde aquí. Su pedido entra a cocina apenas se confirme el pago.'; tot.insertAdjacentElement('afterend', ip); }
+  if (tot) {
+    const mp = document.createElement('div'); mp.className = 'mesa-pago'; mp.id = 'mesaPago';
+    mp.innerHTML = '<div class="mp-t">¿Cómo va a pagar? *</div><div class="mp-ops">' +
+      '<button type="button" class="mp-op" data-pago="efectivo"><i>💵</i><b>Efectivo</b><small>En caja, con su nombre</small></button>' +
+      '<button type="button" class="mp-op" data-pago="transferencia"><i>📲</i><b>Transferencia</b><small>Desde su celular</small></button>' +
+      '</div><div class="mp-det" id="mesaPagoDet"></div>';
+    mp.addEventListener('click', e => { const b = e.target.closest('.mp-op'); if (b) elegirPagoMesa(b.dataset.pago); });
+    tot.insertAdjacentElement('afterend', mp);
+  }
   const notasLbl = document.getElementById('orderNotes');
   if (notasLbl) {
     let fac = {}; try { fac = JSON.parse(lsGet(MESA_LS_FAC) || '{}') || {}; } catch (e) { fac = {}; }
@@ -2545,7 +2584,7 @@ function mostrarBienvenidaMesa() {
   d.innerHTML = '<div class="mesa-bienv-card" role="dialog" aria-label="Bienvenida">' +
     '<div class="mb-logo"><img src="img/logo-sh.svg" width="104" height="48" alt="Super Happy"></div>' +
     '<div class="mb-hola">¡Bienvenido! 👋</div>' +
-    '<div class="mb-mesa"><small>MESA</small><b>' + escHtml(MESA_NUM) + '</b></div>' +
+    (MESA_SIN ? '' : '<div class="mb-mesa"><small>MESA</small><b>' + escHtml(MESA_NUM) + '</b></div>') +
     '<div class="mb-local">' + MESA_LOCALES[MESA_LOCAL] + '</div>' +
     '<div class="mb-pasos">' +
       '<div class="mb-paso"><i>🍗</i><div>Elija lo que se le antoja<small>Presas, combos, bebidas y más</small></div></div>' +
@@ -2571,15 +2610,57 @@ function alAbrirFormularioMesa() {
   const n = cart.reduce((s, i) => s + i.qty, 0);
   const t = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const rs = document.getElementById('mesaResumen');
-  if (rs) rs.innerHTML = '<div class="mr-badge"><small>MESA</small><b>' + escHtml(MESA_NUM) + '</b></div>' +
+  if (rs) rs.innerHTML = (MESA_SIN ? '<div class="mr-badge"><b>🍗</b></div>' : '<div class="mr-badge"><small>MESA</small><b>' + escHtml(MESA_NUM) + '</b></div>') +
     '<div class="mr-txt">' + MESA_LOCALES[MESA_LOCAL] + '<span>' + n + ' producto' + (n === 1 ? '' : 's') + ' · $' + t.toFixed(2) + '</span></div>';
   const btn = document.getElementById('submitBtn'); if (btn && !enviandoMesa) btn.textContent = textoBotonMesa();
+  pintarPagoMesa();
+}
+
+// ¿Cómo va a pagar? (antes de confirmar) · efectivo = en caja con su nombre · transferencia = datos + foto del comprobante
+function elegirPagoMesa(m) {
+  mesaPago = m === 'transferencia' ? 'transferencia' : 'efectivo';
+  errorForm('');
+  pintarPagoMesa();
+}
+function pintarPagoMesa() {
+  const box = document.getElementById('mesaPago'), det = document.getElementById('mesaPagoDet');
+  if (!box || !det) return;
+  box.classList.remove('falta');
+  box.querySelectorAll('.mp-op').forEach(b => b.classList.toggle('sel', b.dataset.pago === mesaPago));
+  const total = '$' + cart.reduce((s, i) => s + i.price * i.qty, 0).toFixed(2);
+  if (mesaPago === 'efectivo') {
+    det.innerHTML = '<div class="mp-info">💵 Al confirmar, acérquese a caja con su nombre y pague <b>' + total + '</b>. Su pedido entra a cocina apenas pague.</div>';
+  } else if (mesaPago === 'transferencia') {
+    const c = MESA_CUENTA;
+    det.innerHTML = '<div class="mt-cta" style="margin-top:0">' + escHtml(c.banco) + ' · ' + escHtml(c.tipo) + '<br>Nº <span class="nro">' + escHtml(c.numero) + '</span>' +
+        '<button type="button" class="mt-copiar" onclick="copiarCuentaMesa()">Copiar</button><br>' +
+        escHtml(c.titular) + ' · CI ' + escHtml(c.ci) + '<br>Valor: <b>' + total + '</b></div>' +
+      (mesaFotoPago
+        ? '<div class="mp-foto"><img src="' + mesaFotoPago + '" alt=""><span>✅ Comprobante listo</span><button type="button" class="mt-copiar" onclick="elegirFotoPagoMesa()">Cambiar</button></div>'
+        : '<button type="button" class="mt-subir" onclick="elegirFotoPagoMesa()">📷 Adjuntar comprobante</button>' +
+          '<div class="mesa-fac-nota" style="text-align:center;margin-top:6px">Transfiera y adjunte la captura. En caja confirman que llegó y su pedido entra a cocina.</div>');
+  } else {
+    det.innerHTML = '';
+  }
+}
+function elegirFotoPagoMesa() {
+  let inp = document.getElementById('mesaFotoPagoInput');
+  if (!inp) {
+    inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.id = 'mesaFotoPagoInput'; inp.style.display = 'none';
+    inp.addEventListener('change', () => { const f = inp.files && inp.files[0]; inp.value = ''; if (f) usarFotoPagoMesa(f); });
+    document.body.appendChild(inp);
+  }
+  inp.click();
+}
+function usarFotoPagoMesa(file) {
+  return achicarFotoMesa(file).then(img => { mesaFotoPago = img; errorForm(''); pintarPagoMesa(); })
+    .catch(() => errorForm('No pudimos leer esa foto. Tome una captura del comprobante e intente otra vez.'));
 }
 
 function mensajeErrorMesa(err) {
   const m = String((err && err.message) || '');
   if (/nombre_invalido/.test(m)) return 'Escriba su nombre (mínimo 2 letras).';
-  if (/demasiados_pendientes/.test(m)) return 'Esta mesa ya tiene pedidos esperando pago. Acérquese a caja, por favor.';
+  if (/demasiados_pendientes/.test(m)) return MESA_SIN ? 'Ya tiene pedidos esperando pago. Acérquese a caja, por favor.' : 'Esta mesa ya tiene pedidos esperando pago. Acérquese a caja, por favor.';
   if (/local_invalido|mesa_invalida/.test(m)) return 'Este código QR no es válido. Pida ayuda en caja.';
   if (/items_invalidos|total_invalido/.test(m)) return 'Revise su pedido e intente otra vez.';
   if (/factura_identificacion/.test(m)) return 'La cédula tiene 10 dígitos y el RUC 13. Revise el número de la factura.';
@@ -2607,6 +2688,15 @@ function enviarPedidoMesa() {
   } else if (cart.reduce((s, i) => s + i.price * i.qty, 0) > 50) {
     errorForm('Para pedidos de más de $50 el SRI pide sus datos: marque «Quiero factura con mis datos».'); return;
   }
+  const cajaPago = document.getElementById('mesaPago');
+  if (cajaPago && !mesaPago) {
+    errorForm('Elija cómo va a pagar: 💵 efectivo o 📲 transferencia.');
+    cajaPago.classList.add('falta'); cajaPago.scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
+  }
+  if (mesaPago === 'transferencia' && !mesaFotoPago) {
+    errorForm('Adjunte la foto del comprobante de su transferencia (o elija pagar en efectivo).');
+    cajaPago.scrollIntoView({ behavior: 'smooth', block: 'center' }); return;
+  }
   errorForm('');
   // este toque habilita el sonido de "su pedido está listo"
   try { if (!mesaAudio && (window.AudioContext || window.webkitAudioContext)) mesaAudio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { mesaAudio = null; }
@@ -2614,7 +2704,7 @@ function enviarPedidoMesa() {
   const items = cart.map(i => ({ nombre: i.name, precio: Math.round(i.price * 100) / 100, qty: i.qty }));
   const btn = document.getElementById('submitBtn');
   enviandoMesa = true; btn.disabled = true; btn.textContent = '⏳ Enviando su pedido…';
-  const args = { p_restaurante_id: SH_RESTAURANTE_ID, p_local: MESA_LOCAL, p_mesa: MESA_NUM,
+  const args = { p_restaurante_id: SH_RESTAURANTE_ID, p_local: MESA_LOCAL, p_mesa: MESA_COD,
     p_nombre: nombre, p_items: items, p_nota: nota || null, p_cliente_uid: mesaUid, p_factura: factura };
   // sinSql046: si la base todavía no tiene el SQL 046 (no conoce p_factura), el pedido sale igual sin factura
   rpcSupa('mesa_crear_pedido', args).catch(err => {
@@ -2627,13 +2717,16 @@ function enviarPedidoMesa() {
     if (!res || !res.token) throw new Error('sin_respuesta');
     lsSet(MESA_LS_NOMBRE, nombre);
     if (factura) lsSet(MESA_LS_FAC, JSON.stringify(factura));
-    mesaPedido = { token: res.token, numero: res.numero, total: Number(res.total), mesa: MESA_NUM, local: MESA_LOCAL, nombre: nombre, items: items, t: Date.now(),
-                   facNombre: factura ? factura.nombre.toUpperCase() : null };
+    mesaPedido = { token: res.token, numero: res.numero, total: Number(res.total), mesa: MESA_COD, local: MESA_LOCAL, nombre: nombre, items: items, t: Date.now(),
+                   facNombre: factura ? factura.nombre.toUpperCase() : null, pago: mesaPago };
     lsSet(MESA_LS_PEDIDO, JSON.stringify(mesaPedido));
     mesaUid = null;
     mesaEstado = 'por_cobrar';
     cart = []; colaOfrecida = false; updateCartUI();
     document.getElementById('orderNotes').value = '';
+    const foto = mesaPago === 'transferencia' ? mesaFotoPago : null;
+    mesaPago = ''; mesaFotoPago = null; pintarPagoMesa();
+    if (foto) enviarComprobanteMesa(foto);   // el comprobante adjuntado sube apenas nace el pedido
     mostrarPedidoMesa();
   }).catch(err => {
     errorForm(mensajeErrorMesa(err));
@@ -2667,7 +2760,7 @@ function pintarPedidoMesa() {
   const est = mesaEstado || 'por_cobrar';
   const el0 = document.getElementById('mesaSuccess');
   const firma = [est, p.numero, p.nombre, Number(p.total || 0).toFixed(2), JSON.stringify(p.items || []), p.comprobante || '', p.facNombre || '',
-                 p.facturaNumero || '', p.facturaToken || '', subiendoComprobante ? 1 : 0, p.errorComprobante || ''].join('|');
+                 p.facturaNumero || '', p.facturaToken || '', subiendoComprobante ? 1 : 0, p.errorComprobante || '', p.pago || ''].join('|');
   if (el0.dataset.firma === firma && el0.style.display !== 'none' && el0.innerHTML) return;   // nada cambió: no redibujar
   const primera = el0.dataset.token !== String(p.token || '');                                  // la animación de entrada solo la 1.ª vez
   const nivel = { por_cobrar: 0, en_cocina: 1, listo: 2, entregado: 3 }[est];
@@ -2704,7 +2797,7 @@ function pintarPedidoMesa() {
       '<div class="mt-ticket">' +
         '<div class="mt-top e-' + est + '">' +
           '<div class="mt-titulo">' + (MESA_ICONO[est] || '') + ' ' + (MESA_TITULO[est] || '') + '</div>' +
-          '<div class="mt-sub">Mesa ' + escHtml(p.mesa) + ' · ' + (MESA_LOCALES[p.local] || '') + (hora ? ' · ' + hora : '') + '</div>' +
+          '<div class="mt-sub">' + lineaMesa(p) + (hora ? ' · ' + hora : '') + '</div>' +
         '</div>' +
         '<div class="mt-num"><small>PEDIDO</small><b>#' + escHtml(p.numero) + '</b></div>' +
         '<div class="mt-nombre">' + escHtml(p.nombre) + '</div>' +
@@ -2727,13 +2820,23 @@ function htmlPagarMesa(p) {
     return '<div class="mt-pagar"><div class="mt-aviso rev">⏳ Recibimos su comprobante. En caja están confirmando que llegó la transferencia; apenas la confirmen, su pedido entra a cocina.</div>' +
       '<button type="button" class="mt-copiar" onclick="elegirComprobanteMesa()">Cambiar la foto del comprobante</button></div>';
   }
+  if (subiendoComprobante && p.pago === 'transferencia') {
+    return '<div class="mt-pagar"><div class="mt-aviso rev">⏳ Enviando su comprobante…</div></div>';
+  }
   const malo = p.comprobante === 'rechazado'
     ? '<div class="mt-aviso mal">❌ En caja no pudieron confirmar su transferencia. Revise el comprobante y súbalo otra vez, o acérquese a caja con su nombre.</div>' : '';
   const err = p.errorComprobante ? '<div class="mt-aviso mal">' + escHtml(p.errorComprobante) + '</div>' : '';
   const c = MESA_CUENTA;
+  const efectivo = '<div class="mt-op"><h4>💵 En caja</h4><p>Acérquese a caja con su nombre, <b>' + escHtml(p.nombre) + '</b>' +
+    (p.pago === 'efectivo' ? ', y pague <b>' + total + '</b>' : '') + '.</p></div>';
+  // ya eligió en el formulario: se ve solo lo suyo, con la opción de cambiar
+  if (p.pago === 'efectivo' && !malo) {
+    return '<div class="mt-pagar">' + err + efectivo +
+      '<button type="button" class="mt-otro" onclick="cambiarPagoMesa(\'transferencia\')">¿Mejor por transferencia?</button></div>';
+  }
+  const soloTransf = p.pago === 'transferencia';
   return '<div class="mt-pagar">' + malo + err +
-    '<div class="mt-pagar-t">¿Cómo desea pagar?</div>' +
-    '<div class="mt-op"><h4>💵 En caja</h4><p>Acérquese a caja con su nombre, <b>' + escHtml(p.nombre) + '</b>.</p></div>' +
+    (soloTransf ? '' : '<div class="mt-pagar-t">¿Cómo desea pagar?</div>' + efectivo) +
     '<div class="mt-op"><h4>📲 Por transferencia, sin ir a caja</h4>' +
       '<div class="mt-cta">' + escHtml(c.banco) + ' · ' + escHtml(c.tipo) + '<br>Nº <span class="nro">' + escHtml(c.numero) + '</span>' +
         '<button type="button" class="mt-copiar" onclick="copiarCuentaMesa()">Copiar</button><br>' +
@@ -2741,7 +2844,15 @@ function htmlPagarMesa(p) {
       '<p style="margin-bottom:10px">Transfiera y suba la foto del comprobante:</p>' +
       '<button type="button" class="mt-subir" id="btnComprobante" onclick="elegirComprobanteMesa()"' + (subiendoComprobante ? ' disabled' : '') + '>' +
         (subiendoComprobante ? '⏳ Subiendo su comprobante…' : '📷 Subir comprobante') + '</button>' +
-    '</div></div>';
+    '</div>' +
+    (soloTransf ? '<button type="button" class="mt-otro" onclick="cambiarPagoMesa(\'efectivo\')">¿Mejor en efectivo? Pague en caja con su nombre</button>' : '') +
+    '</div>';
+}
+function cambiarPagoMesa(m) {
+  if (!mesaPedido) return;
+  mesaPedido.pago = m; mesaPedido.errorComprobante = '';
+  lsSet(MESA_LS_PEDIDO, JSON.stringify(mesaPedido));
+  pintarPedidoMesa();
 }
 function copiarCuentaMesa() {
   const n = MESA_CUENTA.numero;
@@ -2787,15 +2898,18 @@ function achicarFotoMesa(file) {
     img.src = url;
   });
 }
-function subirComprobanteMesa(file) {
+function subirComprobanteMesa(file) { enviarComprobanteMesa(null, file); }
+// img = foto ya achicada (la que adjuntó antes de confirmar) · file = foto elegida en el ticket
+function enviarComprobanteMesa(img, file) {
   if (!mesaPedido || subiendoComprobante) return;
-  subiendoComprobante = true; mesaPedido.errorComprobante = ''; pintarPedidoMesa();
-  achicarFotoMesa(file)
-    .then(img => rpcSupa('mesa_subir_comprobante', { p_token: mesaPedido.token, p_imagen: img }))
-    .then(() => { mesaPedido.comprobante = 'revisar'; lsSet(MESA_LS_PEDIDO, JSON.stringify(mesaPedido)); toastMesa('✅ Comprobante enviado'); })
+  const p = mesaPedido;
+  subiendoComprobante = true; p.errorComprobante = ''; pintarPedidoMesa();
+  (img ? Promise.resolve(img) : achicarFotoMesa(file))
+    .then(foto => rpcSupa('mesa_subir_comprobante', { p_token: p.token, p_imagen: foto }))
+    .then(() => { p.comprobante = 'revisar'; p.pago = 'transferencia'; if (mesaPedido === p) lsSet(MESA_LS_PEDIDO, JSON.stringify(p)); toastMesa('✅ Comprobante enviado'); })
     .catch(err => {
       const m = String((err && err.message) || '');
-      mesaPedido.errorComprobante = /pedido_vencido|estado_invalido/.test(m) ? 'Este pedido ya no está por pagar. Acérquese a caja.'
+      p.errorComprobante = /pedido_vencido|estado_invalido/.test(m) ? 'Este pedido ya no está por pagar. Acérquese a caja.'
         : /imagen_invalida|foto/.test(m) ? 'No pudimos leer esa foto. Tome una captura del comprobante e intente otra vez.'
         : 'No se pudo subir. Revise su internet e intente otra vez.';
     })
@@ -2808,7 +2922,7 @@ function mostrarEnCajaMesa() {
   d.className = 'mesa-mostrar'; d.id = 'mesaMostrar';
   d.innerHTML = '<div class="mm-et">PEDIDO</div><div class="mm-num">#' + escHtml(p.numero) + '</div>' +
     '<div class="mm-nom">' + escHtml(p.nombre) + '</div>' +
-    '<div class="mm-meta">Mesa ' + escHtml(p.mesa) + ' · ' + (MESA_LOCALES[p.local] || '') + '</div>' +
+    '<div class="mm-meta">' + lineaMesa(p) + '</div>' +
     '<div class="mm-total">$' + Number(p.total || 0).toFixed(2) + '</div>' +
     '<button type="button" class="mm-cerrar">Cerrar</button>';
   d.addEventListener('click', () => d.remove());
