@@ -2437,11 +2437,14 @@ function errorForm(msg) {
 // El QR abre esta misma app con ?local=avenida&qr=1 (un solo QR por local; basta el nombre)
 // o, el de una mesa, con ?local=avenida&mesa=5. En ese modo el cliente solo pone su nombre
 // y elige cómo paga: el pedido entra directo al PANEL DE MESAS (Supabase, tabla pedidos_mesa, sin WhatsApp).
+// 21-oct: link corto superhappy.com.ec/avenida (o /localavenida) = lo mismo que ?local=avenida&qr=1
+// (el servidor, nginx-default.conf, entrega esta misma página en esas rutas).
 const MESA_QS = new URLSearchParams(location.search);
+const MESA_RUTA = (location.pathname.match(/^\/(?:local)?(avenida|norte)\/?$/i) || [])[1] || '';
 const MESA_NUM = String(MESA_QS.get('mesa') || '').trim().replace(/[^0-9A-Za-z-]/g, '').slice(0, 10);
-const MESA_LOCAL = String(MESA_QS.get('local') || '').trim().toLowerCase();
+const MESA_LOCAL = String(MESA_QS.get('local') || MESA_RUTA).trim().toLowerCase();
 const MESA_LOCALES = { avenida: 'Local Avenida', norte: 'Local Norte' };
-const MODO_MESA = (!!MESA_NUM || MESA_QS.get('qr') === '1') && Object.prototype.hasOwnProperty.call(MESA_LOCALES, MESA_LOCAL);
+const MODO_MESA = (!!MESA_NUM || MESA_QS.get('qr') === '1' || !!MESA_RUTA) && Object.prototype.hasOwnProperty.call(MESA_LOCALES, MESA_LOCAL);
 const MESA_SIN = MODO_MESA && !MESA_NUM;
 // Sin mesa, la base igual pide un código de mesa: va uno de ESTE celular («QR-xxxxxx»). Así el tope
 // de 3 pedidos sin pagar es por celular (no por local) y el panel sabe que no es una mesa.
