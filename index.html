@@ -880,7 +880,15 @@ body {
 .mb-btn:active{transform:scale(.98)}
 .mb-nota{margin-top:12px;font-size:.82rem;font-weight:700;opacity:.88}
 /* formulario "Casi listo" */
-.mesa-resumen{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#f7f2ff,#fff5fb);border:2px solid #ece4ff;border-radius:16px;padding:10px 12px;margin-bottom:14px}
+.mesa-resumen{background:linear-gradient(135deg,#f7f2ff,#fff5fb);border:2px solid #ece4ff;border-radius:16px;padding:10px 12px;margin-bottom:14px}
+.mr-top{display:flex;align-items:center;gap:12px}
+/* lo que pidió, antes de confirmar (22-oct) */
+.mr-items{list-style:none;margin:10px 0 0;padding:8px 0 0;border-top:1.5px dashed #d8ccff}
+.mr-items li{display:flex;align-items:baseline;gap:8px;padding:4px 0;font-size:.9rem;font-weight:800;color:#333;line-height:1.3}
+.mr-items .q{color:var(--pink);font-weight:900;flex-shrink:0;min-width:24px}
+.mr-items .n{flex:1;min-width:0;overflow-wrap:anywhere}
+.mr-items .n small{display:block;color:#777;font-size:.78rem;font-weight:700}
+.mr-items .p{flex-shrink:0;font-variant-numeric:tabular-nums}
 .mr-badge{width:48px;height:48px;border-radius:50%;background:var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;flex-shrink:0;box-shadow:0 0 0 3px #fff,0 3px 10px rgba(0,0,0,.12)}
 .mr-badge small{font-weight:900;font-size:.46rem;letter-spacing:1px}
 .mr-badge b{font-family:'Righteous',cursive;font-size:1.35rem}
@@ -2610,8 +2618,15 @@ function alAbrirFormularioMesa() {
   const n = cart.reduce((s, i) => s + i.qty, 0);
   const t = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const rs = document.getElementById('mesaResumen');
-  if (rs) rs.innerHTML = (MESA_SIN ? '<div class="mr-badge"><b>🍗</b></div>' : '<div class="mr-badge"><small>MESA</small><b>' + escHtml(MESA_NUM) + '</b></div>') +
-    '<div class="mr-txt">' + MESA_LOCALES[MESA_LOCAL] + '<span>' + n + ' producto' + (n === 1 ? '' : 's') + ' · $' + t.toFixed(2) + '</span></div>';
+  const lista = cart.map(i => {
+    const pz = partirItemMesa(i.name);
+    return '<li><span class="q">' + i.qty + '×</span><span class="n">' + escHtml(pz.base) + (pz.det ? '<small>' + escHtml(pz.det) + '</small>' : '') +
+      '</span><span class="p">$' + (i.price * i.qty).toFixed(2) + '</span></li>';
+  }).join('');
+  if (rs) rs.innerHTML = '<div class="mr-top">' +
+    (MESA_SIN ? '<div class="mr-badge"><b>🍗</b></div>' : '<div class="mr-badge"><small>MESA</small><b>' + escHtml(MESA_NUM) + '</b></div>') +
+    '<div class="mr-txt">' + MESA_LOCALES[MESA_LOCAL] + '<span>' + n + ' producto' + (n === 1 ? '' : 's') + ' · $' + t.toFixed(2) + '</span></div></div>' +
+    (lista ? '<ul class="mr-items">' + lista + '</ul>' : '');
   const btn = document.getElementById('submitBtn'); if (btn && !enviandoMesa) btn.textContent = textoBotonMesa();
   pintarPagoMesa();
 }
