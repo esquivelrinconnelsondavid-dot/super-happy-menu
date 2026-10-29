@@ -694,10 +694,11 @@ function imprimirHTML(html) {
     d.open(); d.write(html); d.close();
     setTimeout(function () {
       try {
-        // hoja del largo exacto del ticket (+ 12 mm para cortar): así la térmica no saca papel en blanco
-        var alto = Math.ceil((d.body.scrollHeight || d.documentElement.scrollHeight || 400) * 25.4 / 96) + 12;
+        // el navegador no puede pedir una hoja a medida: si @page trae tamaño, centra el ticket en la
+        // hoja de la impresora (72 x 297) y le suma fecha y dirección -> 30 cm. Sin tamaño y sin
+        // márgenes, el ticket sale pegado arriba y la térmica corta donde termina el texto.
         var st = d.createElement('style');
-        st.textContent = '@page{size:72mm ' + Math.max(60, Math.min(alto, 600)) + 'mm;margin:0}';
+        st.textContent = '@page{size:auto;margin:0}';
         d.head.appendChild(st);
         f.contentWindow.focus(); f.contentWindow.print();
       } catch (e) { toast('No se pudo imprimir.'); }
