@@ -203,6 +203,8 @@ button{font-family:inherit;cursor:pointer}
 .panel h3{font-size:1.15rem;font-weight:700;margin-bottom:8px}
 .fila{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--linea);font-weight:500}
 .fila input{width:20px;height:20px;accent-color:var(--rosa)}
+.fila-col{flex-direction:column;align-items:stretch;gap:8px}
+.fila select{width:100%;min-width:0;padding:9px 10px;border:1px solid var(--borde2);border-radius:10px;font:inherit;font-size:.9rem;background:var(--superficie);color:var(--tinta)}
 .panel .b{width:100%;margin-top:10px}
 .ayuda{color:var(--gris);font-weight:500;font-size:.84rem;line-height:1.5;margin-top:12px}
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:11px 16px;border-radius:12px;font-weight:600;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:92vw;text-align:center;font-size:.95rem}
@@ -283,11 +285,12 @@ button{font-family:inherit;cursor:pointer}
     <label class="fila">Imprimir la comanda al cobrar <input type="checkbox" id="optImprimir"></label>
     <label class="fila">Imprimir la factura al cobrar <input type="checkbox" id="optImprimirFactura"></label>
     <label class="fila">Sonido cuando llega un pedido <input type="checkbox" id="optSonido"></label>
+    <label class="fila fila-col" id="filaImpresora" hidden>Impresora <select id="optImpresora"></select></label>
     <button type="button" class="b b-sec" id="btnProbar">Probar impresora</button>
     <button type="button" class="b b-sec" id="btnCambiarLocal">Cambiar de local</button>
     <button type="button" class="b b-x" id="btnSalir" style="width:100%">Salir de este panel</button>
     <button type="button" class="b b-ent" id="btnCerrarAjustes">Listo</button>
-    <p class="ayuda">Para imprimir sin que aparezca la ventana de impresión, abra el panel con el acceso directo “Panel de Mesas” del escritorio. La impresora de tickets debe ser la predeterminada de Windows.</p>
+    <p class="ayuda" id="ayudaImpresion">Para imprimir sin que aparezca la ventana de impresión, abra el panel con el acceso directo “Panel de Mesas” del escritorio. La impresora de tickets debe ser la predeterminada de Windows.</p>
   </div>
 </div>
 
@@ -318,7 +321,7 @@ var IC = {
   mudo: svg('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9.5l4 5M21 9.5l-4 5"/>')
 };
 
-var cfg = { local: '', codigo: '', imprimir: true, imprimirFactura: true, sonido: true };
+var cfg = { local: '', codigo: '', imprimir: true, imprimirFactura: true, sonido: true, impresora: '' };
 var FACTURA_URL = 'https://n8n.dewansas.com/webhook/sh-mesa-factura';
 var FACTURA_DOC = 'https://n8n.dewansas.com/webhook/sh-mesa-factura-doc';
 var facturaModo = 'apagada';
@@ -337,6 +340,8 @@ var audio = null;
 var nombreLocal = '';
 var firma = '';
 var avisoT = null;
+// EXE «Pedidos QR Super Happy»: imprime directo en la impresora elegida en Ajustes (sin tocar la predeterminada de Windows)
+var EXE = (window.pedidosQR && typeof window.pedidosQR.imprimir === 'function') ? window.pedidosQR : null;
 
 function $(id) { return document.getElementById(id); }
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -685,6 +690,12 @@ function comandaHTML(p, prueba) {
 }
 function imprimir(p, prueba) { imprimirHTML(comandaHTML(p, prueba)); }
 function imprimirHTML(html) {
+  if (EXE) {
+    EXE.imprimir({ html: html, impresora: cfg.impresora || '' }).then(function (r) {
+      if (!r || !r.ok) toast('No se pudo imprimir' + (r && r.motivo ? ' (' + r.motivo + ')' : '') + '. Revise la impresora en Ajustes.');
+    }, function () { toast('No se pudo imprimir.'); });
+    return;
+  }
   try {
     var f = document.createElement('iframe');
     f.setAttribute('aria-hidden', 'true');
@@ -721,6 +732,25 @@ function emitirFactura(p, manual) {
     })
     .catch(function () { toast('La factura no salió (sin conexión). Toque «Reintentar».'); })
     .then(function () { delete ocupado['f' + p.id]; refrescar(); });
+}
+function cargarImpresoras() {
+  var sel = $('optImpresora');
+  $('filaImpresora').hidden = false;
+  $('ayudaImpresion').textContent = 'Elija la impresora de tickets y toque «Probar impresora». Esto no cambia la impresora predeterminada de Windows.';
+  sel.innerHTML = '<option value="">Buscando impresoras…</option>';
+  EXE.listarImpresoras().then(function (lista) {
+    lista = lista || [];
+    var pred = lista.filter(function (x) { return x.isDefault; })[0];
+    var html = '<option value="">La predeterminada de Windows' + (pred ? ' (' + esc(pred.displayName || pred.name) + ')' : '') + '</option>';
+    var esta = !cfg.impresora;
+    lista.forEach(function (x) {
+      if (x.name === cfg.impresora) esta = true;
+      html += '<option value="' + esc(x.name) + '">' + esc(x.displayName || x.name) + '</option>';
+    });
+    if (!esta) html += '<option value="' + esc(cfg.impresora) + '">' + esc(cfg.impresora) + ' (no está conectada)</option>';
+    sel.innerHTML = html;
+    sel.value = cfg.impresora || '';
+  }, function () { sel.innerHTML = '<option value="">La predeterminada de Windows</option>'; sel.value = ''; });
 }
 function imprimirFactura(p) { if (p.factura_token) imprimirFacturaToken(p.factura_token); }
 function imprimirFacturaToken(token) {
@@ -794,11 +824,12 @@ $('codigo').addEventListener('keydown', function (e) { if (e.key === 'Enter') en
 $('buscar').addEventListener('input', pintar);
 $('nuevoAviso').addEventListener('click', function () { $('nuevoAviso').hidden = true; });
 $('btnSonido').addEventListener('click', function () { cfg.sonido = !cfg.sonido; guardarCfg(); activarAudio(); pintarSonido(); if (cfg.sonido) pitido(1); });
-$('btnAjustes').addEventListener('click', function () { $('optImprimir').checked = !!cfg.imprimir; $('optImprimirFactura').checked = cfg.imprimirFactura !== false; $('optSonido').checked = !!cfg.sonido; $('ajustes').hidden = false; });
+$('btnAjustes').addEventListener('click', function () { $('optImprimir').checked = !!cfg.imprimir; $('optImprimirFactura').checked = cfg.imprimirFactura !== false; $('optSonido').checked = !!cfg.sonido; if (EXE) cargarImpresoras(); $('ajustes').hidden = false; });
 $('btnCerrarAjustes').addEventListener('click', function () { $('ajustes').hidden = true; });
 $('ajustes').addEventListener('click', function (e) { if (e.target === $('ajustes')) $('ajustes').hidden = true; });
 $('optImprimir').addEventListener('change', function () { cfg.imprimir = this.checked; guardarCfg(); });
 $('optImprimirFactura').addEventListener('change', function () { cfg.imprimirFactura = this.checked; guardarCfg(); });
+$('optImpresora').addEventListener('change', function () { cfg.impresora = this.value; guardarCfg(); toast(this.value ? 'Imprimirá en ' + this.value : 'Imprimirá en la predeterminada de Windows'); });
 $('optSonido').addEventListener('change', function () { cfg.sonido = this.checked; guardarCfg(); pintarSonido(); });
 $('btnProbar').addEventListener('click', function () { imprimir({ numero: 0, mesa: '-', nombre: 'Prueba', items: [{ qty: 1, nombre: 'Ticket de prueba', precio: 0 }], total: 0 }, true); });
 $('btnCambiarLocal').addEventListener('click', function () { salir('Elija el otro local y toque Empezar turno.', true); });
